@@ -14,13 +14,65 @@
 			"管道的总体积 V1 （单位：m³）:<font color='#FF0000'>"+((3.14*Math.sqrt(d/2))*l).toFixed(3)+"</font><br>";
 		document.getElementsByName("gd_txt")[0].innerHTML = str;
 	}
+
+	function jm_click() {
+		var d = document.getElementsByName("jm_d")[0].value;
+		var l = document.getElementsByName("jm_l")[0].value;
+		var s = document.getElementsByName("jm_s")[0].value;
+		var str = "管道保温层的表面积 m3（单位：m²）:<font color='#FF0000'>"+((d+2*s)*Math.PI*s).toFixed(3)+"</font><br>"+
+			"管道保温层的体积 V2（单位：m³）:<font color='#FF0000'>"+( Math.PI*(Math.sqrt(d/2+s)-Math.sqrt(d/2)) ).toFixed(3)+"</font><br>";
+		document.getElementsByName("jm_txt")[0].innerHTML = str;
+	}
+
+	function sl_click() {
+		var m1 = document.getElementsByName("sl_m1")[0].value;
+		var t1 = document.getElementsByName("sl_t1")[0].value;
+		var t2 = document.getElementsByName("sl_t2")[0].value;
+		var str = "每小时需要冷量 Q1(单位：KJ) :<font color='#FF0000'>"+(m1*1000*(t2-t1)*4.2).toFixed(3)+"</font><br>"+
+			"主机制冷功率 K1(单位：KW) :<font color='#FF0000'>"+((m1*1000*(t2-t1)*4.2)/3600).toFixed(3)+"</font><br>"+
+			"主机预计电功率 K2(单位：KW) :<font color='#FF0000'>"+((m1*1000*(t2-t1)*4.2)/3600/5.4).toFixed(3)+"</font><br>"+
+			"主机预计电匹数 P(单位：KW) :<font color='#FF0000'>"+((m1*1000*(t2-t1)*4.2)/3600/5.4/0.735).toFixed(3)+"</font><br>";
+		document.getElementsByName("sl_txt")[0].innerHTML = str;
+	}
+
+	function zl_click() {
+		var k1 = document.getElementsByName("zl_k1")[0].value;
+		var t1 = document.getElementsByName("zl_t1")[0].value;
+		var t2 = document.getElementsByName("zl_t2")[0].value;
+		var str = "该冷量下每小时需水流量 m1（单位：m³/h）:<font color='#FF0000'>"+(k1*3600/1000/(t2-t1)/4.2).toFixed(3)+"</font><br>";
+		document.getElementsByName("zl_txt")[0].innerHTML = str;
+	}
 </script>
-<div id = "main">
-	<h4>管道截面积/周长/体积计算</h4>
+<div>
+	<h4>已知管道水量、温差--求主机制冷量</h4>
 	管道的直径 D（单位：m）: <input type="text" name="gd_rad"><br>
 	管道的长度 L（单位：m）: <input type="text" name="gd_len"><br>
 	<input type="button" value="开始计算" onclick="gd_click()">
 	<div name="gd_txt"></div>
+</div>
+<div>
+	<h4>管道截面积/周长/体积计算</h4>
+	管道的直径 D（单位：m）: <input type="text" name="jm_d"><br>
+	管道的长度 L（单位：m）: <input type="text" name="jm_l"><br>
+	保温层的厚度 S （单位：m）: <input type="text" name="jm_s"><br>
+	<input type="button" value="开始计算" onclick="jm_click()">
+	<div name="jm_txt"></div>
+</div>
+<div>
+	<h4>已知管道水量、温差--求主机制冷量</h4>
+	每小时需水流量 m1（单位：m³/h）: <input type="text" name="sl_m1"><br>
+	水进口温度 t1（单位：℃）: <input type="text" name="sl_t1"><br>
+	水出口温度 t2（单位：℃）: <input type="text" name="sl_t2"><br>
+	<input type="button" value="开始计算" onclick="sl_click()">
+	<div name="sl_txt"></div>
+</div>
+<div>
+	<h4>已知道制冷量、温差-求水流量</h4>
+	制冷功率 K1(单位：KW) : <input type="text" name="zl_k1"><br>
+	水进口温度 t1（单位：℃）: <input type="text" name="zl_t1"><br>
+	水出口温度 t2（单位：℃）: <input type="text" name="zl_t2"><br>
+	<input type="button" value="开始计算" onclick="zl_click()">
+	<div name="zl_txt"></div>
 </div>
 </body>
 </html>
