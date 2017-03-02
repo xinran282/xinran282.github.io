@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>凌富机电</title>
+</head>
+<body>
+<script type="text/javascript">
+	function gd_click() {
+		var d = document.getElementsByName("gd_rad")[0].value;
+		var l = document.getElementsByName("gd_len")[0].value;
+		var str = "管道的周长 C（单位：m）:<font color='#FF0000'>"+(d*Math.PI).toFixed(3)+"</font><br>"+
+			"管道的截面积 m1（单位：m²）:<font color='#FF0000'>"+(3.14*Math.sqrt(d/2)).toFixed(3)+"</font><br>"+
+			"管道的总表面积 m2（单位：m²）:<font color='#FF0000'>"+((d*Math.PI)*l).toFixed(3)+"</font><br>"+
+			"管道的总体积 V1 （单位：m³）:<font color='#FF0000'>"+((3.14*Math.sqrt(d/2))*l).toFixed(3)+"</font><br>";
+		document.getElementsByName("gd_txt")[0].innerHTML = str;
+	}
+</script>
+<div id = "main">
+	<h4>管道截面积/周长/体积计算</h4>
+	管道的直径 D（单位：m）: <input type="text" name="gd_rad"><br>
+	管道的长度 L（单位：m）: <input type="text" name="gd_len"><br>
+	<input type="button" value="开始计算" onclick="gd_click()">
+	<div name="gd_txt"></div>
+</div>
+</body>
+</html>
