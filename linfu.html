@@ -7,6 +7,10 @@
     <meta name="description" content="广州凌富机电有限公司">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <style type="text/css">
+      .linfu2{font-size: 3px}
+      .linfu{font-size: 4px}
+    </style>
 
     <title>广州凌富机电有限公司</title>
   </head>
@@ -92,7 +96,7 @@
   <p>管道的直径 D（单位：m）: <input type="text" name="gd_rad"><br>
   管道的长度 L（单位：m）: <input type="text" name="gd_len"><br>
   <input type="button" value="开始计算" onclick="gd_click()">
-  <div name="gd_txt"></div></p>
+  <div class="linfu" name="gd_txt"></div></p>
 
 <h3>
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>管道保温层体积及保温层表面积计算</h3>
@@ -100,7 +104,7 @@
   管道的长度 L（单位：m）: <input type="text" name="jm_l"><br>
   保温层的厚度 S （单位：m）: <input type="text" name="jm_s"><br>
   <input type="button" value="开始计算" onclick="jm_click()">
-  <div name="jm_txt"></div></p>
+  <div class="linfu" name="jm_txt"></div></p>
 
 <h3>
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>已知管道水量、温差--求主机制冷量</h3>
@@ -108,7 +112,7 @@
   水进口温度 t1（单位：℃）: <input type="text" name="sl_t1"><br>
   水出口温度 t2（单位：℃）: <input type="text" name="sl_t2"><br>
   <input type="button" value="开始计算" onclick="sl_click()">
-  <div name="sl_txt"></div></p>
+  <div class="linfu" name="sl_txt"></div></p>
 
 <h3>
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>已知道制冷量、温差-求水流量</h3>
@@ -116,7 +120,7 @@
   水进口温度 t1（单位：℃）: <input type="text" name="zl_t1"><br>
   水出口温度 t2（单位：℃）: <input type="text" name="zl_t2"><br>
   <input type="button" value="开始计算" onclick="zl_click()">
-  <div name="zl_txt"></div></p>
+  <div class="linfu" name="zl_txt"></div></p>
 
 <h3>
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>水泵电机功率计算</h3>
@@ -124,16 +128,16 @@
   水泵扬程 H （单位：m）: <input type="text" name="wc_h"><br>
   水泵效率 η （单位：%）: <input type="text" value="65" name="wc_n"><br>
   <input type="button" value="开始计算" onclick="wc_click()">
-  <div name="wc_txt"></div></p>
+  <div class="linfu" name="wc_txt"></div></p>
 
 <h3>
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>圆形水管道流速计算--推选管径</h3>
   <p>水流量 Q（单位：m³/h）: <input type="text" name="yx_q"><br>
   预算管直径 D(单位：mm) : <input type="text" name="yx_d"><br>
   <input type="button" value="开始计算" onclick="yx_click()">
-  <div style="font-size: 8px">水管推荐最大流速：DN15-0.3m/s；DN20-0.65m/s；DN25-0.8m/s；DN32-1.0m/s；DN40-1.5m/s；DN50-1.5m/s；
+  <div class="linfu2">水管推荐最大流速：DN15-0.3m/s；DN20-0.65m/s；DN25-0.8m/s；DN32-1.0m/s；DN40-1.5m/s；DN50-1.5m/s；
                  （DN50~DN100）-1.6m/s；DN125-1.9m/s；大于DN150-2m/s；<div>
-  <div name="yx_txt"></div></p>
+  <div class="linfu" name="yx_txt"></div></p>
 
 <h3>
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>方形风管流速的计算--推荐风管的尺寸</h3>
@@ -141,11 +145,11 @@
   风管的长边 L(单位：mm) : <input type="text" name="fx_l"><br>
   风管的高度 H(单位：mm) : <input type="text" name="fx_h"><br>
   <input type="button" value="开始计算" onclick="fx_click()">
-  <div style="font-size: 10px">公共场所推荐风管流速：主风道-（5.5~8.0）m/s；水平支风道-（4.0~6.5）m/s；垂直支风道-（4.0~6.0）m/s；
+  <div class="linfu2">公共场所推荐风管流速：主风道-（5.5~8.0）m/s；水平支风道-（4.0~6.5）m/s；垂直支风道-（4.0~6.0）m/s；
                      送风口-（3.0~5.0）m/s；<br>
 工业推荐风管流速：主风道-（6.5~11）m/s；水平支风道-（5.0~9.0）m/s；垂直支风道-（5.0~8.0）m/s；
                      送风口-（3.0~5.0）m/s；<div>
-  <div name="fx_txt"></div></p>
+  <div class="linfu" name="fx_txt"></div></p>
 
 
 
