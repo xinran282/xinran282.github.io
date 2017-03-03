@@ -42,6 +42,31 @@
 		var str = "该冷量下每小时需水流量 m1（单位：m³/h）:<font color='#FF0000'>"+(k1*3600/1000/(t2-t1)/4.2).toFixed(3)+"</font><br>";
 		document.getElementsByName("zl_txt")[0].innerHTML = str;
 	}
+
+	function wc_click() {
+		var q = document.getElementsByName("wc_q")[0].value;
+		var h = document.getElementsByName("wc_h")[0].value;
+		var n = document.getElementsByName("wc_n")[0].value;
+		var str = "轴功率 P (单位：KW) :<font color='#FF0000'>"+((q/3600)*h*9.8*1000/(n*10)).toFixed(3)+"</font><br>"+
+			"建议配用电机功率 P1 (单位：KW) :<font color='#FF0000'>"+((q/3600)*h*9.8*1000/(n*10)*1.1).toFixed(3)+"</font><br>"+
+			"建议配用电机匹数 P2 (单位：P) :<font color='#FF0000'>"+((q/3600)*h*9.8*1000/(n*10)*1.1/0.735).toFixed(3)+"</font><br>";
+		document.getElementsByName("wc_txt")[0].innerHTML = str;
+	}
+
+	function yx_click() {
+		var q = document.getElementsByName("yx_q")[0].value;
+		var d = document.getElementsByName("yx_d")[0].value;
+		var str = "水流流速 V（单位：m/s）:<font color='#FF0000'>"+(q*Math.pow(10,6)/900/Math.PI/d/d).toFixed(3)+"</font><br>";
+		document.getElementsByName("yx_txt")[0].innerHTML = str;
+	}
+
+	function fx_click() {
+		var q = document.getElementsByName("fx_q")[0].value;
+		var l = document.getElementsByName("fx_l")[0].value;
+		var h = document.getElementsByName("fx_h")[0].value;
+		var str = "风的流速 V（单位：m/s）:<font color='#FF0000'>"+(q/3600/(l/1000)/(h/1000)).toFixed(3)+"</font><br>";
+		document.getElementsByName("fx_txt")[0].innerHTML = str;
+	}
 </script>
 <div>
 	<h4>已知管道水量、温差--求主机制冷量</h4>
@@ -74,5 +99,38 @@
 	<input type="button" value="开始计算" onclick="zl_click()">
 	<div name="zl_txt"></div>
 </div>
+<div>
+	<h4>水泵电机功率计算</h4>
+	水泵流量 Q（单位：m³/h）: <input type="text" name="wc_q"><br>
+	水泵扬程 H （单位：m）: <input type="text" name="wc_h"><br>
+	水泵效率 η （单位：%）: <input type="text" value="65" name="wc_n"><br>
+	<input type="button" value="开始计算" onclick="wc_click()">
+	<div name="wc_txt"></div>
+</div>
+
+<div>
+	<h4>圆形水管道流速计算--推选管径</h4>
+	水流量 Q（单位：m³/h）: <input type="text" name="yx_q"><br>
+	预算管直径 D(单位：mm) : <input type="text" name="yx_d"><br>
+	<input type="button" value="开始计算" onclick="yx_click()">
+	<div>水管推荐最大流速：DN15-0.3m/s；DN20-0.65m/s；DN25-0.8m/s；DN32-1.0m/s；DN40-1.5m/s；DN50-1.5m/s；
+                 （DN50~DN100）-1.6m/s；DN125-1.9m/s；大于DN150-2m/s；<div>
+	<div name="yx_txt"></div>
+</div>
+<div>
+	<h4>方形风管流速的计算--推荐风管的尺寸</h4>
+	风的流量 Q（单位：m³/h）: <input type="text" name="fx_q"><br>
+	风管的长边 L(单位：mm) : <input type="text" name="fx_l"><br>
+	风管的高度 H(单位：mm) : <input type="text" name="fx_h"><br>
+	<input type="button" value="开始计算" onclick="fx_click()">
+	<div>公共场所推荐风管流速：主风道-（5.5~8.0）m/s；水平支风道-（4.0~6.5）m/s；垂直支风道-（4.0~6.0）m/s；
+                     送风口-（3.0~5.0）m/s；<br>
+工业推荐风管流速：主风道-（6.5~11）m/s；水平支风道-（5.0~9.0）m/s；垂直支风道-（5.0~8.0）m/s；
+                     送风口-（3.0~5.0）m/s；<div>
+	<div name="fx_txt"></div>
+</div>
 </body>
 </html>
+
+
+
