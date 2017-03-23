@@ -38,7 +38,7 @@
     var l = parseFloat(document.getElementsByName("jm_l")[0].value);
     var s = parseFloat(document.getElementsByName("jm_s")[0].value);
     var str = "管道保温层的表面积 m3（单位：m²）:<font color='#FF0000'>"+((d+2*s)*Math.PI*s).toFixed(3)+"</font><br>"+
-      "管道保温层的体积 V2（单位：m³）:<font color='#FF0000'>"+( Math.PI*(Math.sqrt(d/2+s)-Math.sqrt(d/2)) ).toFixed(3)+"</font><br>";
+      "管道保温层的体积 V2（单位：m³）:<font color='#FF0000'>"+( Math.PI*(Math.sqrt(d/2+s)-Math.sqrt(d/2))*l ).toFixed(3)+"</font><br>";
     document.getElementsByName("jm_txt")[0].innerHTML = str;
   }
 
