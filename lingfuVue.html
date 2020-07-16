@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta name="description" content="广州凌富机电有限公司">
+    <meta content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="http://xinran282.github.io/stylesheets/stylesheet.css">
+    <style type="text/css">
+      .linfu2{font-size: 14px}
+      .linfu{font-size: 16px}
+      .edi{width: 90px}
+      #project_title {font-size: 22px;}
+      #project_tagline {font-size: 20px;}
+      h3 {font-size: 18px;}
+      .inner2 p {  margin: 0 0 0 0;}
+      #header_wrap .inner {padding: 30px 10px 0px 5px;}
+    </style>
+
+    <title>广州凌富机电有限公司</title>
+
+    <script type="x-template" id="calcer">
+      <div class="inner2">
+        <h3><span @click="showclick(index)">{{title}}</span></h3>
+          <div v-if="show != false">
+              <p v-for="(row, index) in rows">
+                {{row.txt}} <input v-model="row.input_num">
+              </p>
+              <input type="button" value="开始计算" @click="calcclick(index)">
+              <div class="linfu2" v-html="desc"></div>
+              <div class="linfu" v-html="result"></div>
+            </div>
+      </div>
+    </script>
+
+    
+  </head>
+
+  <body>   
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">广州凌富机电有限公司</h1>
+          <h2 id="project_tagline">专业工业设备冷却、中央空调、冰蓄冷、电气工程等。制冷选凌富，享终身免费服务！</h2>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <calcer v-for="(item, index) in info" :index="index" :title="item.title" :rows="item.rows" :desc="item.desc" :result="item.result" :show="item.show"></calcer>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+      <p>联系人：蔡先生（13610364267）</p>
+      <p>联系人：张先生（13450261411）</p>
+      <p>邮箱：623357517@qq.com </p>
+      <p>服务热线：4006193318</p>
+      <p>传真号码：020-62956530</p>
+      <p>联系地址：广东省广州市黄埔区沙步大路70号</p>
+      </footer>
+    </div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="text/javascript">
+        var calcer = {
+            props:['index','title','rows','desc','result','show'],
+            data(){
+                return{
+                }
+            },
+            template:"#calcer",
+            components:{
+                // "childer":childer
+            },
+            methods:{
+              calcclick : function(index){
+                switch (index) {
+                  case 0:
+                    d = parseFloat(app.info[index].rows[0].input_num);
+                    l = parseFloat(app.info[index].rows[1].input_num);
+                    app.info[index].result = 
+                      "管道的周长 C（单位：m）:<font color='#FF0000'>"+(d*Math.PI).toFixed(3)+"</font><br>"+
+                      "管道的截面积 m1（单位：m²）:<font color='#FF0000'>"+(3.14*Math.pow(d/2, 2)).toFixed(3)+"</font><br>"+
+                      "管道的总表面积 m2（单位：m²）:<font color='#FF0000'>"+((d*Math.PI)*l).toFixed(3)+"</font><br>"+
+                      "管道的总体积 V1 （单位：m³）:<font color='#FF0000'>"+((3.14*Math.pow(d/2, 2))*l).toFixed(3)+"</font><br>";
+                    break;
+                  case 1:
+                    d = parseFloat(app.info[index].rows[0].input_num);
+                    l = parseFloat(app.info[index].rows[1].input_num);
+                    s = parseFloat(app.info[index].rows[2].input_num);
+                    app.info[index].result = 
+                      "管道保温层的表面积 m3（单位：m²）:<font color='#FF0000'>"+((d+2*s)*Math.PI*l).toFixed(3)+"</font><br>"+
+                      "管道保温层的体积 V2（单位：m³）:<font color='#FF0000'>"+( Math.PI*(Math.pow(d/2+s, 2)-Math.pow(d/2, 2))*l ).toFixed(3)+"</font><br>";
+                    break;
+                  case 2:
+                    m1 = parseFloat(app.info[index].rows[0].input_num);
+                    t1 = parseFloat(app.info[index].rows[1].input_num);
+                    t2 = parseFloat(app.info[index].rows[2].input_num);
+                    app.info[index].result = 
+                      "每小时需要冷量 Q1(单位：KJ) :<font color='#FF0000'>"+(m1*1000*(t2-t1)*4.2).toFixed(3)+"</font><br>"+
+                      "主机制冷功率 K1(单位：KW) :<font color='#FF0000'>"+((m1*1000*(t2-t1)*4.2)/3600).toFixed(3)+"</font><br>"+
+                      "主机预计电功率 K2(单位：KW) :<font color='#FF0000'>"+((m1*1000*(t2-t1)*4.2)/3600/5.4).toFixed(3)+"</font><br>"+
+                      "主机预计电匹数 P(单位：KW) :<font color='#FF0000'>"+((m1*1000*(t2-t1)*4.2)/3600/5.4/0.735).toFixed(3)+"</font><br>";
+                    break;
+                  case 3:
+                    k1 = parseFloat(app.info[index].rows[0].input_num);
+                    t1 = parseFloat(app.info[index].rows[1].input_num);
+                    t2 = parseFloat(app.info[index].rows[2].input_num);
+                    app.info[index].result = "该冷量下每小时需水流量 m1（单位：m³/h）:<font color='#FF0000'>"+(k1*3600/1000/(t2-t1)/4.2).toFixed(3)+"</font><br>";
+                    break;
+                  case 4:
+                    q = parseFloat(app.info[index].rows[0].input_num);
+                    h = parseFloat(app.info[index].rows[1].input_num);
+                    n = parseFloat(app.info[index].rows[2].input_num);
+                    app.info[index].result =
+                      "轴功率 P (单位：KW) :<font color='#FF0000'>"+((q/3600)*h*9.8*1000/(n*10)).toFixed(3)+"</font><br>"+
+                      "建议配用电机功率 P1 (单位：KW) :<font color='#FF0000'>"+((q/3600)*h*9.8*1000/(n*10)*1.1).toFixed(3)+"</font><br>"+
+                      "建议配用电机匹数 P2 (单位：P) :<font color='#FF0000'>"+((q/3600)*h*9.8*1000/(n*10)*1.1/0.735).toFixed(3)+"</font><br>";
+                    break;
+                  case 5:
+                    q = parseFloat(app.info[index].rows[0].input_num);
+                    d = parseFloat(app.info[index].rows[1].input_num);
+                    app.info[index].result = "水流流速 V（单位：m/s）:<font color='#FF0000'>"+(q*Math.pow(10,6)/900/Math.PI/d/d).toFixed(3)+"</font><br>";
+                    break;
+                  case 6:
+                    q = parseFloat(app.info[index].rows[0].input_num);
+                    l = parseFloat(app.info[index].rows[1].input_num);
+                    h = parseFloat(app.info[index].rows[2].input_num);
+                    app.info[index].result = "风的流速 V（单位：m/s）:<font color='#FF0000'>"+(q/3600/(l/1000)/(h/1000)).toFixed(3)+"</font><br>";
+                    break;
+                  default:
+                    app.info[index].result = "尚未处理";
+                    break;
+                }                
+              },
+
+              showclick : function(index){
+                this.show = this.show? false : true;
+                // app.info[index].show = app.info[index].show?false:true;
+              }
+            }
+        };
+
+        var app = new Vue({
+            el:"#main_content_wrap",
+            data:{
+              info:[
+                        {id:0, title:"管道截面积/周长/体积计算", rows:[
+                            {txt:"管道的直径 D（单位：m）:", input_num:0},
+                            {txt:"管道的长度 L（单位：m）: ", input_num:0},
+                        ], desc:"", result:"", show:true},
+
+                        {id:1, title:"管道保温层体积及保温层表面积计算", rows:[
+                            {txt: "管道的直径 D（单位：m）:", input_num:0},
+                            {txt: "管道的长度 L（单位：m）:", input_num:0},
+                            {txt: "保温层的厚度 S （单位：m）:", input_num:0}
+                        ], desc:"", result:"", show:true},
+
+                        {id:2, title:"已知管道水量、温差--求主机制冷量", rows:[
+                          {txt:"每小时需水流量 m1（单位：m³/h）:", input_num:0},
+                          {txt:"水进口温度 t1（单位：℃）:", input_num:0},
+                          {txt:"水出口温度 t2（单位：℃）:", input_num:0}
+                        ], desc:"", result:"", show:true},
+
+                        {id:3, title:"已知道制冷量、温差-求水流量", rows:[
+                          {txt:"制冷功率 K1(单位：KW) :", input_num:0},
+                          {txt:"水进口温度 t1（单位：℃）:", input_num:0},
+                          {txt:"水出口温度 t2（单位：℃）:", input_num:0}
+                        ], desc:"", result:"", show:true},
+
+                        {id:4, title:"水泵电机功率计算", rows:[
+                          {txt:"水泵流量 Q（单位：m³/h）:", input_num:0},
+                          {txt:"水泵扬程 H （单位：m）:", input_num:0},
+                          {txt:"水泵效率 η （单位：%）:", input_num:0}
+                        ], desc:"", result:"", show:true},
+
+                        {id:5, title:"圆形水管道流速计算--推选管径", rows:[
+                          {txt:"水流量 Q（单位：m³/h）:", input_num:0},
+                          {txt:"预算管直径 D(单位：mm) :", input_num:0},
+                        ], desc:"水管推荐最大流速：DN15-0.3m/s；DN20-0.65m/s；DN25-0.8m/s；DN32-1.0m/s；DN40-1.5m/s；DN50-1.5m/s；（DN50~DN100）-1.6m/s；DN125-1.9m/s；大于DN150-2m/s；", result:"", show:true},
+
+                        {id:6, title:"方形风管流速的计算--推荐风管的尺寸", rows:[
+                          {txt:"风的流量 Q（单位：m³/h）:", input_num:0},
+                          {txt:"风管的长边 L(单位：mm) :", input_num:0},
+                          {txt:"风管的高度 H(单位：mm) :", input_num:0},
+                        ], result:"", desc:"公共场所推荐风管流速：主风道-（5.5~8.0）m/s；水平支风道-（4.0~6.5）m/s；垂直支风道-（4.0~6.0）m/s；送风口-（3.0~5.0）m/s；<br>工业推荐风管流速：主风道-（6.5~11）m/s；水平支风道-（5.0~9.0）m/s；垂直支风道-（5.0~8.0）m/s；送风口-（3.0~5.0）m/s；", show:true}
+                    ]
+            },
+            components:{
+                "calcer":calcer
+            }            
+        })
+    
+    </script>
+  </body>
+</html>
+
+
+
