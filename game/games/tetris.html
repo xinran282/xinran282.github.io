@@ -6,146 +6,187 @@
 <title>俄罗斯方块</title>
 <style>
 :root {
-    --wechat-green: #07c160;
-    --wechat-gray: #f6f6f6;
-    --wechat-dark: #333;
+  --wechat-green: #07c160;
+  --wechat-gray: #f6f6f6;
+  --wechat-dark: #333;
 }
 
-/* ====== 全局布局 ====== */
 html, body {
-    height: 100%;
-    margin: 0;
-    background: var(--wechat-gray);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    overflow: hidden;
+  height: 100%;
+  margin: 0;
+  background: var(--wechat-gray);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow: hidden;
 }
 
-/* ====== 顶部导航栏 ====== */
 .navbar {
-    height: 44px;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--wechat-dark);
+  height: 44px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--wechat-dark);
 }
 .navbar .nav-back {
-    position: absolute;
-    left: 10px;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    color: var(--wechat-green);
-    font-size: 22px;
-    text-decoration: none;
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  color: var(--wechat-green);
+  font-size: 22px;
+  text-decoration: none;
 }
 .navbar .nav-back::before {
-    content: "‹";
-    font-size: 28px;
-    line-height: 44px;
+  content: "‹";
+  font-size: 28px;
+  line-height: 44px;
 }
 
-/* ====== 状态栏 ====== */
 .status-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-    padding: 10px 16px;
-    font-size: 15px;
-    color: var(--wechat-dark);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 10px 16px;
+  font-size: 15px;
+  color: var(--wechat-dark);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 .status-bar b {
-    color: var(--wechat-green);
-    font-size: 18px;
-    margin-left: 5px;
+  color: var(--wechat-green);
+  font-size: 18px;
+  margin-left: 5px;
 }
 .status-bar .btn-restart {
-    color: var(--wechat-green);
-    font-weight: bold;
-    cursor: pointer;
+  color: var(--wechat-green);
+  font-weight: bold;
+  cursor: pointer;
 }
 
-/* ====== 游戏区域 ====== */
+/* 游戏主区域 */
+.main {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 44px - 50px);
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
 .game-wrapper {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #e6e6e6;
-    position: relative;
-    height: calc(100% - 88px); /* 导航栏 + 状态栏 */
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: #e6e6e6;
+  box-sizing: border-box;
 }
 
-/* 画布自适应 */
 canvas {
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    display: block;
-    width: 90vw;
-    max-width: 420px;
-    height: auto;
+  background: #fff;
+  width: 90vw;
+  max-width: 420px;
+  aspect-ratio: 10 / 20;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  pointer-events: none;
 }
 
-/* Toast 提示 */
+/* 控制按钮 */
+.controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 9999;
+  background: rgba(255,255,255,0.9);
+  border-radius: 40px;
+  padding: 10px 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.controls button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: var(--wechat-green);
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  user-select: none;
+}
+.controls button:active {
+  background: #06a150;
+}
+
+/* 提示框 */
 .toast {
-    position: fixed;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
-    color: #fff;
-    padding: 10px 16px;
-    border-radius: 6px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    z-index: 99;
+  position: fixed;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 9999;
 }
 .toast.show {
-    opacity: 1;
+  opacity: 1;
 }
 </style>
 </head>
 <body>
-    <div class="navbar">
-        <a href="../index.html" class="nav-back"></a>
-        <div>俄罗斯方块</div>
-    </div>
+  <div class="navbar">
+    <a href="../index.html" class="nav-back"></a>
+    <div>俄罗斯方块</div>
+  </div>
 
-    <div class="status-bar">
-        <span>得分<b id="score">0</b></span>
-        <span class="btn-restart" onclick="game.reset()">重玩</span>
-    </div>
+  <div class="status-bar">
+    <span>得分<b id="score">0</b></span>
+    <span class="btn-restart" onclick="game.reset()">重玩</span>
+  </div>
 
+  <div class="main">
     <div class="game-wrapper" id="gameWrapper">
-        <canvas id="tetrisCanvas"></canvas>
+      <canvas id="tetrisCanvas"></canvas>
     </div>
+  </div>
 
-    <div id="toast" class="toast"></div>
+  <!-- <div class="controls" id="controls">
+    <button id="btn-left">←</button>
+    <button id="btn-rotate">↑</button>
+    <button id="btn-right">→</button>
+    <button id="btn-down">↓</button>
+  </div> -->
+
+  <div id="toast" class="toast"></div>
 
 <script>
-/* ====== 游戏逻辑 ====== */
 const SHAPES = [
     [],
-    [[1,1,1,1]], // I
-    [[1,1],[1,1]], // O
-    [[0,1,0],[1,1,1]], // T
-    [[1,0,0],[1,1,1]], // L
-    [[0,0,1],[1,1,1]], // J
-    [[0,1,1],[1,1,0]], // S
-    [[1,1,0],[0,1,1]]  // Z
+    [[1,1,1,1]],
+    [[1,1],[1,1]],
+    [[0,1,0],[1,1,1]],
+    [[1,0,0],[1,1,1]],
+    [[0,0,1],[1,1,1]],
+    [[0,1,1],[1,1,0]],
+    [[1,1,0],[0,1,1]]
 ];
-const COLORS = [
-    null,
-    '#3eb575','#e6c02a','#9c27b0','#fa5151','#10aeff','#07c160','#ff9800'
-];
+const COLORS = [null,'#3eb575','#e6c02a','#9c27b0','#fa5151','#10aeff','#07c160','#ff9800'];
 
 class Tetris {
     constructor() {
@@ -163,7 +204,9 @@ class Tetris {
         this.lastTime = 0;
         this.currPiece = null;
         this.currPos = {x:0,y:0};
+    }
 
+    start() {
         this.initLayout();
         window.addEventListener('resize', ()=>this.initLayout());
         this.bindControls();
@@ -333,6 +376,7 @@ class Tetris {
     }
 
     bindControls(){
+        // 键盘控制
         window.addEventListener('keydown',(e)=>{
             if(this.isGameOver)return;
             if(e.key==='ArrowLeft') this.move(-1);
@@ -340,359 +384,49 @@ class Tetris {
             else if(e.key==='ArrowUp') this.playerRotate();
             else if(e.key==='ArrowDown') this.hardDrop();
         });
-    }
-}
 
-const game=new Tetris();
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>俄罗斯方块</title>
-<style>
-:root {
-    --wechat-green: #07c160;
-    --wechat-gray: #f6f6f6;
-    --wechat-dark: #333;
-}
-
-/* ====== 全局布局 ====== */
-html, body {
-    height: 100%;
-    margin: 0;
-    background: var(--wechat-gray);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    overflow: hidden;
-}
-
-/* ====== 顶部导航栏 ====== */
-.navbar {
-    height: 44px;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--wechat-dark);
-}
-.navbar .nav-back {
-    position: absolute;
-    left: 10px;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    color: var(--wechat-green);
-    font-size: 22px;
-    text-decoration: none;
-}
-.navbar .nav-back::before {
-    content: "‹";
-    font-size: 28px;
-    line-height: 44px;
-}
-
-/* ====== 状态栏 ====== */
-.status-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-    padding: 10px 16px;
-    font-size: 15px;
-    color: var(--wechat-dark);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-.status-bar b {
-    color: var(--wechat-green);
-    font-size: 18px;
-    margin-left: 5px;
-}
-.status-bar .btn-restart {
-    color: var(--wechat-green);
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* ====== 游戏区域 ====== */
-.game-wrapper {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #e6e6e6;
-    position: relative;
-    height: calc(100% - 88px); /* 导航栏 + 状态栏 */
-}
-
-/* 画布自适应 */
-canvas {
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    display: block;
-    width: 90vw;
-    max-width: 420px;
-    height: auto;
-}
-
-/* Toast 提示 */
-.toast {
-    position: fixed;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
-    color: #fff;
-    padding: 10px 16px;
-    border-radius: 6px;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    z-index: 99;
-}
-.toast.show {
-    opacity: 1;
-}
-</style>
-</head>
-<body>
-    <div class="navbar">
-        <a href="index.html" class="nav-back"></a>
-        <div>俄罗斯方块</div>
-    </div>
-
-    <div class="status-bar">
-        <span>得分<b id="score">0</b></span>
-        <span class="btn-restart" onclick="game.reset()">重玩</span>
-    </div>
-
-    <div class="game-wrapper" id="gameWrapper">
-        <canvas id="tetrisCanvas"></canvas>
-    </div>
-
-    <div id="toast" class="toast"></div>
-
-<script>
-/* ====== 游戏逻辑 ====== */
-const SHAPES = [
-    [],
-    [[1,1,1,1]], // I
-    [[1,1],[1,1]], // O
-    [[0,1,0],[1,1,1]], // T
-    [[1,0,0],[1,1,1]], // L
-    [[0,0,1],[1,1,1]], // J
-    [[0,1,1],[1,1,0]], // S
-    [[1,1,0],[0,1,1]]  // Z
-];
-const COLORS = [
-    null,
-    '#3eb575','#e6c02a','#9c27b0','#fa5151','#10aeff','#07c160','#ff9800'
-];
-
-class Tetris {
-    constructor() {
-        this.canvas = document.getElementById('tetrisCanvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.wrapper = document.getElementById('gameWrapper');
-        this.cols = 10;
-        this.rows = 20;
-        this.blockSize = 0;
-        this.board = [];
-        this.score = 0;
-        this.isGameOver = false;
-        this.dropInterval = 1000;
-        this.dropCounter = 0;
-        this.lastTime = 0;
-        this.currPiece = null;
-        this.currPos = {x:0,y:0};
-
-        this.initLayout();
-        window.addEventListener('resize', ()=>this.initLayout());
-        this.bindControls();
-        this.reset();
-    }
-
-    initLayout() {
-        const w = this.wrapper.clientWidth;
-        const h = this.wrapper.clientHeight;
-        const sizeByW = Math.floor(w / this.cols);
-        const sizeByH = Math.floor(h / this.rows);
-        this.blockSize = Math.min(sizeByW, sizeByH);
-        this.canvas.width = this.blockSize * this.cols;
-        this.canvas.height = this.blockSize * this.rows;
-        this.draw();
-    }
-
-    reset() {
-        this.board = Array.from({length:this.rows},()=>Array(this.cols).fill(0));
-        this.score = 0;
-        this.updateScore();
-        this.isGameOver = false;
-        this.dropInterval = 1000;
-        this.spawnPiece();
-        this.dropCounter = 0;
-        this.lastTime = 0;
-        requestAnimationFrame(this.update.bind(this));
-    }
-
-    spawnPiece() {
-        const id = Math.floor(Math.random()*7)+1;
-        this.currPiece = SHAPES[id];
-        this.currColor = COLORS[id];
-        this.currPos.x = Math.floor((this.cols - this.currPiece[0].length)/2);
-        this.currPos.y = 0;
-        if (this.collide(this.currPos.x,this.currPos.y,this.currPiece)) {
-            this.isGameOver = true;
-            this.showToast(`游戏结束! 得分: ${this.score}`);
-        }
-    }
-
-    collide(x,y,piece){
-        for(let r=0;r<piece.length;r++){
-            for(let c=0;c<piece[r].length;c++){
-                if(piece[r][c]){
-                    const nx=x+c, ny=y+r;
-                    if(nx<0||nx>=this.cols||ny>=this.rows) return true;
-                    if(ny>=0 && this.board[ny][nx]!==0) return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    rotate(piece){
-        const newP = piece[0].map((_,i)=>piece.map(r=>r[i]).reverse());
-        if(this.collide(this.currPos.x,this.currPos.y,newP)){
-            if(!this.collide(this.currPos.x-1,this.currPos.y,newP)) this.currPos.x--;
-            else if(!this.collide(this.currPos.x+1,this.currPos.y,newP)) this.currPos.x++;
-            else return piece;
-        }
-        return newP;
-    }
-
-    merge(){
-        this.currPiece.forEach((row,r)=>{
-            row.forEach((v,c)=>{
-                if(v && this.currPos.y+r>=0)
-                    this.board[this.currPos.y+r][this.currPos.x+c]=this.currColor;
-            });
-        });
-    }
-
-    clearLines(){
-        let lines=0;
-        for(let r=this.rows-1;r>=0;r--){
-            if(this.board[r].every(v=>v!==0)){
-                this.board.splice(r,1);
-                this.board.unshift(Array(this.cols).fill(0));
-                lines++;
-                r++;
-            }
-        }
-        if(lines>0){
-            this.score+=lines*100;
-            this.updateScore();
-            this.dropInterval=Math.max(100,1000-this.score);
-        }
-    }
-
-    drop(){
-        this.currPos.y++;
-        if(this.collide(this.currPos.x,this.currPos.y,this.currPiece)){
-            this.currPos.y--;
-            this.merge();
-            this.clearLines();
-            this.spawnPiece();
-        }
-        this.dropCounter=0;
-    }
-
-    hardDrop(){
-        while(!this.collide(this.currPos.x,this.currPos.y+1,this.currPiece))
-            this.currPos.y++;
-        this.merge();
-        this.clearLines();
-        this.spawnPiece();
-        this.dropCounter=0;
-        this.draw();
-    }
-
-    move(dir){
-        this.currPos.x+=dir;
-        if(this.collide(this.currPos.x,this.currPos.y,this.currPiece))
-            this.currPos.x-=dir;
-        this.draw();
-    }
-
-    playerRotate(){
-        this.currPiece=this.rotate(this.currPiece);
-        this.draw();
-    }
-
-    update(time=0){
-        if(this.isGameOver) return;
-        const delta=time-this.lastTime;
-        this.lastTime=time;
-        this.dropCounter+=delta;
-        if(this.dropCounter>this.dropInterval) this.drop();
-        this.draw();
-        requestAnimationFrame(this.update.bind(this));
-    }
-
-    draw(){
-        this.ctx.fillStyle='#fff';
-        this.ctx.fillRect(0,0,this.canvas.width,this.canvas.height);
-        this.board.forEach((row,r)=>{
-            row.forEach((v,c)=>{
-                if(v) this.drawBlock(c,r,v);
-            });
-        });
-        if(this.currPiece){
-            this.currPiece.forEach((row,r)=>{
-                row.forEach((v,c)=>{
-                    if(v) this.drawBlock(this.currPos.x+c,this.currPos.y+r,this.currColor);
-                });
-            });
-        }
-    }
-
-    drawBlock(x,y,color){
-        this.ctx.fillStyle=color;
-        this.ctx.fillRect(x*this.blockSize,y*this.blockSize,this.blockSize,this.blockSize);
-        this.ctx.strokeStyle='rgba(255,255,255,0.4)';
-        this.ctx.strokeRect(x*this.blockSize,y*this.blockSize,this.blockSize,this.blockSize);
-    }
-
-    updateScore(){
-        document.getElementById('score').innerText=this.score;
-    }
-
-    showToast(msg){
-        const t=document.getElementById('toast');
-        t.innerText=msg;
-        t.classList.add('show');
-        setTimeout(()=>t.classList.remove('show'),3000);
-    }
-
-    bindControls(){
-        window.addEventListener('keydown',(e)=>{
+        // 触摸屏幕区域控制
+        window.addEventListener('touchstart',(e)=>{
+            // 如果点击在按钮上，直接返回
+            if (e.target.closest('.controls')) return;
             if(this.isGameOver)return;
-            if(e.key==='ArrowLeft') this.move(-1);
-            else if(e.key==='ArrowRight') this.move(1);
-            else if(e.key==='ArrowUp') this.playerRotate();
-            else if(e.key==='ArrowDown') this.hardDrop();
+            const touch = e.touches[0];
+            const x = touch.clientX;
+            const y = touch.clientY;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const top = h * 0.25;
+            const bottom = h * 0.75;
+            if(y < top) this.playerRotate();
+            else if(y > bottom) this.hardDrop();
+            else if(x < w/2) this.move(-1);
+            else this.move(1);
         });
+
+        // 按钮控制（阻止冒泡）
+        const bindBtn = (id, handler) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const exec = (e)=>{
+                e.preventDefault();
+                e.stopPropagation(); // ✅ 阻止事件冒泡
+                if(this.isGameOver)return;
+                handler.call(this);
+            };
+            el.addEventListener('touchstart', exec, { passive: false });
+            el.addEventListener('click', exec);
+        };
+        bindBtn('btn-left', ()=>this.move(-1));
+        bindBtn('btn-right', ()=>this.move(1));
+        bindBtn('btn-rotate', ()=>this.playerRotate());
+        bindBtn('btn-down', ()=>this.hardDrop());
     }
 }
 
-const game=new Tetris();
+window.onload = ()=> {
+    window.game = new Tetris();
+    game.start();
+};
 </script>
 </body>
 </html>
