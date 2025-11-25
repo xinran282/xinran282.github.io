@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>数字华容道</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* 顶部 Tab 样式优化 */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            background: #ededed; /* 微信浅灰背景 */
+            padding: 4px;
+            border-radius: 8px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tab-item {
+            padding: 6px 24px;
+            font-size: 14px;
+            color: #666;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-item.active {
+            background: #fff;
+            color: var(--wechat-green);
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* 游戏主容器 */
+        .game-container {
+            width: 320px;
+            height: 320px;
+            background: #e6e6e6; /* 棋盘底色 */
+            border-radius: 12px;
+            margin: 10px auto;
+            padding: 8px;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        /* 网格布局核心修复 */
+        .grid-box {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            gap: 6px; /* 格子间距 */
+        }
+        
+        /* 预定义网格结构，防止加载时错乱 */
+        .grid-box.size-3 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); }
+        .grid-box.size-4 { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); }
+        .grid-box.size-5 { grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); }
+
+        /* 滑块样式 - 微信风格 */
+        .tile {
+            background: #fff;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 3px 0 #d1d1d1; /* 底部立体阴影 */
+            position: relative;
+            top: 0;
+        }
+        .tile:active {
+            transform: translateY(3px); /* 按下效果 */
+            box-shadow: 0 0 0 #d1d1d1;
+        }
+        .tile.empty {
+            background: transparent;
+            box-shadow: none;
+            cursor: default;
+        }
+        /* 数字颜色 */
+        .tile:not(.empty) { color: var(--wechat-green); }
+
+        /* 字体大小适配 */
+        .size-3 .tile { font-size: 32px; }
+        .size-4 .tile { font-size: 24px; }
+        .size-5 .tile { font-size: 20px; }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            width: 320px;
+            margin: 0 auto 15px;
+            color: #888;
+            font-size: 14px;
+        }
+        .status-bar b { color: #333; font-family: monospace; font-size: 16px; }
+
+        .info-text { margin-top: 20px; color: #999; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a class="nav-left" href="../index.html"><i class="icon-back"></i></a>
+        <div class="nav-title">数字华容道</div>
+    </div>
+
+    <div class="page-content">
+        <!-- 阶位选择 -->
+        <div class="tabs">
+            <div class="tab-item active" onclick="game.setSize(3, this)">3 × 3</div>
+            <div class="tab-item" onclick="game.setSize(4, this)">4 × 4</div>
+            <div class="tab-item" onclick="game.setSize(5, this)">5 × 5</div>
+        </div>
+
+        <div class="status-bar">
+            <span>步数 <b id="step">0</b></span>
+            <span>时间 <b id="time">0</b>s</span>
+        </div>
+
+        <div class="game-container">
+            <!-- 默认加上 size-3 防止初始渲染错乱 -->
+            <div id="grid" class="grid-box size-3"></div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn" onclick="game.shuffle()">重新开始</button>
+        </div>
+        <div class="info-text">点击空白格周围的数字移动，将数字按顺序排列</div>
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script>
+        class Klotski {
+            constructor() {
+                this.size = 3;
+                this.grid = document.getElementById('grid');
+                this.stepEl = document.getElementById('step');
+                this.timeEl = document.getElementById('time');
+                this.timer = null;
+                this.isPlaying = false;
+                this.tiles = [];
+                this.emptyIndex = -1;
+                this.steps = 0;
+                this.seconds = 0;
+
+                // 初始化
+                this.init();
+            }
+
+            setSize(n, tabEl) {
+                if(n === this.size && tabEl.classList.contains('active')) return;
+
+                this.size = n;
+                // 更新Tab UI
+                document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+                if(tabEl) tabEl.classList.add('active');
+                
+                // 更新 Grid Class (关键修复：直接切换CSS类名)
+                this.grid.className = `grid-box size-${n}`;
+                
+                this.init();
+            }
+
+            init() {
+                this.resetData();
+                // 生成有序数组
+                this.tiles = Array.from({length: this.size * this.size}, (_, i) => i + 1);
+                this.tiles[this.tiles.length - 1] = 0; // 最后一个是空
+                
+                this.shuffle();
+            }
+
+            resetData() {
+                this.steps = 0;
+                this.seconds = 0;
+                this.stepEl.innerText = '0';
+                this.timeEl.innerText = '0';
+                clearInterval(this.timer);
+                this.isPlaying = false;
+            }
+
+            startTimer() {
+                if (this.isPlaying) return;
+                this.isPlaying = true;
+                this.timer = setInterval(() => {
+                    this.seconds++;
+                    this.timeEl.innerText = this.seconds;
+                }, 1000);
+            }
+
+            shuffle() {
+                this.resetData();
+                // 模拟随机移动来打乱，保证一定有解
+                let count = 150 * this.size; // 增加打乱次数
+                
+                // 先重置为有序状态
+                this.tiles = Array.from({length: this.size * this.size}, (_, i) => i + 1);
+                this.tiles[this.tiles.length - 1] = 0;
+                this.emptyIndex = this.tiles.length - 1;
+
+                // 快速随机移动
+                let lastIdx = -1;
+                while(count > 0) {
+                    const neighbors = this.getNeighbors(this.emptyIndex);
+                    // 尽量不走回头路
+                    let validNeighbors = neighbors.filter(n => n !== lastIdx);
+                    if(validNeighbors.length === 0) validNeighbors = neighbors;
+                    
+                    const randomIdx = validNeighbors[Math.floor(Math.random() * validNeighbors.length)];
+                    
+                    // 交换
+                    [this.tiles[this.emptyIndex], this.tiles[randomIdx]] = [this.tiles[randomIdx], this.tiles[this.emptyIndex]];
+                    lastIdx = this.emptyIndex;
+                    this.emptyIndex = randomIdx;
+                    count--;
+                }
+                this.render();
+            }
+
+            getNeighbors(idx) {
+                const s = this.size;
+                const row = Math.floor(idx / s);
+                const col = idx % s;
+                const neighbors = [];
+                
+                if (row > 0) neighbors.push(idx - s); // 上
+                if (row < s - 1) neighbors.push(idx + s); // 下
+                if (col > 0) neighbors.push(idx - 1); // 左
+                if (col < s - 1) neighbors.push(idx + 1); // 右
+                
+                return neighbors;
+            }
+
+            move(idx) {
+                const neighbors = this.getNeighbors(this.emptyIndex);
+                if (neighbors.includes(idx)) {
+                    if (!this.isPlaying) this.startTimer();
+                    
+                    // 交换
+                    [this.tiles[this.emptyIndex], this.tiles[idx]] = [this.tiles[idx], this.tiles[this.emptyIndex]];
+                    this.emptyIndex = idx;
+                    this.steps++;
+                    this.stepEl.innerText = this.steps;
+                    
+                    this.render();
+                    this.checkWin();
+                }
+            }
+
+            render() {
+                this.grid.innerHTML = '';
+                this.tiles.forEach((num, index) => {
+                    const div = document.createElement('div');
+                    div.className = num === 0 ? 'tile empty' : 'tile';
+                    if (num !== 0) {
+                        div.innerText = num;
+                        div.onclick = () => this.move(index);
+                    }
+                    this.grid.appendChild(div);
+                });
+            }
+
+            checkWin() {
+                for (let i = 0; i < this.tiles.length - 1; i++) {
+                    if (this.tiles[i] !== i + 1) return;
+                }
+                
+                clearInterval(this.timer);
+                this.isPlaying = false;
+                setTimeout(() => {
+                    const t = document.getElementById('toast');
+                    t.innerText = `🎉 挑战成功！\n${this.size}阶耗时 ${this.seconds}秒`;
+                    t.classList.add('show');
+                    setTimeout(()=>t.classList.remove('show'), 3000);
+                }, 200);
+            }
+        }
+
+        const game = new Klotski();
+    </script>
+</body>
+</html>

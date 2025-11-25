@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>连连消除</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* 6x6 网格 */
+        .grid-link { 
+            display: grid; 
+            grid-template-columns: repeat(6, 1fr); 
+            gap: 6px; 
+            width: 100%; 
+            max-width: 340px; 
+            margin: 20px auto;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+        .cell-link { 
+            aspect-ratio: 1; 
+            background: white; 
+            border-radius: 6px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 28px; 
+            cursor: pointer; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.1s, background 0.2s;
+            user-select: none;
+        }
+        .cell-link:active { transform: scale(0.95); }
+        .cell-link.selected { 
+            background: #e6f7ff; 
+            border: 2px solid var(--wechat-green); 
+            box-sizing: border-box;
+        }
+        /* 消除后的状态 */
+        .cell-link.empty { 
+            visibility: hidden; 
+            pointer-events: none; 
+        }
+        /* 连接线高亮 (可选，简单版用闪烁代替) */
+        .cell-link.matched {
+            background: #95ec69;
+            transition: background 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a class="nav-left" href="../index.html"><i class="icon-back"></i></a>
+        <div class="nav-title">连连消除</div>
+    </div>
+
+    <div class="page-content">
+        <div class="info-text">剩余方块: <span id="remain">36</span></div>
+        
+        <div id="grid" class="grid-link"></div>
+        
+        <div class="btn-group">
+            <button class="btn btn-sec" onclick="game.shuffle()">🔄 洗牌</button>
+            <button class="btn" onclick="game.init()">重置游戏</button>
+        </div>
+    </div>
+    <div id="toast" class="toast"></div>
+
+    <script>
+        class LinkGame {
+            constructor() {
+                this.rows = 6;
+                this.cols = 6;
+                this.icons = ['🍎', '🍇', '🍉', '🍊', '🍋', '🍌', '🍍', '🥝', '🥑']; // 9种图标
+                this.init();
+            }
+
+            init() {
+                this.board = []; // 存储图标索引
+                this.selected = null; // 当前选中的 {r, c, el}
+                this.remain = this.rows * this.cols;
+                
+                // 生成成对数据
+                let pairs = [];
+                let totalPairs = (this.rows * this.cols) / 2;
+                for (let i = 0; i < totalPairs; i++) {
+                    let icon = this.icons[i % this.icons.length];
+                    pairs.push(icon, icon);
+                }
+                // 打乱
+                pairs.sort(() => Math.random() - 0.5);
+                
+                // 填充二维数组
+                for(let r=0; r<this.rows; r++) {
+                    this.board[r] = [];
+                    for(let c=0; c<this.cols; c++) {
+                        this.board[r][c] = pairs.pop();
+                    }
+                }
+                
+                this.render();
+                this.updateUI();
+            }
+
+            render() {
+                const grid = document.getElementById('grid');
+                grid.innerHTML = '';
+                for(let r=0; r<this.rows; r++) {
+                    for(let c=0; c<this.cols; c++) {
+                        let div = document.createElement('div');
+                        div.className = 'cell-link';
+                        div.innerText = this.board[r][c];
+                        div.dataset.r = r;
+                        div.dataset.c = c;
+                        div.onclick = (e) => this.click(r, c, e.target);
+                        grid.appendChild(div);
+                    }
+                }
+            }
+
+            // 洗牌（只洗剩下的）
+            shuffle() {
+                let currentItems = [];
+                // 收集
+                for(let r=0; r<this.rows; r++) {
+                    for(let c=0; c<this.cols; c++) {
+                        if(this.board[r][c]) currentItems.push(this.board[r][c]);
+                    }
+                }
+                if(currentItems.length === 0) return;
+                
+                currentItems.sort(() => Math.random() - 0.5);
+                
+                // 放回
+                const cells = document.querySelectorAll('.cell-link');
+                let idx = 0;
+                for(let r=0; r<this.rows; r++) {
+                    for(let c=0; c<this.cols; c++) {
+                        if(this.board[r][c]) {
+                            this.board[r][c] = currentItems[idx];
+                            // 更新DOM
+                            let cell = cells[r*this.cols + c];
+                            cell.innerText = currentItems[idx];
+                            cell.classList.remove('selected');
+                            idx++;
+                        }
+                    }
+                }
+                this.selected = null;
+                this.toast('已重新洗牌');
+            }
+
+            click(r, c, el) {
+                if(!this.board[r][c]) return; // 点击了空的
+                if(this.selected && this.selected.r === r && this.selected.c === c) {
+                    // 取消选中
+                    el.classList.remove('selected');
+                    this.selected = null;
+                    return;
+                }
+
+                el.classList.add('selected');
+
+                if(!this.selected) {
+                    // 第一个选中
+                    this.selected = {r, c, el};
+                } else {
+                    // 第二个选中，判断消除
+                    if(this.board[r][c] === this.board[this.selected.r][this.selected.c]) {
+                        // 图标相同，检查路径
+                        if(this.checkPath(this.selected.r, this.selected.c, r, c)) {
+                            this.match(this.selected, {r, c, el});
+                        } else {
+                            // 路径不通，切换选中
+                            this.selected.el.classList.remove('selected');
+                            this.selected = {r, c, el};
+                        }
+                    } else {
+                        // 图标不同，切换选中
+                        this.selected.el.classList.remove('selected');
+                        this.selected = {r, c, el};
+                    }
+                }
+            }
+
+            match(p1, p2) {
+                // 视觉效果
+                p1.el.classList.add('matched');
+                p2.el.classList.add('matched');
+                p1.el.classList.remove('selected');
+                p2.el.classList.remove('selected');
+
+                setTimeout(() => {
+                    // 逻辑消除
+                    this.board[p1.r][p1.c] = null;
+                    this.board[p2.r][p2.c] = null;
+                    // DOM消除
+                    p1.el.classList.add('empty');
+                    p1.el.classList.remove('matched');
+                    p1.el.innerText = '';
+                    p2.el.classList.add('empty');
+                    p2.el.classList.remove('matched');
+                    p2.el.innerText = '';
+                    
+                    this.selected = null;
+                    this.remain -= 2;
+                    this.updateUI();
+                    
+                    if(this.remain === 0) {
+                        this.toast('恭喜通关！');
+                    }
+                }, 200);
+            }
+
+            updateUI() {
+                document.getElementById('remain').innerText = this.remain;
+            }
+
+            // --- 核心算法：路径检测 ---
+            // 0折(直线), 1折(1个角), 2折(2个角)
+            checkPath(r1, c1, r2, c2) {
+                if (r1 === r2 && c1 === c2) return false;
+                
+                // 1. 直连检测
+                if (this.isLineEmpty(r1, c1, r2, c2)) return true;
+
+                // 2. 一折检测 (找一个拐点C，使得 A-C 和 C-B 都是通路)
+                // 拐点必须是空的(或者就是目标点，但这里目标点肯定有东西，所以拐点必须是空)
+                // 拐点只有两个可能: (r1, c2) 和 (r2, c1)
+                if (this.isEmpty(r1, c2) && this.isLineEmpty(r1, c1, r1, c2) && this.isLineEmpty(r1, c2, r2, c2)) return true;
+                if (this.isEmpty(r2, c1) && this.isLineEmpty(r1, c1, r2, c1) && this.isLineEmpty(r2, c1, r2, c2)) return true;
+
+                // 3. 两折检测 (扫描线法)
+                // 在水平方向或垂直方向寻找一个中间点P，使得 A-P 直连，且 P-B 是一折连接
+                
+                // 扫描所有行
+                for (let i = 0; i < this.rows; i++) {
+                    // 寻找关键点 (i, c1) 和 (i, c2)
+                    // 逻辑：从 A(r1,c1) 走到 (i,c1)，再折到 (i,c2)，再折到 B(r2,c2)
+                    // 必须满足：(i,c1)空, (i,c2)空, 三段路都通
+                    // 优化：其实就是判断 (i, c1) 和 (i, c2) 构成的U型通路
+                    if (this.isEmpty(i, c1) && this.isEmpty(i, c2) && 
+                        this.isLineEmpty(r1, c1, i, c1) && // 竖
+                        this.isLineEmpty(i, c1, i, c2) && // 横
+                        this.isLineEmpty(i, c2, r2, c2))  // 竖
+                    {
+                        return true;
+                    }
+                }
+                
+                // 扫描所有列
+                for (let j = 0; j < this.cols; j++) {
+                    if (this.isEmpty(r1, j) && this.isEmpty(r2, j) &&
+                        this.isLineEmpty(r1, c1, r1, j) && // 横
+                        this.isLineEmpty(r1, j, r2, j) && // 竖
+                        this.isLineEmpty(r2, j, r2, c2))  // 横
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            // 判断点是否为空 (或者越界视为不通，但在本简易版中不处理越界连线)
+            isEmpty(r, c) {
+                return this.board[r][c] === null;
+            }
+
+            // 判断直线是否畅通 (不包含起点和终点本身的内容判断)
+            isLineEmpty(r1, c1, r2, c2) {
+                if (r1 === r2) { // 同行
+                    let min = Math.min(c1, c2);
+                    let max = Math.max(c1, c2);
+                    for (let c = min + 1; c < max; c++) {
+                        if (this.board[r1][c] !== null) return false;
+                    }
+                    return true;
+                } else if (c1 === c2) { // 同列
+                    let min = Math.min(r1, r2);
+                    let max = Math.max(r1, r2);
+                    for (let r = min + 1; r < max; r++) {
+                        if (this.board[r][c1] !== null) return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            toast(msg) {
+                const t = document.getElementById('toast');
+                t.innerText = msg; t.classList.add('show');
+                setTimeout(()=>t.classList.remove('show'), 1500);
+            }
+        }
+        const game = new LinkGame();
+    </script>
+</body>
+</html>

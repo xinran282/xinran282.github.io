@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>微信风格扫雷</title>
+<style>
+:root {
+  --wechat-green: #07c160;
+  --wechat-gray: #f6f6f6;
+  --wechat-dark: #333;
+  --wechat-light: #fff;
+}
+
+body {
+  margin: 0;
+  background: var(--wechat-gray);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  user-select: none;
+  overflow-x: hidden;
+}
+
+/* ===== 顶部导航栏 ===== */
+.navbar {
+  height: 44px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--wechat-dark);
+}
+.navbar .nav-back {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  color: var(--wechat-green);
+  font-size: 22px;
+  text-decoration: none;
+}
+.navbar .nav-back::before {
+  content: "‹";
+  font-size: 28px;
+  line-height: 44px;
+}
+
+/* ===== 主体区域 ===== */
+.container {
+  padding: 15px;
+  text-align: center;
+}
+
+/* 难度选择 */
+.difficulty {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.difficulty button {
+  flex: 1;
+  max-width: 80px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  color: var(--wechat-dark);
+}
+.difficulty button.active {
+  background: var(--wechat-green);
+  color: #fff;
+  border-color: var(--wechat-green);
+}
+
+/* 血量显示 */
+.health {
+  margin: 10px 0;
+  font-size: 16px;
+  color: var(--wechat-dark);
+}
+.heart {
+  color: red;
+  font-size: 20px;
+}
+
+/* 游戏区 */
+.board-container {
+  display: flex;
+  justify-content: center;
+  overflow: hidden; /* ✅ 去掉滚动条 */
+}
+.board {
+  display: grid;
+  gap: 3px;
+  margin-top: 10px;
+}
+.cell {
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  color: var(--wechat-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cell.open {
+  background: #e0f8e9;
+  border-color: #bdeac6;
+}
+.cell.mine {
+  background: #ffdddd;
+}
+.cell.flag {
+  background: #ffe58f;
+}
+
+/* 底部按钮 */
+.controls {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.btn {
+  flex: 1;
+  max-width: 100px;
+  background: var(--wechat-green);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.btn span {
+  font-size: 12px;
+  color: #fff;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+.btn:active {
+  background: #06a150;
+}
+</style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="index.html" class="nav-back"></a>
+    <div>扫雷游戏</div>
+  </div>
+
+  <div class="container">
+    <div class="difficulty">
+      <button id="easy" class="active" onclick="setDifficulty('easy')">低</button>
+      <button id="medium" onclick="setDifficulty('medium')">中</button>
+      <button id="hard" onclick="setDifficulty('hard')">高</button>
+    </div>
+
+    <div class="health" id="health">❤️❤️❤️❤️❤️</div>
+
+    <div class="board-container">
+      <div class="board" id="board"></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="modeBtn" onclick="toggleMode()">☀️<span>打开</span></button>
+      <button class="btn" onclick="restart()">🔄<span>重开</span></button>
+    </div>
+  </div>
+
+<script>
+let rows = 8, cols = 8, minesCount = 10;
+let board = [], revealed = [], flagged = [];
+let health = 5;
+let mode = 'open'; // open or flag
+
+function setDifficulty(level) {
+  document.querySelectorAll('.difficulty button').forEach(b => b.classList.remove('active'));
+  document.getElementById(level).classList.add('active');
+  if (level === 'easy') { rows = 8; cols = 8; minesCount = 10; }
+  if (level === 'medium') { rows = 10; cols = 10; minesCount = 20; }
+  if (level === 'hard') { rows = 14; cols = 10; minesCount = 35; } // ✅ 向上下扩展
+  restart();
+}
+
+function updateHealth() {
+  // ✅ 只显示剩余的 ❤️
+  document.getElementById('health').innerHTML = '❤️'.repeat(health);
+}
+
+function initBoard() {
+  board = Array(rows).fill().map(() => Array(cols).fill(0));
+  revealed = Array(rows).fill().map(() => Array(cols).fill(false));
+  flagged = Array(rows).fill().map(() => Array(cols).fill(false));
+
+  // 随机布雷
+  let placed = 0;
+  while (placed < minesCount) {
+    const r = Math.floor(Math.random() * rows);
+    const c = Math.floor(Math.random() * cols);
+    if (board[r][c] === 0) {
+      board[r][c] = -1;
+      placed++;
+    }
+  }
+
+  // 计算周围地雷数
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (board[r][c] === -1) continue;
+      let count = 0;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          const nr = r + dr, nc = c + dc;
+          if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc] === -1) count++;
+        }
+      }
+      board[r][c] = count;
+    }
+  }
+}
+
+function renderBoard() {
+  const boardDiv = document.getElementById('board');
+  boardDiv.innerHTML = '';
+  boardDiv.style.gridTemplateColumns = `repeat(${cols}, 32px)`;
+  boardDiv.style.gridTemplateRows = `repeat(${rows}, 32px)`;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      if (revealed[r][c]) {
+        cell.classList.add('open');
+        if (board[r][c] === -1) cell.classList.add('mine');
+        else if (board[r][c] > 0) cell.textContent = board[r][c];
+      } else if (flagged[r][c]) {
+        cell.classList.add('flag');
+        cell.textContent = '🚩';
+      }
+
+      cell.addEventListener('click', () => handleCell(r, c));
+      boardDiv.appendChild(cell);
+    }
+  }
+}
+
+function handleCell(r, c) {
+  if (revealed[r][c]) return;
+  if (mode === 'flag') {
+    flagged[r][c] = !flagged[r][c];
+  } else {
+    if (flagged[r][c]) return;
+    if (board[r][c] === -1) {
+      health--;
+      updateHealth();
+      if (health <= 0) {
+        alert('💥 游戏结束！');
+        revealAll();
+        return;
+      }
+    } else {
+      reveal(r, c);
+    }
+  }
+  renderBoard();
+  checkWin();
+}
+
+function reveal(r, c) {
+  if (r < 0 || r >= rows || c < 0 || c >= cols || revealed[r][c]) return;
+  revealed[r][c] = true;
+  if (board[r][c] === 0) {
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        reveal(r + dr, c + dc);
+      }
+    }
+  }
+}
+
+function revealAll() {
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) revealed[r][c] = true;
+  renderBoard();
+}
+
+function checkWin() {
+  let safeCells = 0;
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    if (board[r][c] !== -1 && revealed[r][c]) safeCells++;
+  }
+  if (safeCells === rows * cols - minesCount) {
+    alert('🎉 恭喜你成功排雷！');
+    revealAll();
+  }
+}
+
+function toggleMode() {
+  mode = mode === 'open' ? 'flag' : 'open';
+  const btn = document.getElementById('modeBtn');
+  if (mode === 'open') {
+    btn.innerHTML = '☀️<span>打开</span>';
+  } else {
+    btn.innerHTML = '🚩<span>标记</span>';
+  }
+}
+
+function restart() {
+  health = 5;
+  updateHealth();
+  initBoard();
+  renderBoard();
+}
+
+// 初始化
+restart();
+</script>
+</body>
+</html>

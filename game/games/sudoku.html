@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>数独</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* 棋盘样式 */
+        .sudoku-board {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            width: 340px;
+            height: 340px;
+            margin: 20px auto;
+            background: #333; /* 边框颜色 */
+            border: 2px solid #333;
+            gap: 1px;
+        }
+        .cell {
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        /* 宫格加粗边框 (3x3) */
+        .cell:nth-child(3n) { border-right: 2px solid #333; }
+        .cell:nth-child(9n) { border-right: none; } /* 最右侧不需要 */
+        .cell:nth-child(n+19):nth-child(-n+27),
+        .cell:nth-child(n+46):nth-child(-n+54) {
+            border-bottom: 2px solid #333;
+        }
+
+        /* 状态样式 */
+        .cell.fixed { font-weight: bold; color: #000; background: #f5f5f5; } /* 题目数字 */
+        .cell.user-input { color: var(--wechat-green); } /* 用户填写的 */
+        .cell.solved { color: #1aad19; font-weight: bold; } /* 求解器填入的 */
+        .cell.selected { background: #e6f7ff; } /* 选中态 */
+        .cell.error { background: #ffcccc; } /* 错误提示 */
+
+        /* 底部数字键盘 (仿微信 ActionSheet) */
+        .numpad-overlay {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none; z-index: 100;
+            align-items: flex-end;
+        }
+        .numpad-overlay.show { display: flex; }
+        .numpad {
+            width: 100%; background: #f7f7f7;
+            border-radius: 12px 12px 0 0;
+            padding: 20px; box-sizing: border-box;
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+            animation: slideUp 0.2s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .num-btn {
+            height: 50px; background: #fff; border-radius: 8px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 22px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .num-btn:active { background: #e0e0e0; }
+        .num-btn.clear { color: #fa5151; font-size: 16px; }
+        .num-btn.close { grid-column: span 5; margin-top: 10px; font-size: 16px; background: transparent; box-shadow: none; }
+
+        /* 顶部控制栏 */
+        .controls {
+            display: flex; justify-content: space-between; padding: 0 20px; margin-bottom: 10px;
+        }
+        select {
+            padding: 5px 10px; border: 1px solid #ddd; border-radius: 4px; background: white; font-size: 14px;
+        }
+        
+        .mode-switch {
+            display: flex; justify-content: center; margin-bottom: 15px;
+        }
+        .mode-btn {
+            padding: 6px 16px; border: 1px solid var(--wechat-green); 
+            color: var(--wechat-green); background: white;
+            font-size: 14px; cursor: pointer;
+        }
+        .mode-btn:first-child { border-radius: 4px 0 0 4px; border-right: none; }
+        .mode-btn:last-child { border-radius: 0 4px 4px 0; }
+        .mode-btn.active { background: var(--wechat-green); color: white; }
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a class="nav-left" href="../index.html"><i class="icon-back"></i></a>
+        <div class="nav-title">数独</div>
+    </div>
+
+    <div class="page-content">
+        <!-- 模式切换 -->
+        <div class="mode-switch">
+            <div class="mode-btn active" id="modeGame" onclick="app.setMode('game')">闯关模式</div>
+            <div class="mode-btn" id="modeSolver" onclick="app.setMode('solver')">求解器(自填)</div>
+        </div>
+
+        <!-- 游戏控制栏 -->
+        <div class="controls" id="gameControls">
+            <select id="difficulty" onchange="app.newGame()">
+                <option value="30">简单</option>
+                <option value="40">中等</option>
+                <option value="50">困难</option>
+            </select>
+            <div class="info-text" style="margin:0">剩余: <span id="remain">0</span></div>
+        </div>
+
+        <!-- 求解器控制栏 -->
+        <div class="controls" id="solverControls" style="display:none; justify-content: center;">
+            <div class="info-text" style="margin:0; font-size: 13px; color: #888;">输入题目数字，点击“自动求解”</div>
+        </div>
+
+        <div id="board" class="sudoku-board"></div>
+
+        <div class="btn-group">
+            <button class="btn" id="mainBtn" onclick="app.handleMainBtn()">验算</button>
+            <button class="btn btn-sec" onclick="app.resetBoard()">清空/重置</button>
+        </div>
+    </div>
+
+    <!-- 底部键盘 -->
+    <div class="numpad-overlay" id="numpadOverlay" onclick="app.closePad(event)">
+        <div class="numpad">
+            <div class="num-btn" onclick="app.fill(1)">1</div>
+            <div class="num-btn" onclick="app.fill(2)">2</div>
+            <div class="num-btn" onclick="app.fill(3)">3</div>
+            <div class="num-btn" onclick="app.fill(4)">4</div>
+            <div class="num-btn" onclick="app.fill(5)">5</div>
+            <div class="num-btn" onclick="app.fill(6)">6</div>
+            <div class="num-btn" onclick="app.fill(7)">7</div>
+            <div class="num-btn" onclick="app.fill(8)">8</div>
+            <div class="num-btn" onclick="app.fill(9)">9</div>
+            <div class="num-btn clear" onclick="app.fill(null)">清除</div>
+            <div class="num-btn close" onclick="app.closePad(null, true)">关闭键盘</div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        class SudokuApp {
+            constructor() {
+                this.mode = 'game'; // 'game' or 'solver'
+                this.selectedCell = null; // {index, el}
+                this.boardData = Array(81).fill(null); // 当前盘面数据
+                this.fixedMask = Array(81).fill(false); // 题目锁定掩码
+                this.initUI();
+                this.newGame();
+            }
+
+            initUI() {
+                const board = document.getElementById('board');
+                board.innerHTML = '';
+                for (let i = 0; i < 81; i++) {
+                    let cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.index = i;
+                    cell.onclick = (e) => this.onCellClick(i, cell);
+                    board.appendChild(cell);
+                }
+            }
+
+            // 切换模式
+            setMode(mode) {
+                this.mode = mode;
+                document.getElementById('modeGame').className = mode === 'game' ? 'mode-btn active' : 'mode-btn';
+                document.getElementById('modeSolver').className = mode === 'solver' ? 'mode-btn active' : 'mode-btn';
+                
+                document.getElementById('gameControls').style.display = mode === 'game' ? 'flex' : 'none';
+                document.getElementById('solverControls').style.display = mode === 'solver' ? 'flex' : 'none';
+                
+                const mainBtn = document.getElementById('mainBtn');
+                if(mode === 'game') {
+                    mainBtn.innerText = '验算';
+                    mainBtn.onclick = () => this.checkGame();
+                    this.newGame();
+                } else {
+                    mainBtn.innerText = '自动求解';
+                    mainBtn.onclick = () => this.solveUserBoard();
+                    this.clearBoard();
+                }
+            }
+
+            // --- 游戏模式逻辑 ---
+
+            newGame() {
+                this.clearBoard();
+                const diff = parseInt(document.getElementById('difficulty').value);
+                
+                // 1. 生成完整数独
+                const solution = this.generateSolution();
+                
+                // 2. 挖洞
+                let puzzle = [...solution];
+                let attempts = diff; 
+                while (attempts > 0) {
+                    let idx = Math.floor(Math.random() * 81);
+                    if (puzzle[idx] !== null) {
+                        puzzle[idx] = null;
+                        attempts--;
+                    }
+                }
+
+                // 3. 渲染
+                const cells = document.querySelectorAll('.cell');
+                for(let i=0; i<81; i++) {
+                    if(puzzle[i] !== null) {
+                        this.boardData[i] = puzzle[i];
+                        this.fixedMask[i] = true;
+                        cells[i].innerText = puzzle[i];
+                        cells[i].classList.add('fixed');
+                    } else {
+                        this.boardData[i] = null;
+                        this.fixedMask[i] = false;
+                        cells[i].innerText = '';
+                    }
+                }
+                this.updateRemain();
+            }
+
+            checkGame() {
+                // 检查是否填满
+                if(this.boardData.includes(null)) {
+                    this.toast('还有空格未填哦');
+                    return;
+                }
+                // 验证逻辑
+                if(this.isValidSolution(this.boardData)) {
+                    this.toast('🎉 恭喜成功！');
+                } else {
+                    this.toast('❌ 答案有误，请检查红色标记');
+                    this.highlightErrors();
+                }
+            }
+
+            highlightErrors() {
+                const cells = document.querySelectorAll('.cell');
+                // 简单检查：行、列、宫是否有重复
+                // 这里为了简化，只标记明显冲突
+                cells.forEach(c => c.classList.remove('error'));
+                
+                for(let i=0; i<81; i++) {
+                    if(this.fixedMask[i]) continue; // 题目不标红
+                    // 临时清空当前格，检查放入当前值是否合法
+                    let val = this.boardData[i];
+                    this.boardData[i] = null;
+                    if(!this.isValidMove(this.boardData, i, val)) {
+                        cells[i].classList.add('error');
+                    }
+                    this.boardData[i] = val; // 恢复
+                }
+            }
+
+            // --- 求解器模式逻辑 ---
+
+            solveUserBoard() {
+                // 清除之前的求解结果（非固定部分）
+                const cells = document.querySelectorAll('.cell');
+                for(let i=0; i<81; i++) {
+                    if(!this.fixedMask[i]) {
+                        this.boardData[i] = null;
+                        cells[i].innerText = '';
+                        cells[i].className = 'cell'; // 重置样式
+                    }
+                }
+
+                // 验证当前输入是否合法
+                if(!this.isValidBoard(this.boardData)) {
+                    this.toast('当前输入的题目有冲突！');
+                    return;
+                }
+
+                // 深度拷贝并求解
+                let boardCopy = [...this.boardData];
+                if(this.solve(boardCopy)) {
+                    // 渲染结果
+                    for(let i=0; i<81; i++) {
+                        if(this.boardData[i] === null) {
+                            cells[i].innerText = boardCopy[i];
+                            cells[i].classList.add('solved'); // 绿色标记
+                            this.boardData[i] = boardCopy[i]; // 更新数据以便后续操作
+                        }
+                    }
+                    this.toast('求解成功');
+                } else {
+                    this.toast('此题无解');
+                }
+            }
+
+            // --- 交互逻辑 ---
+
+            onCellClick(index, el) {
+                // 游戏模式下，固定数字不可点
+                if(this.mode === 'game' && this.fixedMask[index]) return;
+                
+                // 选中效果
+                document.querySelectorAll('.cell').forEach(c => c.classList.remove('selected'));
+                el.classList.add('selected');
+                this.selectedCell = { index, el };
+
+                // 弹出键盘
+                document.getElementById('numpadOverlay').classList.add('show');
+            }
+
+            fill(num) {
+                if(!this.selectedCell) return;
+                const { index, el } = this.selectedCell;
+
+                this.boardData[index] = num;
+                el.innerText = num ? num : '';
+                
+                // 样式处理
+                el.classList.remove('error');
+                if(this.mode === 'solver') {
+                    // 求解器模式：填入的视为题目(Fixed)
+                    if(num) {
+                        this.fixedMask[index] = true;
+                        el.classList.add('fixed');
+                        el.classList.remove('solved');
+                    } else {
+                        this.fixedMask[index] = false;
+                        el.classList.remove('fixed');
+                    }
+                } else {
+                    // 游戏模式：填入的是用户输入
+                    el.classList.add('user-input');
+                }
+
+                this.updateRemain();
+                this.closePad(null, true);
+            }
+
+            closePad(e, force) {
+                if (force || e.target.id === 'numpadOverlay') {
+                    document.getElementById('numpadOverlay').classList.remove('show');
+                    if(this.selectedCell) {
+                        this.selectedCell.el.classList.remove('selected');
+                        this.selectedCell = null;
+                    }
+                }
+            }
+
+            resetBoard() {
+                if(this.mode === 'game') {
+                    // 仅清除用户输入
+                    const cells = document.querySelectorAll('.cell');
+                    for(let i=0; i<81; i++) {
+                        if(!this.fixedMask[i]) {
+                            this.boardData[i] = null;
+                            cells[i].innerText = '';
+                            cells[i].className = 'cell';
+                        } else {
+                            cells[i].className = 'cell fixed'; // 移除可能的error
+                        }
+                    }
+                } else {
+                    // 求解器：全清
+                    this.clearBoard();
+                }
+                this.updateRemain();
+            }
+
+            clearBoard() {
+                this.boardData.fill(null);
+                this.fixedMask.fill(false);
+                const cells = document.querySelectorAll('.cell');
+                cells.forEach(c => {
+                    c.innerText = '';
+                    c.className = 'cell';
+                });
+            }
+
+            updateRemain() {
+                if(this.mode === 'game') {
+                    const emptyCount = this.boardData.filter(x => x === null).length;
+                    document.getElementById('remain').innerText = emptyCount;
+                }
+            }
+
+            toast(msg) {
+                const t = document.getElementById('toast');
+                t.innerText = msg; t.classList.add('show');
+                setTimeout(()=>t.classList.remove('show'), 2000);
+            }
+
+            // --- 核心算法 ---
+
+            // 生成一个完整的数独终盘
+            generateSolution() {
+                let board = Array(81).fill(null);
+                this.solve(board, true); // true for random
+                return board;
+            }
+
+            // 回溯求解
+            solve(board, random = false) {
+                for (let i = 0; i < 81; i++) {
+                    if (board[i] === null) {
+                        let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                        if (random) nums.sort(() => Math.random() - 0.5);
+
+                        for (let num of nums) {
+                            if (this.isValidMove(board, i, num)) {
+                                board[i] = num;
+                                if (this.solve(board, random)) return true;
+                                board[i] = null;
+                            }
+                        }
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            isValidMove(board, index, num) {
+                const row = Math.floor(index / 9);
+                const col = index % 9;
+                
+                // 行检
+                for (let c = 0; c < 9; c++) if (board[row * 9 + c] === num) return false;
+                // 列检
+                for (let r = 0; r < 9; r++) if (board[r * 9 + col] === num) return false;
+                // 宫检
+                const startR = Math.floor(row / 3) * 3;
+                const startC = Math.floor(col / 3) * 3;
+                for (let r = 0; r < 3; r++) {
+                    for (let c = 0; c < 3; c++) {
+                        if (board[(startR + r) * 9 + (startC + c)] === num) return false;
+                    }
+                }
+                return true;
+            }
+
+            // 检查整个盘面是否合法（用于求解器输入检查）
+            isValidBoard(board) {
+                for(let i=0; i<81; i++) {
+                    if(board[i] !== null) {
+                        let val = board[i];
+                        board[i] = null; // 暂时拿出来
+                        if(!this.isValidMove(board, i, val)) return false;
+                        board[i] = val; // 放回去
+                    }
+                }
+                return true;
+            }
+            
+            // 检查是否是正确解答
+            isValidSolution(board) {
+                // 简单起见，只要填满且无冲突即为成功
+                return this.isValidBoard(board);
+            }
+        }
+
+        const app = new SudokuApp();
+    </script>
+</body>
+</html>

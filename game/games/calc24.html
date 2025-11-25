@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>24点计算器</title>
+<style>
+:root {
+  --wechat-green: #07c160;
+  --wechat-gray: #f6f6f6;
+  --wechat-dark: #333;
+  --wechat-light: #fff;
+}
+
+/* ====== 全局 ====== */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--wechat-gray);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ====== 顶部导航栏 ====== */
+.navbar {
+  height: 44px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--wechat-dark);
+}
+.navbar .nav-back {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  color: var(--wechat-green);
+  font-size: 22px;
+  text-decoration: none;
+}
+.navbar .nav-back::before {
+  content: "‹";
+  font-size: 28px;
+  line-height: 44px;
+}
+
+/* ====== 主体 ====== */
+.container {
+  padding: 20px;
+}
+
+/* 数字输入区 */
+.number-inputs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.number-inputs input {
+  width: 22%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: center;
+  outline: none;
+  background: #fff;
+}
+.number-inputs input:focus {
+  border-color: var(--wechat-green);
+}
+
+/* 数字选择区 */
+.number-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.number-select button {
+  flex: 1 0 18%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px 0;
+  font-size: 16px;
+  color: var(--wechat-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.number-select button:active {
+  background: var(--wechat-green);
+  color: #fff;
+  border-color: var(--wechat-green);
+}
+
+/* 按钮区 */
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.btn {
+  flex: 1;
+  background: var(--wechat-green);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 17px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn:active {
+  background: #06a150;
+}
+.btn-reset {
+  background: #fff;
+  color: var(--wechat-dark);
+  border: 1px solid #ddd;
+}
+.btn-reset:active {
+  background: #f0f0f0;
+}
+
+/* 结果区 */
+.result {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.result h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: var(--wechat-dark);
+}
+.result .card {
+  background: var(--wechat-gray);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin: 6px 0;
+  font-family: monospace;
+  color: #222;
+  border-left: 4px solid var(--wechat-green);
+}
+.result .empty {
+  color: #999;
+  font-size: 15px;
+  text-align: center;
+  padding: 10px 0;
+}
+</style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="../index.html" class="nav-back"></a>
+    <div>24点计算器</div>
+  </div>
+
+  <div class="container">
+    <div class="number-inputs">
+      <input type="number" id="num1" min="1" max="13" placeholder="1~13">
+      <input type="number" id="num2" min="1" max="13" placeholder="1~13">
+      <input type="number" id="num3" min="1" max="13" placeholder="1~13">
+      <input type="number" id="num4" min="1" max="13" placeholder="1~13">
+    </div>
+
+    <div class="number-select" id="numSelect"></div>
+
+    <div class="btn-group">
+      <button class="btn" onclick="calculate24()">计算</button>
+      <button class="btn btn-reset" onclick="resetAll()">重置</button>
+      <button class="btn" style="background:#10aeff" onclick="randomGenerate()">随机生成</button>
+    </div>
+
+    <div class="result" id="result">
+      <h3>结果：</h3>
+      <div class="empty">请输入或选择四个数字后点击“计算”</div>
+    </div>
+  </div>
+
+<script>
+const numSelect = document.getElementById('numSelect');
+for (let i = 1; i <= 13; i++) {
+  const btn = document.createElement('button');
+  btn.textContent = i;
+  btn.addEventListener('click', () => selectNumber(i));
+  numSelect.appendChild(btn);
+}
+
+let selectedNumbers = [];
+
+function selectNumber(num) {
+  if (selectedNumbers.length < 4) {
+    selectedNumbers.push(num);
+    updateInputs();
+  } else {
+    alert('只能选择4个数字');
+  }
+}
+
+function updateInputs() {
+  const inputs = [num1, num2, num3, num4];
+  inputs.forEach((input, i) => input.value = selectedNumbers[i] || '');
+}
+
+// ====== 重置功能 ======
+function resetAll() {
+  selectedNumbers = [];
+  [num1, num2, num3, num4].forEach(i => i.value = '');
+  document.getElementById('result').innerHTML = `
+    <h3>结果：</h3>
+    <div class="empty">请输入或选择四个数字后点击“计算”</div>
+  `;
+}
+
+// ====== 随机生成四个数字 ======
+function randomGenerate() {
+  selectedNumbers = [];
+  for (let i = 0; i < 4; i++) {
+    selectedNumbers.push(Math.floor(Math.random() * 13) + 1);
+  }
+  updateInputs();
+}
+
+// ====== 计算24点算法 ======
+function calculate24() {
+  const nums = [num1.value, num2.value, num3.value, num4.value].map(Number);
+  if (nums.some(isNaN)) {
+    alert('请输入或选择四个数字');
+    return;
+  }
+
+  const results = solve24(nums);
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = '<h3>结果：</h3>';
+
+  if (results.length === 0) {
+    resultDiv.innerHTML += '<div class="empty">没有找到可以得到 24 的组合。</div>';
+  } else {
+    results.slice(0, 100).forEach(exp => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.textContent = exp;
+      resultDiv.appendChild(card);
+    });
+  }
+}
+
+// ====== 24点求解核心逻辑 ======
+function solve24(nums) {
+  const results = new Set();
+
+  function helper(arr, exprs) {
+    if (arr.length === 1) {
+      if (Math.abs(arr[0] - 24) < 1e-6) results.add(exprs[0]);
+      return;
+    }
+
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr.length; j++) {
+        if (i === j) continue;
+        const a = arr[i], b = arr[j];
+        const expA = exprs[i], expB = exprs[j];
+        const next = [];
+        const nextExpr = [];
+
+        for (let k = 0; k < arr.length; k++) {
+          if (k !== i && k !== j) {
+            next.push(arr[k]);
+            nextExpr.push(exprs[k]);
+          }
+        }
+
+        const ops = [
+          [a + b, `(${expA}+${expB})`],
+          [a - b, `(${expA}-${expB})`],
+          [b - a, `(${expB}-${expA})`],
+          [a * b, `(${expA}×${expB})`]
+        ];
+        if (Math.abs(b) > 1e-6) ops.push([a / b, `(${expA}÷${expB})`]);
+        if (Math.abs(a) > 1e-6) ops.push([b / a, `(${expB}÷${expA})`]);
+
+        for (const [val, exp] of ops) {
+          next.push(val);
+          nextExpr.push(exp);
+          helper(next, nextExpr);
+          next.pop();
+          nextExpr.pop();
+        }
+      }
+    }
+  }
+
+  helper(nums, nums.map(String));
+  return Array.from(results);
+}
+</script>
+</body>
+</html>
