@@ -2,9 +2,10 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.2">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,327 +14,311 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
-  </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-  <meta name="description" content="1. observer:start()官方系统监视工具，最强最全，但只能在window下运行，可惜正式部署环境大多为Linux，且不与外界节点联通，导致只能在开发周期使用        2. crashdump_viewer:start()官方对崩溃日志（erl_crash.dump）的解析工具        3. observer_cli:start()文字窗口版本的observer">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="汇总 Erlang 开发和运行维护中常用的监控、调试与崩溃分析工具。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="erlang工具介绍">
-<meta property="og:url" content="http://example.com/2022/03/13/erlang%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:title" content="Erlang 工具介绍">
+<meta property="og:url" content="https://xinran282.github.io/2022/03/13/erlang%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/index.html">
 <meta property="og:site_name" content="欣然的备忘录">
-<meta property="og:description" content="1. observer:start()官方系统监视工具，最强最全，但只能在window下运行，可惜正式部署环境大多为Linux，且不与外界节点联通，导致只能在开发周期使用        2. crashdump_viewer:start()官方对崩溃日志（erl_crash.dump）的解析工具        3. observer_cli:start()文字窗口版本的observer">
+<meta property="og:description" content="汇总 Erlang 开发和运行维护中常用的监控、调试与崩溃分析工具。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-13T07:06:47.000Z">
-<meta property="article:modified_time" content="2022-04-13T07:45:58.613Z">
+<meta property="article:modified_time" content="2026-08-17T03:14:53.451Z">
 <meta property="article:author" content="欣然">
+<meta property="article:tag" content="Erlang">
+<meta property="article:tag" content="OTP">
+<meta property="article:tag" content="崩溃分析">
+<meta property="article:tag" content="监控">
+<meta property="article:tag" content="调试">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2022/03/13/erlang%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/">
+
+<link rel="canonical" href="https://xinran282.github.io/2022/03/13/erlang%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2022/03/13/erlang%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/","path":"2022/03/13/erlang工具介绍/","title":"Erlang 工具介绍"}</script>
 
-  <title>erlang工具介绍 | 欣然的备忘录</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Erlang 工具介绍 | 欣然的备忘录</title>
   
 
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">欣然的备忘录</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
     </a>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
     </div>
   </div>
 </div>
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
   </ul>
 </nav>
 
 
 
 
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-observer-start"><span class="nav-number">1.</span> <span class="nav-text">1. observer:start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-crashdump-viewer-start"><span class="nav-number">2.</span> <span class="nav-text">2. crashdump_viewer:start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-observer-cli-start"><span class="nav-number">3.</span> <span class="nav-text">3. observer_cli:start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-erlangpl"><span class="nav-number">4.</span> <span class="nav-text">4.  erlangpl</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-debugger"><span class="nav-number">5.</span> <span class="nav-text">5. debugger</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-dialyzer"><span class="nav-number">6.</span> <span class="nav-text">6. dialyzer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-reltool"><span class="nav-number">7.</span> <span class="nav-text">7. reltool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B7%A5%E5%85%B7"><span class="nav-number">8.</span> <span class="nav-text">8. 运行时工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-Syntax-Tool-%E6%A0%87%E7%AD%BE%E5%B7%A5%E5%85%B7"><span class="nav-number">9.</span> <span class="nav-text">9. Syntax_Tool  标签工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-cover-%E8%A6%86%E7%9B%96%E5%88%86%E6%9E%90"><span class="nav-number">10.</span> <span class="nav-text">10. cover 覆盖分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-redbug"><span class="nav-number">11.</span> <span class="nav-text">11. redbug</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#recon"><span class="nav-number">12.</span> <span class="nav-text">recon</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#recon-trace"><span class="nav-number">12.1.</span> <span class="nav-text">recon_trace</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Tool"><span class="nav-number">13.</span> <span class="nav-text">12. Tool</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#tags"><span class="nav-number">13.1.</span> <span class="nav-text">tags</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#cprof"><span class="nav-number">13.2.</span> <span class="nav-text">cprof</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#eprof"><span class="nav-number">13.3.</span> <span class="nav-text">eprof</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
 </div>
-    </header>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
 
     
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
+  </aside>
 
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
+    </div>
 
-          <div class="content post posts-expand">
-            
+    <div class="main-inner post posts-expand">
 
-    
+
+  
+
+
+<div class="post-block">
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/13/erlang%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2022/03/13/erlang%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="欣然">
-      <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Erlang 工具介绍 | 欣然的备忘录">
+      <meta itemprop="description" content="汇总 Erlang 开发和运行维护中常用的监控、调试与崩溃分析工具。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          erlang工具介绍
+          Erlang 工具介绍
         </h1>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2022-03-13 15:06:47" itemprop="dateCreated datePublished" datetime="2022-03-13T15:06:47+08:00">2022-03-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-13 15:45:58" itemprop="dateModified" datetime="2022-04-13T15:45:58+08:00">2022-04-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/erlang/" itemprop="url" rel="index"><span itemprop="name">erlang</span></a>
-                </span>
-            </span>
+      <time title="创建时间：2022-03-13 15:06:47" itemprop="dateCreated datePublished" datetime="2022-03-13T15:06:47+08:00">2022-03-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-17 11:14:53" itemprop="dateModified" datetime="2026-08-17T11:14:53+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Erlang/" itemprop="url" rel="index"><span itemprop="name">Erlang</span></a>
+        </span>
+    </span>
 
-          
+  
+</div>
 
+            <div class="post-description">汇总 Erlang 开发和运行维护中常用的监控、调试与崩溃分析工具。</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <h4 id="1-observer-start"><a href="#1-observer-start" class="headerlink" title="1. observer:start()"></a>1. observer:start()</h4><p>官方系统监视工具，最强最全，但只能在window下运行，可惜正式部署环境大多为Linux，且不与外界节点联通，导致只能在开发周期使用       </p>
-<h4 id="2-crashdump-viewer-start"><a href="#2-crashdump-viewer-start" class="headerlink" title="2. crashdump_viewer:start()"></a>2. crashdump_viewer:start()</h4><p>官方对崩溃日志（erl_crash.dump）的解析工具       </p>
-<h4 id="3-observer-cli-start"><a href="#3-observer-cli-start" class="headerlink" title="3. observer_cli:start()"></a>3. observer_cli:start()</h4><p>文字窗口版本的observer       </p>
-<h4 id="4-erlangpl"><a href="#4-erlangpl" class="headerlink" title="4.  erlangpl"></a>4.  erlangpl</h4><p>escript ./erlangpl -n Node -c Cookie                </p>
-<p>网页版系统信息监控，需要能联通监视节点        </p>
+    <div class="post-body" itemprop="articleBody"><h4 id="1-observer-start"><a href="#1-observer-start" class="headerlink" title="1. observer:start()"></a>1. observer:start()</h4><p>官方系统监视工具，最强最全，但只能在window下运行，可惜正式部署环境大多为Linux，且不与外界节点联通，导致只能在开发周期使用</p>
+<h4 id="2-crashdump-viewer-start"><a href="#2-crashdump-viewer-start" class="headerlink" title="2. crashdump_viewer:start()"></a>2. crashdump_viewer:start()</h4><p>官方对崩溃日志（erl_crash.dump）的解析工具</p>
+<h4 id="3-observer-cli-start"><a href="#3-observer-cli-start" class="headerlink" title="3. observer_cli:start()"></a>3. observer_cli:start()</h4><p>文字窗口版本的observer</p>
+<h4 id="4-erlangpl"><a href="#4-erlangpl" class="headerlink" title="4.  erlangpl"></a>4.  erlangpl</h4><p>escript .&#x2F;erlangpl -n Node -c Cookie</p>
+<p>网页版系统信息监控，需要能联通监视节点</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/erlanglab/erlangpl">项目地址</a></p>
 <h4 id="5-debugger"><a href="#5-debugger" class="headerlink" title="5. debugger"></a>5. debugger</h4><p>debugger:start().</p>
-<ul>
-<li>win下界面版断点调试、信息匹配跟踪                </li>
-<li>断点单进程比较合适，多进程并发服务器就不怎么适用了                </li>
-<li>信息匹配追踪，较难上手，比较适合通过命令方式在正式场景动态追踪问题        </li>
-</ul>
-<h4 id="6-dialyzer"><a href="#6-dialyzer" class="headerlink" title="6. dialyzer"></a>6. dialyzer</h4><p>静态分析工具，代码错误检查鸡肋工具，会有较多的非错误性输出        </p>
-<h4 id="7-reltool"><a href="#7-reltool" class="headerlink" title="7. reltool"></a>7. reltool</h4><p>todo 发布工具        </p>
-<h4 id="8-运行时工具"><a href="#8-运行时工具" class="headerlink" title="8. 运行时工具"></a>8. 运行时工具</h4><ol>
-<li>dbg<br> todo 信息追踪                </li>
-<li>dyntrace<br>  todo 信息追踪</li>
-<li>erts_alloc_config<pre><code> 内存分配配置
-</code></pre>
-</li>
-<li>msacc<pre><code> 调度\IO进程利用率查看
-</code></pre>
-</li>
-<li>scheduler<pre><code> 调度进程
-</code></pre>
-</li>
-<li>system_infomation<pre><code> 系统信息
-</code></pre>
-</li>
-</ol>
-<h4 id="9-Syntax-Tool-标签工具"><a href="#9-Syntax-Tool-标签工具" class="headerlink" title="9. Syntax_Tool  标签工具"></a>9. Syntax_Tool  标签工具</h4><ol>
-<li>prettypr<br> 输出美化</li>
-</ol>
-<h4 id="10-cover-覆盖分析"><a href="#10-cover-覆盖分析" class="headerlink" title="10. cover 覆盖分析"></a>10. cover 覆盖分析</h4><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">% 启动引用</span></span><br><span class="line">cover:start().</span><br><span class="line"><span class="comment">% 编译所要分析的模块</span></span><br><span class="line">cover:compile_beam(Module).</span><br><span class="line"><span class="comment">% 执行测试代码</span></span><br><span class="line"><span class="comment">% 覆盖分析</span></span><br><span class="line">cover:analyse(Module, coverrage, module | funcation | clause | line) -&gt; &#123;ok,  list()&#125;</span><br><span class="line"><span class="comment">% 调用次数分析</span></span><br><span class="line">cover:analyse(Module, calls, module | funcation | clause | line) -&gt; &#123;ok,  list()&#125;</span><br><span class="line"><span class="comment">% 输出到文件</span></span><br><span class="line">cover:analyse_to_file(Module).</span><br></pre></td></tr></table></figure>
+<p>win下界面版断点调试、信息匹配跟踪<br>断点单进程比较合适，多进程并发服务器就不怎么适用了<br>信息匹配追踪，较难上手，比较适合通过命令方式在正式场景动态追踪问题        </p>
+<h4 id="6-dialyzer"><a href="#6-dialyzer" class="headerlink" title="6. dialyzer"></a>6. dialyzer</h4><p>静态分析工具，代码错误检查鸡肋工具，会有较多的非错误性输出</p>
+<h4 id="7-reltool"><a href="#7-reltool" class="headerlink" title="7. reltool"></a>7. reltool</h4><p>todo 发布工具</p>
+<h4 id="8-运行时工具"><a href="#8-运行时工具" class="headerlink" title="8. 运行时工具"></a>8. 运行时工具</h4><p>dbg<br> todo 信息追踪<br>dyntrace<br>  todo 信息追踪<br>erts_alloc_config 内存分配配置</p>
+<p>msacc 调度\IO进程利用率查看</p>
+<p>scheduler 调度进程</p>
+<p>system_infomation 系统信息</p>
+<h4 id="9-Syntax-Tool-标签工具"><a href="#9-Syntax-Tool-标签工具" class="headerlink" title="9. Syntax_Tool  标签工具"></a>9. Syntax_Tool  标签工具</h4><p>prettypr<br> 输出美化</p>
+<h4 id="10-cover-覆盖分析"><a href="#10-cover-覆盖分析" class="headerlink" title="10. cover 覆盖分析"></a>10. cover 覆盖分析</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">% 启动引用</span><br><span class="line">cover:start().</span><br><span class="line">% 编译所要分析的模块</span><br><span class="line">cover:compile_beam(Module).</span><br><span class="line">% 执行测试代码</span><br><span class="line">% 覆盖分析</span><br><span class="line">cover:analyse(Module, coverrage, module | funcation | clause | line) -&gt; &#123;ok,  list()&#125;</span><br><span class="line">% 调用次数分析</span><br><span class="line">cover:analyse(Module, calls, module | funcation | clause | line) -&gt; &#123;ok,  list()&#125;</span><br><span class="line">% 输出到文件</span><br><span class="line">cover:analyse_to_file(Module).</span><br></pre></td></tr></table></figure>
+
+
 
 <h4 id="11-redbug"><a href="#11-redbug" class="headerlink" title="11. redbug"></a>11. redbug</h4><p><a target="_blank" rel="noopener" href="https://github.com/massemanet/redbug">项目地址</a></p>
 <p>基于erlang trace机制实现的，跟踪函数调用并输出的方法库</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">% 监听模块函数</span><br><span class="line">redbug:start(&quot;Module:Func&quot;).</span><br><span class="line">% 监听模块函数并打印结果 </span><br><span class="line">redbug:start(&quot;Module:Func-&gt;return&quot;).</span><br><span class="line">% 监听模块函数并打印调用堆栈</span><br><span class="line">redbug:start(&quot;Module:Func-&gt;stack&quot;).</span><br><span class="line"></span><br><span class="line">监听格式 &lt;MFA&gt; when &lt;guard&gt; -&gt; &lt;action&gt;</span><br><span class="line">MFA = Mod | Mod:Fun | Mod:Fun/Arity | Mod:Fun(_, atom, X)</span><br><span class="line">guard = is_atom(X) | X == 1</span><br><span class="line">action = return | stack | return;stack</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">% 监听模块函数</span><br><span class="line">redbug:start(&quot;Module:Func&quot;).</span><br><span class="line">% 监听模块函数并打印结果</span><br><span class="line">redbug:start(&quot;Module:Func-&gt;return&quot;).</span><br><span class="line">% 监听模块函数并打印调用堆栈</span><br><span class="line">redbug:start(&quot;Module:Func-&gt;stack&quot;).</span><br><span class="line"></span><br><span class="line">监听格式  when  -&gt;</span><br><span class="line">MFA = Mod | Mod:Fun | Mod:Fun/Arity | Mod:Fun(_, atom, X)</span><br><span class="line">guard = is_atom(X) | X == 1</span><br><span class="line">action = return | stack | return;stack</span><br></pre></td></tr></table></figure>
+
+
 
 <p>第二参数选项</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>默认</th>
-<th>释义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>msgs</td>
-<td>10</td>
-<td>条数</td>
-</tr>
-<tr>
-<td>time</td>
-<td>15000</td>
-<td>持续时间</td>
-</tr>
-<tr>
-<td>procs</td>
-<td>all</td>
-<td>all 或 指定的pid列表</td>
-</tr>
-<tr>
-<td>records</td>
-<td>[]</td>
-<td>模块名列表，从其取出record</td>
-</tr>
-<tr>
-<td>print_file</td>
-<td>“”</td>
-<td>打印输出文件，默认为standard_io(屏幕)</td>
-</tr>
-<tr>
-<td>print_mesc</td>
-<td>false</td>
-<td>显示时间精确到毫秒否</td>
-</tr>
-<tr>
-<td>print_return</td>
-<td>true</td>
-<td>显示返回值否</td>
-</tr>
-<tr>
-<td>print_fun</td>
-<td>‘’</td>
-<td>自定义显示函数</td>
-</tr>
-<tr>
-<td>arity</td>
-<td>false</td>
-<td>true:显示参数个数 false:显示参数详细</td>
-</tr>
-</tbody></table>
+<p>参数<br>默认<br>释义</p>
+<p>msgs<br>10<br>条数</p>
+<p>time<br>15000<br>持续时间</p>
+<p>procs<br>all<br>all 或 指定的pid列表</p>
+<p>records<br>[]<br>模块名列表，从其取出record</p>
+<p>print_file<br>“”<br>打印输出文件，默认为standard_io(屏幕)</p>
+<p>print_mesc<br>false<br>显示时间精确到毫秒否</p>
+<p>print_return<br>true<br>显示返回值否</p>
+<p>print_fun<br>‘’<br>自定义显示函数</p>
+<p>arity<br>false<br>true:显示参数个数 false:显示参数详细</p>
 <h4 id="recon"><a href="#recon" class="headerlink" title="recon"></a>recon</h4><h5 id="recon-trace"><a href="#recon-trace" class="headerlink" title="recon_trace"></a>recon_trace</h5><p>以安全的方式监听单个erlang节点的函数调用，会创建一个进程去收集信息并处理</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">recon_trace:calls(TSpecs::tspec() | [tspec(), ...], Max::max(), Opts::options()) -&gt; num_matches()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">recon_trace:call(&#123;dev, online, &#x27;_&#x27;&#125;, 100, []).</span><br><span class="line">% 带返回结果</span><br><span class="line">recon_trace:call(&#123;dev, online,  return_trace&#125;, 100, []).</span><br><span class="line">% 自定义输出打印 A = &#123;trace, Pid, call, &#123;M, F, A&#125;&#125;</span><br><span class="line">recon_trace:call(&#123;dev, online, &#x27;_&#x27;&#125;, 100, [&#123;formatter, fun(A)-&gt; io_lib:format(&quot;&quot;, [A]) end&#125;]).</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">recon_trace:calls(TSpecs::tspec() | [tspec(), ...], Max::max(), Opts::options()) -&gt; num_matches()</span><br><span class="line"></span><br><span class="line">recon_trace:call(&#123;dev, online, &#x27;_&#x27;&#125;, 100, []).</span><br><span class="line">% 带返回结果</span><br><span class="line">recon_trace:call(&#123;dev, online,  return_trace&#125;, 100, []).</span><br><span class="line">% 自定义输出打印 A = &#123;trace, Pid, call, &#123;M, F, A&#125;&#125;</span><br><span class="line">recon_trace:call(&#123;dev, online, &#x27;_&#x27;&#125;, 100, [&#123;formatter, fun(A)-&gt; io_lib:format(&quot;&quot;, [A]) end&#125;]).</span><br></pre></td></tr></table></figure>
 
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>默认</th>
-<th>释义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>scope</td>
-<td>global</td>
-<td>local:跟踪包括本地调用 global:只限mfa的调用</td>
-</tr>
-</tbody></table>
+
+
+
+
+
+
+<p>参数<br>默认<br>释义</p>
+<p>scope<br>global<br>local:跟踪包括本地调用 global:只限mfa的调用</p>
 <p><a target="_blank" rel="noopener" href="http://ferd.github.io/recon/recon_trace.html#type-args">文档</a></p>
 <h4 id="12-Tool"><a href="#12-Tool" class="headerlink" title="12. Tool"></a>12. Tool</h4><h5 id="tags"><a href="#tags" class="headerlink" title="tags"></a>tags</h5><p>标签，用于生成EMACS的跳转函数，几乎不用，ctags就能支持了，且有更多适合erlang编辑的工具，如eclipse，Idea</p>
 <h5 id="cprof"><a href="#cprof" class="headerlink" title="cprof"></a>cprof</h5><p>一个基于断点的调用次数分析工具，使用时性能相对会下降10%</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">% 使用流程</span><br><span class="line">cprof:start().          % 开始统计</span><br><span class="line">cprof:pause().         % 暂停统计 </span><br><span class="line">cprof:analyse().       % 分析并打印结果</span><br><span class="line">cprof:restart().        % 重新开启统计</span><br><span class="line">cprof:stop().           % 结束统计</span><br><span class="line">```     </span><br><span class="line">以上函数都支持0-3参数（analyse除外）</span><br><span class="line"> - 0参数 表示监听所有已加载的模块，除了eprof自身</span><br><span class="line"> - Mod 监听某个模块</span><br><span class="line"> - Mod, Fun 监听某个函数，无论是否有导出</span><br><span class="line"> - Mod, Fun, Arty</span><br><span class="line"></span><br><span class="line">分析输出数据：</span><br><span class="line">&#123;调用总次数, [&#123;Mod, 模块凑数, [&#123;&#123;Mod, Fun&#125;, 函数次数&#125;]&#125;]&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">##### eprof</span><br><span class="line">时间分析工具，基于trace监控指定进程（及其创建的进程）的函数时间消耗，会影响系统性能</span><br></pre></td></tr></table></figure>
-<p>% 使用流程<br>eprof:start().                                      % 启动分析进程<br>eprof:start_profiling(PidL).                     % 开始分析<br>eprof:stop_profiling().                         % 结束分析<br>eprof:log(FileName).                           % 分析结果输出到指定文件<br>eprof:analyze(procs | total [, Opt]).      % 分析输出结果<br>eprof:stop().                                    % 停止进程</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">% 使用流程</span><br><span class="line">cprof:start().          % 开始统计</span><br><span class="line">cprof:pause().         % 暂停统计</span><br><span class="line">cprof:analyse().       % 分析并打印结果</span><br><span class="line">cprof:restart().        % 重新开启统计</span><br><span class="line">cprof:stop().           % 结束统计</span><br></pre></td></tr></table></figure>
+<p>以上函数都支持0-3参数（analyse除外）</p>
+<ul>
+<li>0参数 表示监听所有已加载的模块，除了eprof自身</li>
+<li>Mod 监听某个模块</li>
+<li>Mod, Fun 监听某个函数，无论是否有导出</li>
+<li>Mod, Fun, Arty</li>
+</ul>
+<p>分析输出数据：<br>{调用总次数, [{Mod, 模块凑数, [{{Mod, Fun}, 函数次数}]}]}</p>
+<h5 id="eprof"><a href="#eprof" class="headerlink" title="eprof"></a>eprof</h5><p>时间分析工具，基于trace监控指定进程（及其创建的进程）的函数时间消耗，会影响系统性能</p>
 <pre><code>
+
+% 使用流程
+eprof:start().                                      % 启动分析进程
+eprof:start_profiling(PidL).                     % 开始分析
+eprof:stop_profiling().                         % 结束分析
+eprof:log(FileName).                           % 分析结果输出到指定文件
+eprof:analyze(procs | total [, Opt]).      % 分析输出结果
+eprof:stop().                                    % 停止进程
+
+
+
 - analyze
     - procs 分析结果按进程分类
     - total 分析结果汇总
-    - Opt = [&#123;filter, Filter&#125; | &#123;sort, Sort&#125;]
+    - Opt = [{filter, Filter} | {sort, Sort}]
         - Sort = time | calls | mfa 指定排序的列
         
 分析输出数据：
@@ -351,191 +336,70 @@ Mod:Fun/Arty  | 调用次数 | 占用百分比 | 总消耗时间 | 每次消耗�
     
     
 
-      <footer class="post-footer">
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item"></div>
-      <div class="post-nav-item">
-    <a href="/2022/04/13/hexo%E5%85%A5%E9%97%A8/" rel="next" title="hexo入门">
-      hexo入门 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Erlang/" rel="tag"># Erlang</a>
+              <a href="/tags/%E8%B0%83%E8%AF%95/" rel="tag"># 调试</a>
+              <a href="/tags/OTP/" rel="tag"># OTP</a>
+              <a href="/tags/%E7%9B%91%E6%8E%A7/" rel="tag"># 监控</a>
+              <a href="/tags/%E5%B4%A9%E6%BA%83%E5%88%86%E6%9E%90/" rel="tag"># 崩溃分析</a>
           </div>
-          
 
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-observer-start"><span class="nav-number">1.</span> <span class="nav-text">1. observer:start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-crashdump-viewer-start"><span class="nav-number">2.</span> <span class="nav-text">2. crashdump_viewer:start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-observer-cli-start"><span class="nav-number">3.</span> <span class="nav-text">3. observer_cli:start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-erlangpl"><span class="nav-number">4.</span> <span class="nav-text">4.  erlangpl</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-debugger"><span class="nav-number">5.</span> <span class="nav-text">5. debugger</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-dialyzer"><span class="nav-number">6.</span> <span class="nav-text">6. dialyzer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-reltool"><span class="nav-number">7.</span> <span class="nav-text">7. reltool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B7%A5%E5%85%B7"><span class="nav-number">8.</span> <span class="nav-text">8. 运行时工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-Syntax-Tool-%E6%A0%87%E7%AD%BE%E5%B7%A5%E5%85%B7"><span class="nav-number">9.</span> <span class="nav-text">9. Syntax_Tool  标签工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-cover-%E8%A6%86%E7%9B%96%E5%88%86%E6%9E%90"><span class="nav-number">10.</span> <span class="nav-text">10. cover 覆盖分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-redbug"><span class="nav-number">11.</span> <span class="nav-text">11. redbug</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#recon"><span class="nav-number">12.</span> <span class="nav-text">recon</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#recon-trace"><span class="nav-number">12.1.</span> <span class="nav-text">recon_trace</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-Tool"><span class="nav-number">13.</span> <span class="nav-text">12. Tool</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#tags"><span class="nav-number">13.1.</span> <span class="nav-text">tags</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#cprof"><span class="nav-number">13.2.</span> <span class="nav-text">cprof</span></a></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="欣然"
-      src="/images/avatar.jpg">
-  <p class="site-author-name" itemprop="name">欣然</p>
-  <div class="site-description" itemprop="description"></div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">4</span>
-        <span class="site-state-item-name">分类</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/13/hexo%E5%85%A5%E9%97%A8/" rel="next" title="Hexo 入门">
+                  Hexo 入门 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
 </div>
 
 
 
-      </div>
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
 
     </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
+  </footer>
 
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
   
-  &copy; 
-  <span itemprop="copyrightYear">2022</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">欣然</span>
-</div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
   </div>
 
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一套评估 Tool 调用是否真正正确的判断框架，覆盖意图、参数、时机、副作用、结果验证和失败处理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何评测一次 Tool 调用是否正确">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%84%E6%B5%8B%E4%B8%80%E6%AC%A1%20Tool%20%E8%B0%83%E7%94%A8%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="一套评估 Tool 调用是否真正正确的判断框架，覆盖意图、参数、时机、副作用、结果验证和失败处理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-13T03:41:00.000Z">
+<meta property="article:modified_time" content="2026-08-17T03:23:08.595Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="Tool Calling">
+<meta property="article:tag" content="函数调用">
+<meta property="article:tag" content="智能体">
+<meta property="article:tag" content="权限控制">
+<meta property="article:tag" content="评测">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%84%E6%B5%8B%E4%B8%80%E6%AC%A1%20Tool%20%E8%B0%83%E7%94%A8%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%84%E6%B5%8B%E4%B8%80%E6%AC%A1%20Tool%20%E8%B0%83%E7%94%A8%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE/","path":"2026/08/13/如何评测一次 Tool 调用是否正确/","title":"如何评测一次 Tool 调用是否正确"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>如何评测一次 Tool 调用是否正确 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AF%84%E6%B5%8B%E4%B8%80%E6%AC%A1-Tool-%E8%B0%83%E7%94%A8%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE"><span class="nav-number">1.</span> <span class="nav-text">如何评测一次 Tool 调用是否正确</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E7%9C%8B%E4%BB%BB%E5%8A%A1%E6%98%AF%E5%90%A6%E7%9C%9F%E7%9A%84%E9%9C%80%E8%A6%81%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.</span> <span class="nav-text">先看任务是否真的需要调用工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%8D%E7%9C%8B%E5%B7%A5%E5%85%B7%E9%80%89%E6%8B%A9%E6%98%AF%E5%90%A6%E5%8C%B9%E9%85%8D%E6%84%8F%E5%9B%BE"><span class="nav-number">1.2.</span> <span class="nav-text">再看工具选择是否匹配意图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E6%98%AF%E5%90%A6%E7%B2%BE%E7%A1%AE%E3%80%81%E5%AE%8C%E6%95%B4%E3%80%81%E4%B8%8D%E8%BF%87%E5%BA%A6"><span class="nav-number">1.3.</span> <span class="nav-text">参数是否精确、完整、不过度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E6%97%B6%E6%9C%BA%E6%98%AF%E5%90%A6%E5%90%88%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">调用时机是否合理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E5%B0%8A%E9%87%8D%E6%9D%83%E9%99%90%E3%80%81%E6%88%90%E6%9C%AC%E5%92%8C%E5%89%AF%E4%BD%9C%E7%94%A8"><span class="nav-number">1.5.</span> <span class="nav-text">是否尊重权限、成本和副作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E6%98%AF%E5%90%A6%E8%A2%AB%E6%AD%A3%E7%A1%AE%E8%A7%A3%E9%87%8A"><span class="nav-number">1.6.</span> <span class="nav-text">返回结果是否被正确解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E6%8A%8A%E7%BB%93%E6%9E%9C%E7%94%A8%E4%BA%8E%E4%B8%8B%E4%B8%80%E6%AD%A5"><span class="nav-number">1.7.</span> <span class="nav-text">是否把结果用于下一步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%B1%E8%B4%A5%E5%A4%84%E7%90%86%E4%B9%9F%E6%98%AF%E6%AD%A3%E7%A1%AE%E6%80%A7%E7%9A%84%E4%B8%80%E9%83%A8%E5%88%86"><span class="nav-number">1.8.</span> <span class="nav-text">失败处理也是正确性的一部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%AE%9E%E7%94%A8%E8%AF%84%E5%88%86%E8%A1%A8"><span class="nav-number">1.9.</span> <span class="nav-text">一个实用评分表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E5%88%A4%E6%96%AD"><span class="nav-number">1.10.</span> <span class="nav-text">最终判断</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%84%E6%B5%8B%E4%B8%80%E6%AC%A1%20Tool%20%E8%B0%83%E7%94%A8%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="如何评测一次 Tool 调用是否正确 | 欣然的备忘录">
+      <meta itemprop="description" content="一套评估 Tool 调用是否真正正确的判断框架，覆盖意图、参数、时机、副作用、结果验证和失败处理。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何评测一次 Tool 调用是否正确
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-13 11:41:00" itemprop="dateCreated datePublished" datetime="2026-08-13T11:41:00+08:00">2026-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-17 11:23:08" itemprop="dateModified" datetime="2026-08-17T11:23:08+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">一套评估 Tool 调用是否真正正确的判断框架，覆盖意图、参数、时机、副作用、结果验证和失败处理。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="如何评测一次-Tool-调用是否正确"><a href="#如何评测一次-Tool-调用是否正确" class="headerlink" title="如何评测一次 Tool 调用是否正确"></a>如何评测一次 Tool 调用是否正确</h1><p>评测一次 Tool 调用，不能只看它有没有返回成功，也不能只看模型有没有“用工具”。更可靠的判断是：这次调用是否在正确的时机，用正确的工具、正确的参数，对正确的对象做了正确范围内的操作，并把结果用于后续决策。</p>
+<p>换句话说，Tool 调用的正确性不是单点判断，而是一条链路。链路上任何一环错了，最终都可能表现成“工具没坏，但任务做错了”。</p>
+<h2 id="先看任务是否真的需要调用工具"><a href="#先看任务是否真的需要调用工具" class="headerlink" title="先看任务是否真的需要调用工具"></a>先看任务是否真的需要调用工具</h2><p>第一步不是检查参数，而是检查调用本身有没有必要。</p>
+<p>有些问题可以直接回答，调用工具反而增加噪声。比如用户只问“解释这个概念”，模型却去搜文件或联网，通常不是好调用。相反，如果用户问的是本地代码、当前价格、最新政策、具体文件内容、网页状态，模型不调用工具就直接回答，风险也很高。</p>
+<p>可以用三个问题判断：</p>
+<ul>
+<li>用户的请求是否依赖外部状态、本地状态或实时状态？</li>
+<li>模型记忆中的答案是否可能过期、不完整或不可验证？</li>
+<li>工具返回的信息是否会改变最终答案？</li>
+</ul>
+<p>如果三个问题都是否定，工具调用未必必要。如果至少一个是肯定，就要看模型是否选择了合适的工具。</p>
+<h2 id="再看工具选择是否匹配意图"><a href="#再看工具选择是否匹配意图" class="headerlink" title="再看工具选择是否匹配意图"></a>再看工具选择是否匹配意图</h2><p>正确的工具选择，要能贴近用户真正要完成的事。</p>
+<p>用户要找代码里的调用点，优先用搜索工具；用户要修改文件，才进入编辑工具；用户要验证页面视觉效果，就该打开浏览器或截图；用户要查最新信息，就需要联网或权威数据源。工具的名称相近不代表用途相同，能返回结果也不代表它适合当前任务。</p>
+<p>一个常见误判是“工具调用成功，所以选择正确”。比如用全文搜索去理解一个结构化配置文件，可能能搜到关键词，但漏掉继承、默认值和解析规则。又比如用网页搜索回答某个仓库里的实现细节，往往绕远了，甚至把外部资料误当成本地事实。</p>
+<p>评测时要问：如果换成更贴近任务的工具，结果会不会更完整、更可验证、更少副作用？如果答案是会，那原调用就不算理想。</p>
+<h2 id="参数是否精确、完整、不过度"><a href="#参数是否精确、完整、不过度" class="headerlink" title="参数是否精确、完整、不过度"></a>参数是否精确、完整、不过度</h2><p>工具选对之后，参数决定调用质量。</p>
+<p>好的参数通常有三个特征：范围明确、对象准确、约束充分。搜索代码时，查询词不能太泛；打开文件时，路径要对；调用 API 时，分页、过滤条件、时间范围、权限范围要符合任务。参数不足会漏信息，参数过宽会带来噪声，参数过强则可能排除正确答案。</p>
+<p>可以把参数错误分成四类：</p>
+<ul>
+<li>对象错：查错文件、点错链接、请求错接口。</li>
+<li>范围错：本该查整个项目，却只查了一个目录；本该限制日期，却查了全部历史。</li>
+<li>格式错：参数类型、编码、路径转义、时间格式不符合工具要求。</li>
+<li>约束错：用户只要求查看，模型却传入会修改状态的选项。</li>
+</ul>
+<p>评测参数时，不要只看“工具有没有报错”。很多错误参数不会报错，只会返回一个看似合理但不完整的结果。</p>
+<h2 id="调用时机是否合理"><a href="#调用时机是否合理" class="headerlink" title="调用时机是否合理"></a>调用时机是否合理</h2><p>Tool 调用还有时机问题。</p>
+<p>太早调用，模型可能还没理解任务，查了一堆无关信息。太晚调用，模型可能已经基于猜测形成结论，只把工具结果当作装饰。正确的时机通常是在模型明确了待验证的问题之后，在下结论之前。</p>
+<p>对于多步任务，还要看调用顺序。先读项目结构，再改代码；先确认现有风格，再加组件；先获取最新事实，再做建议。这些顺序不是形式主义，而是为了降低误判和返工。</p>
+<p>如果一次调用发生在错误的前提之后，即使调用本身参数无误，它服务的也是错误目标。</p>
+<h2 id="是否尊重权限、成本和副作用"><a href="#是否尊重权限、成本和副作用" class="headerlink" title="是否尊重权限、成本和副作用"></a>是否尊重权限、成本和副作用</h2><p>有些工具只是读信息，有些工具会写文件、发请求、启动服务、删除资源、创建外部对象。评测这类调用时，必须把副作用纳入正确性。</p>
+<p>一次正确的 Tool 调用应该满足：</p>
+<ul>
+<li>没有越过用户授权的边界。</li>
+<li>没有对无关文件或外部系统产生修改。</li>
+<li>对高风险操作有确认或保护。</li>
+<li>成本与收益相称，不为小问题做大范围扫描或昂贵请求。</li>
+<li>在可恢复性上有基本考虑，比如修改前知道目标文件是什么。</li>
+</ul>
+<p>“完成任务”不能抵消不必要的副作用。一个命令生成了正确结果，但顺手改了无关文件，仍然是不正确的调用。</p>
+<h2 id="返回结果是否被正确解释"><a href="#返回结果是否被正确解释" class="headerlink" title="返回结果是否被正确解释"></a>返回结果是否被正确解释</h2><p>很多 Tool 调用的错误不发生在调用时，而发生在解释结果时。</p>
+<p>搜索没有结果，不等于事实不存在；接口返回空列表，可能是权限、分页、过滤条件或时间范围的问题；命令退出码为 0，也不表示业务验证通过；网页打开成功，也不表示页面内容加载完成。</p>
+<p>评测时要看模型有没有区分这些层次：</p>
+<ul>
+<li>工具执行是否成功。</li>
+<li>返回数据是否覆盖了问题范围。</li>
+<li>结果是否需要二次验证。</li>
+<li>结果中的不确定性有没有被保留。</li>
+<li>后续回答是否忠实反映了工具输出。</li>
+</ul>
+<p>如果模型把部分证据说成完整证据，把推断说成事实，把失败调用包装成确定结论，这次调用链路就是错的。</p>
+<h2 id="是否把结果用于下一步"><a href="#是否把结果用于下一步" class="headerlink" title="是否把结果用于下一步"></a>是否把结果用于下一步</h2><p>工具不是表演动作。一次调用是否正确，还要看返回结果有没有进入后续推理。</p>
+<p>如果模型调用了搜索工具，却没有引用搜索到的文件；运行了测试，却没有根据失败信息修改判断；打开了网页，却继续复述调用前的猜测，这些都说明工具结果没有真正被使用。</p>
+<p>好的调用会改变模型的状态：缩小范围、确认假设、推翻猜测、生成下一步操作，或让最终回答更具体。评测时可以问一句：删除这次 Tool 调用，最终答案会不会几乎不变？如果不会变，它可能只是无效调用。</p>
+<h2 id="失败处理也是正确性的一部分"><a href="#失败处理也是正确性的一部分" class="headerlink" title="失败处理也是正确性的一部分"></a>失败处理也是正确性的一部分</h2><p>工具失败并不自动意味着调用错误。网络断开、权限不足、文件不存在、服务未启动，都可能是环境问题。关键在于失败后怎么处理。</p>
+<p>合理的失败处理包括：</p>
+<ul>
+<li>说明失败发生在哪一步。</li>
+<li>判断失败是参数问题、权限问题、环境问题，还是工具本身问题。</li>
+<li>在安全范围内尝试替代路径。</li>
+<li>不把失败结果当成事实结论。</li>
+<li>必要时向用户请求授权或补充信息。</li>
+</ul>
+<p>不合理的失败处理包括反复执行同一个无效调用、静默跳过关键验证、编造结果，或者在未确认风险时升级到有副作用的操作。</p>
+<h2 id="一个实用评分表"><a href="#一个实用评分表" class="headerlink" title="一个实用评分表"></a>一个实用评分表</h2><p>可以用 10 分制快速评估一次 Tool 调用：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>低分表现</th>
+<th>高分表现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>必要性</td>
+<td>不需要工具却调用，或需要工具却没调用</td>
+<td>调用正好补足模型无法可靠知道的信息</td>
+</tr>
+<tr>
+<td>工具选择</td>
+<td>工具与任务不匹配</td>
+<td>工具直接对应任务目标</td>
+</tr>
+<tr>
+<td>参数质量</td>
+<td>对象、范围、格式或约束错误</td>
+<td>参数精确、完整、不过度</td>
+</tr>
+<tr>
+<td>时机顺序</td>
+<td>基于错误前提调用，或调用顺序颠倒</td>
+<td>在下结论前验证关键事实</td>
+</tr>
+<tr>
+<td>副作用控制</td>
+<td>越权、误改、成本过高</td>
+<td>权限、范围和风险都受控</td>
+</tr>
+<tr>
+<td>结果解释</td>
+<td>把空结果、部分结果或失败结果误读成事实</td>
+<td>区分事实、推断和不确定性</td>
+</tr>
+<tr>
+<td>后续使用</td>
+<td>调了工具但没有影响答案</td>
+<td>工具结果明确推动下一步</td>
+</tr>
+<tr>
+<td>失败处理</td>
+<td>静默失败、重复失败或编造结果</td>
+<td>诊断原因，尝试安全替代路径</td>
+</tr>
+</tbody></table>
+<p>如果要做更正式的评测，可以给每个维度 0 到 2 分：0 表示明显错误，1 表示可接受但有缺口，2 表示可靠。总分 16 分里，低于 10 分通常需要人工复核；低于 8 分，基本不能算一次正确调用。</p>
+<h2 id="最终判断"><a href="#最终判断" class="headerlink" title="最终判断"></a>最终判断</h2><p>一次 Tool 调用正确，不等于它成功返回；成功返回，也不等于任务完成。</p>
+<p>更稳的判断标准是：它是否减少了不确定性，是否保持在用户授权和任务范围内，是否让后续答案更接近事实。如果一次调用满足这些条件，即使中途遇到失败并诚实处理，也可以算正确。反过来，如果它只是制造了一个看起来可靠的结果，却没有服务于真实问题，那就只是一次漂亮但错误的调用。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 智能体</a>
+              <a href="/tags/%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/" rel="tag"># 权限控制</a>
+              <a href="/tags/Tool-Calling/" rel="tag"># Tool Calling</a>
+              <a href="/tags/%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/" rel="tag"># 函数调用</a>
+              <a href="/tags/%E8%AF%84%E6%B5%8B/" rel="tag"># 评测</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%81%E6%98%8E%E6%96%B0%E7%9A%84%20Prompt%20%E6%AF%94%E6%97%A7%E7%89%88%E6%9B%B4%E5%A5%BD/" rel="prev" title="如何证明新的 Prompt 比旧版更好">
+                  <i class="fa fa-angle-left"></i> 如何证明新的 Prompt 比旧版更好
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/%E5%A4%A7%E5%9E%8B%E4%BB%A3%E7%A0%81%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%8F%96%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF%E8%80%8C%E4%B8%8D%E6%92%91%E7%88%86%E4%B8%8A%E4%B8%8B%E6%96%87/" rel="next" title="大型代码项目中，如何快速获取相关信息而不撑爆上下文">
+                  大型代码项目中，如何快速获取相关信息而不撑爆上下文 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

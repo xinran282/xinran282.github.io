@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="介绍 Langfuse 的定位、核心能力、接入方式、部署选择和适用场景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/17/Langfuse%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E7%BB%99%20LLM%20%E5%BA%94%E7%94%A8%E8%A3%85%E4%B8%8A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E5%92%8C%E8%AF%84%E6%B5%8B%E9%97%AD%E7%8E%AF/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="介绍 Langfuse 的定位、核心能力、接入方式、部署选择和适用场景。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-17T01:50:00.000Z">
+<meta property="article:modified_time" content="2026-08-17T03:13:23.907Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="LLMOps">
+<meta property="article:tag" content="Langfuse">
+<meta property="article:tag" content="Prompt 评测">
+<meta property="article:tag" content="可观测性">
+<meta property="article:tag" content="大语言模型">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/17/Langfuse%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E7%BB%99%20LLM%20%E5%BA%94%E7%94%A8%E8%A3%85%E4%B8%8A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E5%92%8C%E8%AF%84%E6%B5%8B%E9%97%AD%E7%8E%AF/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/17/Langfuse%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E7%BB%99%20LLM%20%E5%BA%94%E7%94%A8%E8%A3%85%E4%B8%8A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E5%92%8C%E8%AF%84%E6%B5%8B%E9%97%AD%E7%8E%AF/","path":"2026/08/17/Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环/","title":"Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-games"><a href="/game/" rel="section"><i class="fa fa-gamepad fa-fw"></i>games</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Langfuse-%E4%BB%8B%E7%BB%8D%EF%BC%9A%E7%BB%99-LLM-%E5%BA%94%E7%94%A8%E8%A3%85%E4%B8%8A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E5%92%8C%E8%AF%84%E6%B5%8B%E9%97%AD%E7%8E%AF"><span class="nav-number">1.</span> <span class="nav-text">Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E6%8A%8A%E5%AE%83%E6%94%BE%E5%88%B0%E6%8A%80%E6%9C%AF%E6%A0%88%E9%87%8C"><span class="nav-number">1.1.</span> <span class="nav-text">先把它放到技术栈里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E8%83%BD%E5%8A%9B"><span class="nav-number">1.2.</span> <span class="nav-text">核心能力</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-LLM-%E5%BA%94%E7%94%A8%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. LLM 应用可观测性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Prompt-%E7%AE%A1%E7%90%86"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. Prompt 管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%AF%84%E6%B5%8B"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 评测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Datasets-%E5%92%8C%E5%AE%9E%E9%AA%8C"><span class="nav-number">1.2.4.</span> <span class="nav-text">4. Datasets 和实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Playground"><span class="nav-number">1.2.5.</span> <span class="nav-text">5. Playground</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%8E%A5%E5%85%A5"><span class="nav-number">1.3.</span> <span class="nav-text">如何接入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E9%80%89%E6%8B%A9"><span class="nav-number">1.4.</span> <span class="nav-text">部署选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Langfuse-Cloud"><span class="nav-number">1.4.1.</span> <span class="nav-text">Langfuse Cloud</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E6%89%98%E7%AE%A1"><span class="nav-number">1.4.2.</span> <span class="nav-text">自托管</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Langfuse-%E5%92%8C%E5%87%A0%E7%B1%BB%E5%B7%A5%E5%85%B7%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C"><span class="nav-number">1.5.</span> <span class="nav-text">Langfuse 和几类工具有什么不同</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C-LangChain-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.5.1.</span> <span class="nav-text">和 LangChain 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C%E6%99%AE%E9%80%9A%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.5.2.</span> <span class="nav-text">和普通日志系统的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C-Prompt-%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.5.3.</span> <span class="nav-text">和 Prompt 管理工具的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E5%90%88%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%BC%95%E5%85%A5"><span class="nav-number">1.6.</span> <span class="nav-text">适合什么时候引入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%97%B6%E6%9C%80%E5%AE%B9%E6%98%93%E5%BF%BD%E7%95%A5%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-number">1.7.</span> <span class="nav-text">使用时最容易忽略的地方</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%82%E6%B5%8B%E6%95%B0%E6%8D%AE%E6%9C%AC%E8%BA%AB%E5%8F%AF%E8%83%BD%E5%BE%88%E6%95%8F%E6%84%9F"><span class="nav-number">1.7.1.</span> <span class="nav-text">观测数据本身可能很敏感</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E6%95%B0%E6%8D%AE%E4%B8%8D%E7%AD%89%E4%BA%8E%E6%9C%89%E7%BB%93%E8%AE%BA"><span class="nav-number">1.7.2.</span> <span class="nav-text">有数据不等于有结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E6%B5%8B%E6%8C%87%E6%A0%87%E4%B8%8D%E8%83%BD%E8%84%B1%E7%A6%BB%E4%B8%9A%E5%8A%A1"><span class="nav-number">1.7.3.</span> <span class="nav-text">评测指标不能脱离业务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MIT-%E8%AE%B8%E5%8F%AF%E8%AF%81%E9%9C%80%E8%A6%81%E7%9C%8B%E4%BE%8B%E5%A4%96"><span class="nav-number">1.7.4.</span> <span class="nav-text">MIT 许可证需要看例外</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%8A%A1%E5%AE%9E%E7%9A%84%E8%90%BD%E5%9C%B0%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.8.</span> <span class="nav-text">一个务实的落地顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E5%88%A4%E6%96%AD"><span class="nav-number">1.9.</span> <span class="nav-text">最后的判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="nav-number">1.10.</span> <span class="nav-text">相关资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/17/Langfuse%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E7%BB%99%20LLM%20%E5%BA%94%E7%94%A8%E8%A3%85%E4%B8%8A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E5%92%8C%E8%AF%84%E6%B5%8B%E9%97%AD%E7%8E%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环 | 欣然的备忘录">
+      <meta itemprop="description" content="介绍 Langfuse 的定位、核心能力、接入方式、部署选择和适用场景。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-17 09:50:00 / 修改时间：11:13:23" itemprop="dateCreated datePublished" datetime="2026-08-17T09:50:00+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">介绍 Langfuse 的定位、核心能力、接入方式、部署选择和适用场景。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Langfuse-介绍：给-LLM-应用装上可观测性和评测闭环"><a href="#Langfuse-介绍：给-LLM-应用装上可观测性和评测闭环" class="headerlink" title="Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环"></a>Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环</h1><p>一个 LLM 应用刚做出来时，看到“回答不对”通常已经够头疼了。真正上线后，问题会继续分裂：是哪一轮模型调用出了错？检索拿到了什么？Prompt 什么时候变的？不同模型的成本和延迟怎样？用户到底在哪些场景下不满意？</p>
+<p>Langfuse 处理的就是这些问题。</p>
+<p>它是一个开源的 LLM 工程平台，帮助团队开发、监控、评测和调试 AI 应用。你可以把它理解成 LLM 应用的一层“观测与实验基础设施”：应用运行时把调用链、检索、Embedding、Agent 动作和用户反馈记录下来，团队再在 Langfuse 里查看、标注、比较和迭代。</p>
+<p>它不是模型，也不是 Agent 框架。<strong>Langfuse 负责让模型应用变得可观察、可比较、可改进；真正执行推理的仍然是你的模型和应用代码。</strong></p>
+<h2 id="先把它放到技术栈里"><a href="#先把它放到技术栈里" class="headerlink" title="先把它放到技术栈里"></a>先把它放到技术栈里</h2><p>一个典型的问答或 Agent 应用，大致会经过这样的流程：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">用户请求</span><br><span class="line">   ↓</span><br><span class="line">应用入口</span><br><span class="line">   ↓</span><br><span class="line">Prompt → 模型调用 → 工具 / Agent 动作</span><br><span class="line">   ↓             ↓</span><br><span class="line">检索 / Embedding  业务逻辑</span><br><span class="line">   ↓</span><br><span class="line">最终回答</span><br><span class="line">   ↓</span><br><span class="line">用户反馈与评测结果</span><br></pre></td></tr></table></figure>
+
+<p>没有观测系统时，你可能只记录最终输入和输出。这样一旦回答出错，中间发生了什么已经看不见了。</p>
+<p>接入 Langfuse 后，可以把一次请求组织成 trace，下面挂着多个 observation：模型调用、检索、Embedding、工具调用和自定义业务步骤。排查问题时，团队看到的是一棵带上下文的执行记录，而不是一行孤零零的字符串日志。</p>
+<p>这也是它和普通应用日志的区别：日志告诉你“某件事发生了”，LLM tracing 还要回答“这次回答是怎么一步步生成的”。</p>
+<h2 id="核心能力"><a href="#核心能力" class="headerlink" title="核心能力"></a>核心能力</h2><h3 id="1-LLM-应用可观测性"><a href="#1-LLM-应用可观测性" class="headerlink" title="1. LLM 应用可观测性"></a>1. LLM 应用可观测性</h3><p>Langfuse 的 tracing 可以记录模型调用和周边逻辑，例如 RAG 检索、Embedding、Agent 动作、工具执行以及用户会话。界面里可以检查输入输出、模型参数、延迟、Token 和成本等信息。</p>
+<p>对于 Agent，链路尤其重要。一次请求可能调用多个工具、经过几轮模型决策；只看最后的文本，很难判断究竟是规划错误、工具返回异常，还是模型没有正确利用结果。把步骤串起来后，问题定位会具体很多。</p>
+<h3 id="2-Prompt-管理"><a href="#2-Prompt-管理" class="headerlink" title="2. Prompt 管理"></a>2. Prompt 管理</h3><p>Prompt 往往先散落在代码、配置文件和实验笔记里，改过几次之后，没人说得清线上跑的是哪个版本。Langfuse 提供集中管理和版本控制，让 Prompt 可以被团队协作编辑、比较和发布。</p>
+<p>它还支持缓存，官方文档将其作为减少 Prompt 迭代延迟的一部分。实际使用时，仍需把环境、版本和回滚策略设计清楚。Prompt 进入中心化管理，不代表发布流程自动完善。</p>
+<h3 id="3-评测"><a href="#3-评测" class="headerlink" title="3. 评测"></a>3. 评测</h3><p>LLM 应用的质量很难只靠单元测试判断。一个答案可能语法正确，却没有回答问题；也可能内容不错，但引用来源不对。</p>
+<p>Langfuse 支持多种评测方式：</p>
+<ul>
+<li>LLM-as-a-judge；</li>
+<li>代码评估器；</li>
+<li>用户反馈收集；</li>
+<li>人工标注；</li>
+<li>通过 API 或 SDK 接入自定义评测流水线。</li>
+</ul>
+<p>这使评测可以从一次性的 Demo 检查，变成持续迭代的一部分。要注意，LLM-as-a-judge 也会犯错，评分标准和样本集仍然需要人工设计与抽查。</p>
+<h3 id="4-Datasets-和实验"><a href="#4-Datasets-和实验" class="headerlink" title="4. Datasets 和实验"></a>4. Datasets 和实验</h3><p>Datasets 用来保存测试集和基准样本。你可以用它做上线前测试、结构化实验，也可以比较 Prompt、模型或检索策略的变化。</p>
+<p>例如，一次改动可能让平均评分上升，但让某一类关键问题变差。把固定样本集保留下来，才能发现这种回归，而不是凭几次手动试问下结论。</p>
+<h3 id="5-Playground"><a href="#5-Playground" class="headerlink" title="5. Playground"></a>5. Playground</h3><p>Playground 用来快速尝试 Prompt 和模型配置。当你在 trace 中发现一个坏案例，可以直接带着问题进入实验环境，修改 Prompt 或模型参数，再观察结果变化。</p>
+<p>这个反馈回路很实用：线上发现问题，抽取案例，调整方案，用数据集回放，确认改动是否真的改善。否则调 Prompt 很容易变成凭感觉改几句文字。</p>
+<h2 id="如何接入"><a href="#如何接入" class="headerlink" title="如何接入"></a>如何接入</h2><p>Langfuse 提供 Python 和 JavaScript&#x2F;TypeScript SDK，也为常见框架和模型调用提供集成。</p>
+<p>官方 README 列出的常见集成包括：</p>
+<ul>
+<li>OpenAI Python、JS&#x2F;TS SDK；</li>
+<li>LangChain、LlamaIndex、Haystack；</li>
+<li>LiteLLM；</li>
+<li>Vercel AI SDK；</li>
+<li>Mastra 以及多种 Agent 框架；</li>
+<li>Dify、Open WebUI、Flowise、Langflow 等应用工具；</li>
+<li>直接使用公共 API。</li>
+</ul>
+<p>最小接入通常是三件事：创建项目，生成 API 凭证，在应用入口或模型调用周围添加观测。Python 示例可以从 <code>@observe()</code> 装饰器开始；需要更细粒度的记录时，再为检索、工具和自定义步骤补充 instrumentation。</p>
+<p>接入时建议先选一条真实链路，不要一开始就把所有函数都埋点。先回答三个问题：哪些步骤影响回答质量？哪些步骤需要排查延迟和成本？哪些字段包含敏感信息？这会决定你记录什么、如何脱敏，以及 trace 的层级怎么设计。</p>
+<h2 id="部署选择"><a href="#部署选择" class="headerlink" title="部署选择"></a>部署选择</h2><h3 id="Langfuse-Cloud"><a href="#Langfuse-Cloud" class="headerlink" title="Langfuse Cloud"></a>Langfuse Cloud</h3><p>适合想快速开始的团队。注册项目、拿到密钥、接入 SDK，就可以把精力放在应用本身。</p>
+<h3 id="自托管"><a href="#自托管" class="headerlink" title="自托管"></a>自托管</h3><p>Langfuse 支持在自己的基础设施上部署。官方提供 Docker Compose、本地部署、虚拟机部署、Kubernetes Helm，以及 AWS、Azure、GCP 的 Terraform 模板。</p>
+<p>从仓库的部署说明看，自托管涉及 Web、Worker、数据库和 ClickHouse 等组件。生产环境采用自托管时，需要自己负责升级、备份、容量、网络和权限。它适合有合规要求、希望控制数据位置，或已经具备平台运维能力的团队。</p>
+<p>“五分钟本地跑起来”和“长期稳定地运营一套观测平台”是两件事。前者适合验证方案，后者要认真估算 trace 量、保留周期和存储成本。</p>
+<h2 id="Langfuse-和几类工具有什么不同"><a href="#Langfuse-和几类工具有什么不同" class="headerlink" title="Langfuse 和几类工具有什么不同"></a>Langfuse 和几类工具有什么不同</h2><h3 id="和-LangChain-的区别"><a href="#和-LangChain-的区别" class="headerlink" title="和 LangChain 的区别"></a>和 LangChain 的区别</h3><p>LangChain 是应用开发框架，帮助你组织模型、工具、检索和 Agent 流程。Langfuse 是观测、Prompt 和评测平台。两者可以一起使用，LangChain 负责流程，Langfuse 负责记录和分析。</p>
+<h3 id="和普通日志系统的区别"><a href="#和普通日志系统的区别" class="headerlink" title="和普通日志系统的区别"></a>和普通日志系统的区别</h3><p>ELK、云日志或通用 APM 当然可以保存文本和请求记录，但 LLM 应用需要额外理解 Token、模型参数、Prompt 版本、trace 层级、评分和数据集。Langfuse 的数据模型和界面围绕这些对象设计。</p>
+<h3 id="和-Prompt-管理工具的区别"><a href="#和-Prompt-管理工具的区别" class="headerlink" title="和 Prompt 管理工具的区别"></a>和 Prompt 管理工具的区别</h3><p>Prompt 只是 LLM 应用的一部分。单独管理 Prompt 能解决版本问题，但无法完整回答某个线上请求为什么失败。Langfuse 把 Prompt、trace、评测和数据集放进一套工作流里。</p>
+<h2 id="适合什么时候引入"><a href="#适合什么时候引入" class="headerlink" title="适合什么时候引入"></a>适合什么时候引入</h2><p>如果你还在做一次性原型，应用只有几次模型调用，先用简单日志可能更省事。Langfuse 开始显出价值，通常是在以下阶段：</p>
+<ul>
+<li>应用已经有真实用户和持续流量；</li>
+<li>链路包含 RAG、工具调用或多轮 Agent；</li>
+<li>团队需要比较模型和 Prompt，而不是凭感觉选择；</li>
+<li>线上错误难以复现；</li>
+<li>需要把用户反馈纳入质量评估；</li>
+<li>成本、延迟和数据合规开始成为工程问题。</li>
+</ul>
+<p>尤其是 Agent 应用，越早记录结构化 trace，后面越少依赖“我记得当时它好像先调用了搜索”。</p>
+<h2 id="使用时最容易忽略的地方"><a href="#使用时最容易忽略的地方" class="headerlink" title="使用时最容易忽略的地方"></a>使用时最容易忽略的地方</h2><h3 id="观测数据本身可能很敏感"><a href="#观测数据本身可能很敏感" class="headerlink" title="观测数据本身可能很敏感"></a>观测数据本身可能很敏感</h3><p>Trace 可能包含用户问题、文档片段、工具参数、模型输出和业务标识。接入之前要确认哪些字段能上传，哪些字段必须脱敏，谁能查看项目数据，以及日志保存多久。</p>
+<h3 id="有数据不等于有结论"><a href="#有数据不等于有结论" class="headerlink" title="有数据不等于有结论"></a>有数据不等于有结论</h3><p>把所有调用都记录下来，只是第一步。真正有用的系统需要稳定的命名、版本、标签、用户反馈和评测集，否则界面里会堆满 trace，却很难筛出问题。</p>
+<h3 id="评测指标不能脱离业务"><a href="#评测指标不能脱离业务" class="headerlink" title="评测指标不能脱离业务"></a>评测指标不能脱离业务</h3><p>通用正确性、相关性评分有帮助，但客服、搜索、代码生成和内容审核关心的指标不同。最好从少量高价值场景开始，把人工判断写成可复现的评测标准。</p>
+<h3 id="MIT-许可证需要看例外"><a href="#MIT-许可证需要看例外" class="headerlink" title="MIT 许可证需要看例外"></a>MIT 许可证需要看例外</h3><p>Langfuse 仓库 README 说明，仓库采用 MIT，但 <code>ee</code> 文件夹除外；企业版相关代码和功能不能简单按 MIT 处理。准备二次开发、商业分发或自建服务时，应直接阅读仓库的 LICENSE 和官方开源说明。</p>
+<h2 id="一个务实的落地顺序"><a href="#一个务实的落地顺序" class="headerlink" title="一个务实的落地顺序"></a>一个务实的落地顺序</h2><ol>
+<li>先选一条线上链路，记录完整 trace，包括模型调用、检索和工具步骤；</li>
+<li>给 trace 加上应用版本、Prompt 版本和环境标签；</li>
+<li>从真实失败案例中建立一个小数据集；</li>
+<li>用人工标注或代码评估器建立第一版质量指标；</li>
+<li>再把 Prompt 管理、自动评测和成本告警接进发布流程。</li>
+</ol>
+<p>这个顺序能让 Langfuse 先解决一个具体问题，例如“为什么 RAG 回答经常答非所问”，再逐步扩大为团队的 LLMOps 基础设施。</p>
+<h2 id="最后的判断"><a href="#最后的判断" class="headerlink" title="最后的判断"></a>最后的判断</h2><p>Langfuse 的价值不在于替你选择一个更强的模型，而在于让 LLM 应用的开发过程有记录、有样本、有比较，也有回退依据。</p>
+<p>如果你的应用已经从“能调用模型”进入“要稳定交付”，它值得认真试用。先从 tracing 开始，再逐步接入评测和 Prompt 管理。对于简单脚本，直接加几行结构化日志可能就够了；对于复杂 RAG 或 Agent 系统，没有可观测性，后续调试往往会越来越依赖猜测。</p>
+<h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/langfuse/langfuse">Langfuse GitHub 仓库</a></li>
+<li><a target="_blank" rel="noopener" href="https://langfuse.com/docs">官方文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://langfuse.com/docs/tracing">Tracing</a></li>
+<li><a target="_blank" rel="noopener" href="https://langfuse.com/docs/prompt-management/get-started">Prompt Management</a></li>
+<li><a target="_blank" rel="noopener" href="https://langfuse.com/docs/evaluation/overview">Evaluations</a></li>
+<li><a target="_blank" rel="noopener" href="https://langfuse.com/self-hosting">Self-hosting</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/langfuse/langfuse/blob/main/LICENSE">Langfuse License</a></li>
+</ul>
+<p>本文依据 Langfuse 官方 README 和文档整理。产品能力、部署选项和开源范围可能随版本更新，使用前请以官方页面为准。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="tag"># 大语言模型</a>
+              <a href="/tags/Langfuse/" rel="tag"># Langfuse</a>
+              <a href="/tags/%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7/" rel="tag"># 可观测性</a>
+              <a href="/tags/Prompt-%E8%AF%84%E6%B5%8B/" rel="tag"># Prompt 评测</a>
+              <a href="/tags/LLMOps/" rel="tag"># LLMOps</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/17/grill-me%EF%BC%9A%E6%8A%8A%E6%A8%A1%E7%B3%8A%E6%83%B3%E6%B3%95%E9%97%AE%E5%88%B0%E6%B8%85%E6%A5%9A/" rel="prev" title="grill-me：把模糊想法问到清楚">
+                  <i class="fa fa-angle-left"></i> grill-me：把模糊想法问到清楚
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA%20AI%20%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF/" rel="next" title="Multica：把多个 AI 编码智能体放进同一块任务看板">
+                  Multica：把多个 AI 编码智能体放进同一块任务看板 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

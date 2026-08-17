@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="介绍 mattpocock&#x2F;skills 中的 grill-me 技能，以及它和 grilling、grill-with-docs 的关系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="grill-me：把模糊想法问到清楚">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/11/grill-me%EF%BC%9A%E6%8A%8A%E6%A8%A1%E7%B3%8A%E6%83%B3%E6%B3%95%E9%97%AE%E5%88%B0%E6%B8%85%E6%A5%9A/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="介绍 mattpocock&#x2F;skills 中的 grill-me 技能，以及它和 grilling、grill-with-docs 的关系。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-11T08:24:00.000Z">
+<meta property="article:modified_time" content="2026-08-17T03:22:57.884Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="grill-me">
+<meta property="article:tag" content="提示词">
+<meta property="article:tag" content="智能体">
+<meta property="article:tag" content="需求分析">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/11/grill-me%EF%BC%9A%E6%8A%8A%E6%A8%A1%E7%B3%8A%E6%83%B3%E6%B3%95%E9%97%AE%E5%88%B0%E6%B8%85%E6%A5%9A/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/11/grill-me%EF%BC%9A%E6%8A%8A%E6%A8%A1%E7%B3%8A%E6%83%B3%E6%B3%95%E9%97%AE%E5%88%B0%E6%B8%85%E6%A5%9A/","path":"2026/08/11/grill-me：把模糊想法问到清楚/","title":"grill-me：把模糊想法问到清楚"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>grill-me：把模糊想法问到清楚 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#grill-me%EF%BC%9A%E6%8A%8A%E6%A8%A1%E7%B3%8A%E6%83%B3%E6%B3%95%E9%97%AE%E5%88%B0%E6%B8%85%E6%A5%9A"><span class="nav-number">1.</span> <span class="nav-text">grill-me：把模糊想法问到清楚</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">它解决什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.2.</span> <span class="nav-text">它怎么工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8-grill-me"><span class="nav-number">1.3.</span> <span class="nav-text">什么时候用 grill-me</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%92%8C-grill-with-docs-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.4.</span> <span class="nav-text">和 grill-with-docs 的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%AE%89%E8%A3%85%E5%92%8C%E8%B0%83%E7%94%A8"><span class="nav-number">1.5.</span> <span class="nav-text">怎么安装和调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E7%9C%9F%E6%AD%A3%E6%9C%89%E7%94%A8%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="nav-number">1.6.</span> <span class="nav-text">它真正有用的地方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%96%99%E6%9D%A5%E6%BA%90"><span class="nav-number">1.7.</span> <span class="nav-text">资料来源</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/11/grill-me%EF%BC%9A%E6%8A%8A%E6%A8%A1%E7%B3%8A%E6%83%B3%E6%B3%95%E9%97%AE%E5%88%B0%E6%B8%85%E6%A5%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="grill-me：把模糊想法问到清楚 | 欣然的备忘录">
+      <meta itemprop="description" content="介绍 mattpocock&#x2F;skills 中的 grill-me 技能，以及它和 grilling、grill-with-docs 的关系。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          grill-me：把模糊想法问到清楚
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-11 16:24:00" itemprop="dateCreated datePublished" datetime="2026-08-11T16:24:00+08:00">2026-08-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-17 11:22:57" itemprop="dateModified" datetime="2026-08-17T11:22:57+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">AI 工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">介绍 mattpocock/skills 中的 grill-me 技能，以及它和 grilling、grill-with-docs 的关系。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="grill-me：把模糊想法问到清楚"><a href="#grill-me：把模糊想法问到清楚" class="headerlink" title="grill-me：把模糊想法问到清楚"></a>grill-me：把模糊想法问到清楚</h1><p><code>grill-me</code> 做的事很单纯：让智能体持续追问你的计划或设计，直到关键决策不再含糊。它适合用在动手之前，尤其是你已经有一个方向，但还说不清边界、取舍和下一步的时候。</p>
+<p>这个技能来自 <a target="_blank" rel="noopener" href="https://github.com/mattpocock/skills">mattpocock&#x2F;skills</a>。从公开说明看，<code>grill-me</code> 本身很薄，它的 <code>SKILL.md</code> 基本只是让智能体运行一场 <code>/grilling</code> 会话。真正的工作方式写在 <a target="_blank" rel="noopener" href="https://github.com/mattpocock/skills/blob/main/docs/productivity/grilling.md">grilling 文档</a>里。</p>
+<h2 id="它解决什么问题"><a href="#它解决什么问题" class="headerlink" title="它解决什么问题"></a>它解决什么问题</h2><p>很多计划在刚开始时看起来已经够清楚了，但一问到具体选择，就会露出空白。</p>
+<p>比如：</p>
+<ul>
+<li>这个功能先服务哪一类用户？</li>
+<li>哪些行为必须现在支持，哪些可以以后再说？</li>
+<li>成功标准是什么？</li>
+<li>如果两个目标冲突，优先保哪一个？</li>
+</ul>
+<p>普通的助手很容易直接给方案。<code>grill-me</code> 的价值正好相反：它先不急着替你执行，而是把计划里的未定项逐个挑出来。它按照决策之间的依赖关系追问，一次只问一个问题，并且会给出它推荐的答案，让你可以确认、反驳或改写。</p>
+<p>这比一次性扔出十几个问题更有用。前一个答案会改变后一个问题，访谈才会收敛。</p>
+<h2 id="它怎么工作"><a href="#它怎么工作" class="headerlink" title="它怎么工作"></a>它怎么工作</h2><p><code>grill-me</code> 背后的核心模型是“决策树”。一个计划不是一段线性的待办清单，而是一组互相影响的选择。先选目标用户，才知道交互要偏简单还是偏可配置；先选数据来源，才知道验证逻辑要放在哪里；先选发布范围，才知道测试应该覆盖到什么程度。</p>
+<p>所以它会沿着这棵树往下走：</p>
+<ol>
+<li>找出当前最影响后续判断的问题。</li>
+<li>只问这一个问题。</li>
+<li>同时给出推荐答案，逼近一个可执行的判断。</li>
+<li>根据你的回答继续追问下一层。</li>
+<li>等双方对计划的理解一致后，再停下来。</li>
+</ol>
+<p>如果问题可以通过代码库或已有资料回答，<code>grilling</code> 的设计倾向是让智能体自己去查，而不是把所有不确定性都丢回给你。也就是说，它追问的是需要人类判断的取舍，不是让你替它做检索。</p>
+<h2 id="什么时候用-grill-me"><a href="#什么时候用-grill-me" class="headerlink" title="什么时候用 grill-me"></a>什么时候用 grill-me</h2><p>用 <code>grill-me</code> 的好时机，是你还不想写正式 spec，但已经有一个值得打磨的想法。</p>
+<p>它尤其适合这些场景：</p>
+<ul>
+<li>产品功能：你知道要做什么，但还没想清 MVP 范围。</li>
+<li>架构调整：你有一个方向，但担心隐藏的迁移成本。</li>
+<li>写作或课程设计：你有主题，但结构和受众还没定。</li>
+<li>个人决策：你有几个选项，需要把判断标准说清楚。</li>
+</ul>
+<p>如果你的目标只是“帮我想几个点子”，它可能显得太用力。它更像一次严肃的预演：真正开始之前，先把会绊倒你的问题拿到桌面上。</p>
+<h2 id="和-grill-with-docs-的区别"><a href="#和-grill-with-docs-的区别" class="headerlink" title="和 grill-with-docs 的区别"></a>和 grill-with-docs 的区别</h2><p><code>grill-me</code> 是轻量入口。它负责访谈，不强调留下长期文档。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md"><code>grill-with-docs</code></a> 则适合已有代码库的工程场景。它同样运行 <code>/grilling</code>，但会把已经澄清的术语写进 <code>CONTEXT.md</code>，把难以逆转、需要记录背景的决策写成 ADR。</p>
+<p>简单说：</p>
+<ul>
+<li>只想被追问，把想法磨清楚：用 <code>grill-me</code>。</li>
+<li>想在追问过程中顺手沉淀项目词汇和架构决策：用 <code>grill-with-docs</code>。</li>
+<li>想直接使用底层访谈机制：用 <code>grilling</code>。</li>
+</ul>
+<p>这三个名字看起来接近，但定位并不一样。<code>grilling</code> 是访谈技术本身；<code>grill-me</code> 是最直接的用户入口；<code>grill-with-docs</code> 是带文档副作用的工程版。</p>
+<h2 id="怎么安装和调用"><a href="#怎么安装和调用" class="headerlink" title="怎么安装和调用"></a>怎么安装和调用</h2><p>公开的 <a target="_blank" rel="noopener" href="https://www.skills.sh/mattpocock/skills/grill-me">skills.sh 页面</a>给出的安装方式是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx skills add https://github.com/mattpocock/skills --skill grill-me</span><br></pre></td></tr></table></figure>
+
+<p>安装后，在支持技能调用的智能体里使用 <code>/grill-me</code>，再贴上你的计划或设计草案即可。草案不需要完美，但要有足够的起点。比如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/grill-me</span><br><span class="line"></span><br><span class="line">我想做一个面向独立开发者的轻量项目管理工具。核心是把需求、任务和发布节奏串起来，但我还没想清楚第一版应该多小。</span><br></pre></td></tr></table></figure>
+
+<p>好的输入通常包含三类信息：你想达成什么、已经确定了什么、最不确定的地方在哪里。剩下的部分，可以交给它追问。</p>
+<h2 id="它真正有用的地方"><a href="#它真正有用的地方" class="headerlink" title="它真正有用的地方"></a>它真正有用的地方</h2><p><code>grill-me</code> 的重点不是“问得狠”，而是问得有顺序。它不靠压力制造清晰，而是把互相依赖的选择拆开，让你一次只处理一个判断。</p>
+<p>这对人很友好。很多模糊不是因为懒，而是因为脑子里同时挂着太多分支。<code>grill-me</code> 把这些分支排队，让决策有一个可以走下去的路径。</p>
+<p>我会把它看成一种计划前的校准工具。它不会替你拥有判断，但会逼你发现自己到底在判断什么。对复杂一点的功能、架构和产品方向来说，这通常比立刻写代码更省时间。</p>
+<h2 id="资料来源"><a href="#资料来源" class="headerlink" title="资料来源"></a>资料来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/mattpocock/skills">mattpocock&#x2F;skills GitHub 仓库</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.skills.sh/mattpocock/skills/grill-me">grill-me 页面</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/mattpocock/skills/blob/main/docs/productivity/grilling.md">grilling 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/mattpocock/skills/blob/main/docs/engineering/grill-with-docs.md">grill-with-docs 文档</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 智能体</a>
+              <a href="/tags/%E6%8F%90%E7%A4%BA%E8%AF%8D/" rel="tag"># 提示词</a>
+              <a href="/tags/grill-me/" rel="tag"># grill-me</a>
+              <a href="/tags/%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90/" rel="tag"># 需求分析</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/10/Agent%E8%B7%91%E9%A3%9E%E4%BA%86-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95/" rel="prev" title="Agent 跑飞了：如何定位和兜底">
+                  <i class="fa fa-angle-left"></i> Agent 跑飞了：如何定位和兜底
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/12/Codex%E3%80%81Claude%E3%80%81Cursor%20%E6%80%8E%E4%B9%88%E9%80%89%EF%BC%9A%E4%B8%80%E4%BB%BD%E9%9D%A2%E5%90%91%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E6%AF%94%E8%BE%83/" rel="next" title="Codex、Claude、Cursor 怎么选：一份面向开发者的比较">
+                  Codex、Claude、Cursor 怎么选：一份面向开发者的比较 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

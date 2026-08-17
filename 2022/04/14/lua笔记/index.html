@@ -2,9 +2,10 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.2">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,359 +14,112 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
-  </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-  <meta name="description" content="skynet 同一服务内的不同用户线程永远是轮流获得执行权的，每个线程都会需要一个阻塞操作而挂起让出控制权，也会在其它线程让出控制权后再延续运行 skynet 并不是一个抢占式调度器，没有时间片的设计，不会因为一个工作线工作时间过长而强制挂起它 消息由 6 部分构成：消息类型、session 、发起服务地址 、接收服务地址 、消息 C 指针、消息长度。 skynet.register_protoc">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Lua 与 Skynet 开发中的并发模型、安装配置和常用实践笔记。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="lua笔记">
-<meta property="og:url" content="http://example.com/2022/04/14/lua%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:title" content="Lua 笔记">
+<meta property="og:url" content="https://xinran282.github.io/2022/04/14/lua%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="欣然的备忘录">
-<meta property="og:description" content="skynet 同一服务内的不同用户线程永远是轮流获得执行权的，每个线程都会需要一个阻塞操作而挂起让出控制权，也会在其它线程让出控制权后再延续运行 skynet 并不是一个抢占式调度器，没有时间片的设计，不会因为一个工作线工作时间过长而强制挂起它 消息由 6 部分构成：消息类型、session 、发起服务地址 、接收服务地址 、消息 C 指针、消息长度。 skynet.register_protoc">
+<meta property="og:description" content="Lua 与 Skynet 开发中的并发模型、安装配置和常用实践笔记。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-04-14T01:36:44.000Z">
-<meta property="article:modified_time" content="2022-04-14T01:37:24.486Z">
+<meta property="article:modified_time" content="2026-08-17T03:13:28.445Z">
 <meta property="article:author" content="欣然">
+<meta property="article:tag" content="C 扩展">
+<meta property="article:tag" content="Lua">
+<meta property="article:tag" content="Skynet">
+<meta property="article:tag" content="协程">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2022/04/14/lua%E7%AC%94%E8%AE%B0/">
+
+<link rel="canonical" href="https://xinran282.github.io/2022/04/14/lua%E7%AC%94%E8%AE%B0/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2022/04/14/lua%E7%AC%94%E8%AE%B0/","path":"2022/04/14/lua笔记/","title":"Lua 笔记"}</script>
 
-  <title>lua笔记 | 欣然的备忘录</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Lua 笔记 | 欣然的备忘录</title>
   
 
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">欣然的备忘录</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
     </a>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
     </div>
   </div>
 </div>
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
   </ul>
 </nav>
 
 
 
 
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
-    
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/14/lua%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="欣然">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欣然的备忘录">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          lua笔记
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-14 09:36:44 / 修改时间：09:37:24" itemprop="dateCreated datePublished" datetime="2022-04-14T09:36:44+08:00">2022-04-14</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/lua/" itemprop="url" rel="index"><span itemprop="name">lua</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <h2 id="skynet"><a href="#skynet" class="headerlink" title="skynet"></a>skynet</h2><ol>
-<li>同一服务内的不同用户线程永远是轮流获得执行权的，每个线程都会需要一个阻塞操作而挂起让出控制权，也会在其它线程让出控制权后再延续运行</li>
-<li>skynet 并不是一个抢占式调度器，没有时间片的设计，不会因为一个工作线工作时间过长而强制挂起它</li>
-<li>消息由 6 部分构成：消息类型、session 、发起服务地址 、接收服务地址 、消息 C 指针、消息长度。</li>
-<li><a target="_blank" rel="noopener" href="https://www.zybuluo.com/wsd1/note/564718">skynet.register_protocol() 和 skynet.dispatch()</a> <br>dispatch处理lua类消息，register_protocol支持自定义类消息（如socket传来的消息）</li>
-</ol>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/llh_1178/article/details/79329250">gcc4.9安装</a> </p>
-<p><a target="_blank" rel="noopener" href="http://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.gz">gcc4.9.4 安装包</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 需要 gcc4.9</span><br><span class="line">yum install gcc-c++</span><br><span class="line">yum install -y readline-devel autoconf</span><br><span class="line"></span><br><span class="line">git clone https://github.com/cloudwu/skynet.git</span><br><span class="line">cd skynet</span><br><span class="line">make linux</span><br></pre></td></tr></table></figure>
-
-<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><p>映射关系</p>
-<table>
-<thead>
-<tr>
-<th>函数</th>
-<th>函数说明</th>
-<th>回调</th>
-<th>回调说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>newservice(Name)</td>
-<td>启动一个服务</td>
-<td>Name文件中的skenet.start</td>
-<td>在其中指定了该服务的回调函数组</td>
-</tr>
-<tr>
-<td>call(Name, “lua”, Func, Arg)</td>
-<td>Name:服务名 “lua”为消息类型 Func:调用函数 Arg:其他参数</td>
-<td>Name文件中的函数</td>
-<td></td>
-</tr>
-</tbody></table>
-<h3 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h3><ul>
-<li>userdata、lightuserdata<ul>
-<li>可以让C返回一个句柄给Lua，而Lua可以将句柄再通过在C中注册的方法传回C</li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/fwb330198372/article/details/82217022">区别</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="question"><a href="#question" class="headerlink" title="question"></a>question</h3><ol>
-<li>怎么创建一个进程（或者说服务）？</li>
-<li>进程内的数据怎么保存？<ol>
-<li>相当于一个全局变量</li>
-</ol>
-</li>
-<li>怎么与socket进程通信？</li>
-<li>垃圾回收机制是怎样的？</li>
-<li>有没有性能分析工具？<ol>
-<li>skynet.stat(“mqlen” | “cpu” | “message”)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/Profile">profile</a></li>
-</ol>
-</li>
-<li>各种瓶颈数值（进程数、端口数）</li>
-<li>skynet<ol>
-<li>call(addr, type, …) 用 type 类型发送一个消息到 addr ，并等待对方的回应。</li>
-<li>dispatch(type, func) 为 type 类型的消息设定一个处理函数。</li>
-<li>redirect(addr, source, type, …) 伪装成 source 地址，向 addr 发送一个消息。</li>
-<li>send(addr, type, …) 用 type 类型向 addr 发送一个消息。</li>
-</ol>
-</li>
-<li>有交互调试shell吗？<ol>
-<li><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/DebugConsole">DebugConsole</a></li>
-</ol>
-</li>
-<li>支持热更吗？<ol>
-<li>连接到debug_console，使用clearcache清掉代码缓存，会使内存增大，但可以再调用gc回收</li>
-<li>本质是替换变量的值（函数也是变量）</li>
-<li><a target="_blank" rel="noopener" href="https://blog.codingnow.com/2016/11/lua_update.html">尽量正确的热更新</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/losophy/p/9204036.html">skynet：热更新 lua 代码</a></li>
-</ol>
-</li>
-<li>怎么启动<br>./skynet ConfigFile<br>配置文件的start为启动入口<br><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/Config">Skynet配置</a>    </li>
-</ol>
-<h3 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h3><h4 id="网关-gateserver"><a href="#网关-gateserver" class="headerlink" title="网关 gateserver"></a>网关 gateserver</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">Main[Main] --&gt;|1.new|Watchdog(Watchdog)</span><br><span class="line">Watchdog --&gt;|2.new|Gate(Gate)</span><br><span class="line">Gate --&gt;|3.start|Gateserver(Gateserver)</span><br><span class="line">Main --&gt;|4.start|Watchdog</span><br><span class="line">Watchdog --&gt;|5.open|Gateserver</span><br><span class="line">Gateserver --&gt;|6.端口监听|Socket(Socket)</span><br><span class="line">Gateserver --&gt;|7.open|Gate</span><br><span class="line"></span><br><span class="line">Socket --&gt;|11.链接来了|Gateserver</span><br><span class="line">Gateserver --&gt;|12.opne|Gate</span><br><span class="line">Gate --&gt;|13.open|Watchdog</span><br><span class="line">Watchdog --&gt;|14.new|Agent(Agent)</span><br><span class="line">Watchdog --&gt;|15.start|Agent</span><br><span class="line">Agent --&gt;|16.forward|Gate</span><br><span class="line">Gate --&gt;|17.openclient|Gateserver</span><br><span class="line">Gateserver --&gt;|18.socketdriver.start|Socket</span><br><span class="line"></span><br><span class="line">Socket --&gt;|21.消息来了|Gateserver</span><br><span class="line">Gateserver --&gt;|22.message|Gate</span><br><span class="line">Gate --&gt;|23.socket data|Agent</span><br><span class="line"></span><br><span class="line">Socket --&gt;|31.连接关闭|Gateserver</span><br><span class="line">Gateserver --&gt;|32.disconnect|Gate</span><br><span class="line">Gate --&gt;|33.close|Watchdog</span><br><span class="line">Watchdog --&gt;|34.kick|Gate</span><br><span class="line">Gate --&gt;|35.closeclient|Gateserver</span><br><span class="line">Watchdog --&gt;|36.disconnect|Agent</span><br></pre></td></tr></table></figure>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44770127/article/details/107721768">网关服务</a></li>
-<li><a target="_blank" rel="noopener" href="https://wudaijun.com/2015/02/skynet-socketserver/">skynet socketserver</a></li>
-</ul>
-<h4 id="登陆服务器-loginserver"><a href="#登陆服务器-loginserver" class="headerlink" title="登陆服务器 loginserver"></a>登陆服务器 loginserver</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">User[用户] --&gt;|1.发起认证请求 获取Token|A(认证平台)</span><br><span class="line">User[用户] --&gt;|2.选择服务器+Token 交换密钥|L(登陆服)</span><br><span class="line">L --&gt;|3.检查 Token合法性|A</span><br><span class="line">L --&gt;|4.转发登陆请求 密钥|G[游戏节点]</span><br><span class="line">G --&gt;|5.同步subid 作为登陆凭证 |L</span><br><span class="line">L --&gt;|6.同步subid|User</span><br><span class="line">User --&gt;|7.断开连接|L</span><br><span class="line">User --&gt;|8.链接后通讯|G</span><br></pre></td></tr></table></figure>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/LoginServer">官网LoginServer介绍</a></li>
-</ul>
-<h2 id="资料"><a href="#资料" class="headerlink" title="资料"></a>资料</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.codingnow.com/2012/09/the_design_of_skynet.html">Skynet 设计综述</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/GettingStarted">skynet 入门</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/LuaAPI">skynet LuaAPI</a></li>
-<li><a target="_blank" rel="noopener" href="https://manistein.github.io/blog/post/server/skynet/skynet%E6%BA%90%E7%A0%81%E8%B5%8F%E6%9E%90/">skynet源码赏析</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Naivebug/skynet_gameserver_study">游戏例子</a></li>
-<li><a target="_blank" rel="noopener" href="https://cloudwu.github.io/lua53doc/manual.html">Lua 5.3 参考手册</a></li>
-<li><a target="_blank" rel="noopener" href="http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/installation/index.html">白鹭</a></li>
-</ul>
-
-    </div>
-
-    
-    
-    
-
-      <footer class="post-footer">
-
+</header>
         
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2022/04/14/erlang%E6%B1%87%E6%80%BB/" rel="prev" title="erlang汇总">
-      <i class="fa fa-chevron-left"></i> erlang汇总
-    </a></div>
-      <div class="post-nav-item"></div>
-    </div>
-      </footer>
-    
-  </article>
   
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
   <aside class="sidebar">
-    <div class="sidebar-inner">
 
-      <ul class="sidebar-nav motion-element">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
         </li>
@@ -374,123 +128,222 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#skynet"><span class="nav-number">1.</span> <span class="nav-text">skynet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API"><span class="nav-number">1.2.</span> <span class="nav-text">API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#misc"><span class="nav-number">1.3.</span> <span class="nav-text">misc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#question"><span class="nav-number">1.4.</span> <span class="nav-text">question</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="nav-number">1.5.</span> <span class="nav-text">源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E5%85%B3-gateserver"><span class="nav-number">1.5.1.</span> <span class="nav-text">网关 gateserver</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%99%BB%E9%99%86%E6%9C%8D%E5%8A%A1%E5%99%A8-loginserver"><span class="nav-number">1.5.2.</span> <span class="nav-text">登陆服务器 loginserver</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%96%99"><span class="nav-number">2.</span> <span class="nav-text">资料</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#skynet"><span class="nav-number">1.</span> <span class="nav-text">skynet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API"><span class="nav-number">1.2.</span> <span class="nav-text">API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#misc"><span class="nav-number">1.3.</span> <span class="nav-text">misc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#question"><span class="nav-number">1.4.</span> <span class="nav-text">question</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="nav-number">1.5.</span> <span class="nav-text">源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E5%85%B3-gateserver"><span class="nav-number">1.5.1.</span> <span class="nav-text">网关 gateserver</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%99%BB%E9%99%86%E6%9C%8D%E5%8A%A1%E5%99%A8-loginserver"><span class="nav-number">1.5.2.</span> <span class="nav-text">登陆服务器 loginserver</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%96%99"><span class="nav-number">2.</span> <span class="nav-text">资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="欣然"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">欣然</p>
   <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap motion-element">
+<div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">6</span>
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">4</span>
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">1</span>
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
 
-
-
+        </div>
       </div>
+    </div>
+
+    
+  </aside>
+
 
     </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
+
+    <div class="main-inner post posts-expand">
 
 
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
   
-  &copy; 
-  <span itemprop="copyrightYear">2022</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">欣然</span>
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2022/04/14/lua%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Lua 笔记 | 欣然的备忘录">
+      <meta itemprop="description" content="Lua 与 Skynet 开发中的并发模型、安装配置和常用实践笔记。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Lua 笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-14 09:36:44" itemprop="dateCreated datePublished" datetime="2022-04-14T09:36:44+08:00">2022-04-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-17 11:13:28" itemprop="dateModified" datetime="2026-08-17T11:13:28+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">编程语言</span></a>
+        </span>
+    </span>
+
+  
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
-  </div>
+
+            <div class="post-description">Lua 与 Skynet 开发中的并发模型、安装配置和常用实践笔记。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="skynet"><a href="#skynet" class="headerlink" title="skynet"></a>skynet</h2><p>同一服务内的不同用户线程永远是轮流获得执行权的，每个线程都会需要一个阻塞操作而挂起让出控制权，也会在其它线程让出控制权后再延续运行<br>skynet 并不是一个抢占式调度器，没有时间片的设计，不会因为一个工作线工作时间过长而强制挂起它<br>消息由 6 部分构成：消息类型、session 、发起服务地址 、接收服务地址 、消息 C 指针、消息长度。<br><a target="_blank" rel="noopener" href="https://www.zybuluo.com/wsd1/note/564718">skynet.register_protocol() 和 skynet.dispatch()</a><br>dispatch处理lua类消息，register_protocol支持自定义类消息（如socket传来的消息）</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/llh_1178/article/details/79329250">gcc4.9安装</a></p>
+<p><a target="_blank" rel="noopener" href="http://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.gz">gcc4.9.4 安装包</a></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 需要 gcc4.9</span><br><span class="line">yum install gcc-c++</span><br><span class="line">yum install -y readline-devel autoconf</span><br><span class="line"></span><br><span class="line">git clone https://github.com/cloudwu/skynet.git</span><br><span class="line">cd skynet</span><br><span class="line">make linux</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><p>映射关系</p>
+<p>函数<br>函数说明<br>回调<br>回调说明</p>
+<p>newservice(Name)<br>启动一个服务<br>Name文件中的skenet.start<br>在其中指定了该服务的回调函数组</p>
+<p>call(Name, “lua”, Func, Arg)<br>Name:服务名 “lua”为消息类型 Func:调用函数 Arg:其他参数<br>Name文件中的函数</p>
+<h3 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h3><p>userdata、lightuserdata<br>可以让C返回一个句柄给Lua，而Lua可以将句柄再通过在C中注册的方法传回C<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/fwb330198372/article/details/82217022">区别</a></p>
+<h3 id="question"><a href="#question" class="headerlink" title="question"></a>question</h3><p>怎么创建一个进程（或者说服务）？<br>进程内的数据怎么保存？<br>相当于一个全局变量</p>
+<p>怎么与socket进程通信？<br>垃圾回收机制是怎样的？<br>有没有性能分析工具？<br>skynet.stat(“mqlen” | “cpu” | “message”)<br><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/Profile">profile</a></p>
+<p>各种瓶颈数值（进程数、端口数）<br>skynet<br>call(addr, type, …) 用 type 类型发送一个消息到 addr ，并等待对方的回应。<br>dispatch(type, func) 为 type 类型的消息设定一个处理函数。<br>redirect(addr, source, type, …) 伪装成 source 地址，向 addr 发送一个消息。<br>send(addr, type, …) 用 type 类型向 addr 发送一个消息。</p>
+<p>有交互调试shell吗？<br><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/DebugConsole">DebugConsole</a></p>
+<p>支持热更吗？<br>连接到debug_console，使用clearcache清掉代码缓存，会使内存增大，但可以再调用gc回收<br>本质是替换变量的值（函数也是变量）<br><a target="_blank" rel="noopener" href="https://blog.codingnow.com/2016/11/lua_update.html">尽量正确的热更新</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/losophy/p/9204036.html">skynet：热更新 lua 代码</a></p>
+<p>怎么启动<br>.&#x2F;skynet ConfigFile<br>配置文件的start为启动入口<br><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/Config">Skynet配置</a>    </p>
+<h3 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h3><h4 id="网关-gateserver"><a href="#网关-gateserver" class="headerlink" title="网关 gateserver"></a>网关 gateserver</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">Main[Main] --&gt;|1.new|Watchdog(Watchdog)</span><br><span class="line">Watchdog --&gt;|2.new|Gate(Gate)</span><br><span class="line">Gate --&gt;|3.start|Gateserver(Gateserver)</span><br><span class="line">Main --&gt;|4.start|Watchdog</span><br><span class="line">Watchdog --&gt;|5.open|Gateserver</span><br><span class="line">Gateserver --&gt;|6.端口监听|Socket(Socket)</span><br><span class="line">Gateserver --&gt;|7.open|Gate</span><br><span class="line"></span><br><span class="line">Socket --&gt;|11.链接来了|Gateserver</span><br><span class="line">Gateserver --&gt;|12.opne|Gate</span><br><span class="line">Gate --&gt;|13.open|Watchdog</span><br><span class="line">Watchdog --&gt;|14.new|Agent(Agent)</span><br><span class="line">Watchdog --&gt;|15.start|Agent</span><br><span class="line">Agent --&gt;|16.forward|Gate</span><br><span class="line">Gate --&gt;|17.openclient|Gateserver</span><br><span class="line">Gateserver --&gt;|18.socketdriver.start|Socket</span><br><span class="line"></span><br><span class="line">Socket --&gt;|21.消息来了|Gateserver</span><br><span class="line">Gateserver --&gt;|22.message|Gate</span><br><span class="line">Gate --&gt;|23.socket data|Agent</span><br><span class="line"></span><br><span class="line">Socket --&gt;|31.连接关闭|Gateserver</span><br><span class="line">Gateserver --&gt;|32.disconnect|Gate</span><br><span class="line">Gate --&gt;|33.close|Watchdog</span><br><span class="line">Watchdog --&gt;|34.kick|Gate</span><br><span class="line">Gate --&gt;|35.closeclient|Gateserver</span><br><span class="line">Watchdog --&gt;|36.disconnect|Agent</span><br></pre></td></tr></table></figure>
+
+
+
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44770127/article/details/107721768">网关服务</a><br><a target="_blank" rel="noopener" href="https://wudaijun.com/2015/02/skynet-socketserver/">skynet socketserver</a></p>
+<h4 id="登陆服务器-loginserver"><a href="#登陆服务器-loginserver" class="headerlink" title="登陆服务器 loginserver"></a>登陆服务器 loginserver</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">User[用户] --&gt;|1.发起认证请求 获取Token|A(认证平台)</span><br><span class="line">User[用户] --&gt;|2.选择服务器+Token 交换密钥|L(登陆服)</span><br><span class="line">L --&gt;|3.检查 Token合法性|A</span><br><span class="line">L --&gt;|4.转发登陆请求 密钥|G[游戏节点]</span><br><span class="line">G --&gt;|5.同步subid 作为登陆凭证 |L</span><br><span class="line">L --&gt;|6.同步subid|User</span><br><span class="line">User --&gt;|7.断开连接|L</span><br><span class="line">User --&gt;|8.链接后通讯|G</span><br></pre></td></tr></table></figure>
+
+
+
+<p><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/LoginServer">官网LoginServer介绍</a></p>
+<h2 id="资料"><a href="#资料" class="headerlink" title="资料"></a>资料</h2><p><a target="_blank" rel="noopener" href="https://blog.codingnow.com/2012/09/the_design_of_skynet.html">Skynet 设计综述</a><br><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/GettingStarted">skynet 入门</a><br><a target="_blank" rel="noopener" href="https://github.com/cloudwu/skynet/wiki/LuaAPI">skynet LuaAPI</a><br><a target="_blank" rel="noopener" href="https://manistein.github.io/blog/post/server/skynet/skynet%E6%BA%90%E7%A0%81%E8%B5%8F%E6%9E%90/">skynet源码赏析</a><br><a target="_blank" rel="noopener" href="https://github.com/Naivebug/skynet_gameserver_study">游戏例子</a><br><a target="_blank" rel="noopener" href="https://cloudwu.github.io/lua53doc/manual.html">Lua 5.3 参考手册</a><br><a target="_blank" rel="noopener" href="http://developer.egret.com/cn/github/egret-docs/Engine2D/projectConfig/installation/index.html">白鹭</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Lua/" rel="tag"># Lua</a>
+              <a href="/tags/Skynet/" rel="tag"># Skynet</a>
+              <a href="/tags/%E5%8D%8F%E7%A8%8B/" rel="tag"># 协程</a>
+              <a href="/tags/C-%E6%89%A9%E5%B1%95/" rel="tag"># C 扩展</a>
+          </div>
 
         
 
-
-
-
-
-
-
-
-      </div>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/14/erlang%E6%B1%87%E6%80%BB/" rel="prev" title="Erlang 常用知识汇总">
+                  <i class="fa fa-angle-left"></i> Erlang 常用知识汇总
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/07/%E4%BB%8EChatGPT%E5%88%B0%E6%99%BA%E8%83%BD%E4%BD%93-AI%E5%8F%91%E5%B1%95%E7%9A%84%E5%85%AD%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%80%A7%E6%A0%87%E8%AF%86/" rel="next" title="从 ChatGPT 到智能体：AI 发展的六个阶段性标识">
+                  从 ChatGPT 到智能体：AI 发展的六个阶段性标识 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
+    </div>
+  </footer>
 
   
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

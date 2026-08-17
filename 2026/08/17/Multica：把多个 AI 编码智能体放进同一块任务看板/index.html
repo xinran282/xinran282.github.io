@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="介绍 Multica 的定位、运行方式、主要能力、适用场景，以及使用前需要注意的权限和许可证问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Multica：把多个 AI 编码智能体放进同一块任务看板">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/17/Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA%20AI%20%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="介绍 Multica 的定位、运行方式、主要能力、适用场景，以及使用前需要注意的权限和许可证问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-17T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-17T03:13:30.723Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="AI 编程">
+<meta property="article:tag" content="Multica">
+<meta property="article:tag" content="任务管理">
+<meta property="article:tag" content="多智能体">
+<meta property="article:tag" content="智能体">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/17/Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA%20AI%20%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/17/Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA%20AI%20%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF/","path":"2026/08/17/Multica：把多个 AI 编码智能体放进同一块任务看板/","title":"Multica：把多个 AI 编码智能体放进同一块任务看板"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Multica：把多个 AI 编码智能体放进同一块任务看板 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-games"><a href="/game/" rel="section"><i class="fa fa-gamepad fa-fw"></i>games</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA-AI-%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF"><span class="nav-number">1.</span> <span class="nav-text">Multica：把多个 AI 编码智能体放进同一块任务看板</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">它解决什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E6%AC%A1%E4%BB%BB%E5%8A%A1%E5%A6%82%E4%BD%95%E6%B5%81%E8%BD%AC"><span class="nav-number">1.2.</span> <span class="nav-text">一次任务如何流转</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BB%BA%E7%AB%8B%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 建立运行时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%9B%E5%BB%BA%E6%99%BA%E8%83%BD%E4%BD%93"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 创建智能体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%86%E9%85%8D%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 分配任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%9F%A5%E7%9C%8B%E6%89%A7%E8%A1%8C%E5%B9%B6%E5%AE%A1%E6%A0%B8"><span class="nav-number">1.2.4.</span> <span class="nav-text">4. 查看执行并审核</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E7%9B%AE%E5%89%8D%E6%8F%90%E4%BE%9B%E5%93%AA%E4%BA%9B%E8%83%BD%E5%8A%9B"><span class="nav-number">1.3.</span> <span class="nav-text">它目前提供哪些能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E6%98%AF%E6%80%8E%E4%B9%88%E6%90%AD%E8%B5%B7%E6%9D%A5%E7%9A%84"><span class="nav-number">1.4.</span> <span class="nav-text">它是怎么搭起来的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%91%E7%AB%AF%E3%80%81%E6%A1%8C%E9%9D%A2%E7%AB%AF%E5%92%8C%E8%87%AA%E6%89%98%E7%AE%A1"><span class="nav-number">1.5.</span> <span class="nav-text">云端、桌面端和自托管</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E5%90%88%E5%93%AA%E4%BA%9B%E5%9B%A2%E9%98%9F"><span class="nav-number">1.6.</span> <span class="nav-text">适合哪些团队</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%89%8D%E8%A6%81%E7%9C%8B%E6%B8%85%E4%B8%89%E4%BB%B6%E4%BA%8B"><span class="nav-number">1.7.</span> <span class="nav-text">使用前要看清三件事</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E8%BE%B9%E7%95%8C"><span class="nav-number">1.7.1.</span> <span class="nav-text">权限边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%BA%E5%B7%A5%E5%AE%A1%E6%A0%B8%E4%B8%8D%E6%98%AF%E8%87%AA%E5%8A%A8%E5%AE%89%E5%85%A8"><span class="nav-number">1.7.2.</span> <span class="nav-text">人工审核不是自动安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B8%E5%8F%AF%E8%AF%81%E4%B8%8D%E6%98%AF%E6%A0%87%E5%87%86-Apache-2-0"><span class="nav-number">1.7.3.</span> <span class="nav-text">许可证不是标准 Apache 2.0</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E5%AE%83%E5%80%BC%E4%B8%8D%E5%80%BC%E5%BE%97%E5%BC%95%E5%85%A5"><span class="nav-number">1.8.</span> <span class="nav-text">怎么判断它值不值得引入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E5%88%A4%E6%96%AD"><span class="nav-number">1.9.</span> <span class="nav-text">最后的判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="nav-number">1.10.</span> <span class="nav-text">相关资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/17/Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA%20AI%20%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Multica：把多个 AI 编码智能体放进同一块任务看板 | 欣然的备忘录">
+      <meta itemprop="description" content="介绍 Multica 的定位、运行方式、主要能力、适用场景，以及使用前需要注意的权限和许可证问题。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Multica：把多个 AI 编码智能体放进同一块任务看板
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-17 10:00:00 / 修改时间：11:13:30" itemprop="dateCreated datePublished" datetime="2026-08-17T10:00:00+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">AI 工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">介绍 Multica 的定位、运行方式、主要能力、适用场景，以及使用前需要注意的权限和许可证问题。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Multica：把多个-AI-编码智能体放进同一块任务看板"><a href="#Multica：把多个-AI-编码智能体放进同一块任务看板" class="headerlink" title="Multica：把多个 AI 编码智能体放进同一块任务看板"></a>Multica：把多个 AI 编码智能体放进同一块任务看板</h1><p>同时使用 Codex、Claude Code、Cursor Agent 是什么体验？开始时像多了几名帮手，过一阵往往变成一排终端窗口：任务在哪个窗口里，谁改过哪些文件，哪个智能体卡住了，都要人自己记。</p>
+<p>Multica 想处理的正是这一层问题。</p>
+<p>它不是新的大模型，也不替代编码智能体。它是一个面向人和 AI 智能体的协作工作区：任务放进看板，分配给某个智能体，由智能体在指定机器上执行；进度、命令、错误、Token 用量和代码变更继续挂在同一个任务下面，完成后进入人工审核。</p>
+<p>一句话概括：<strong>Codex、Claude Code 负责干活，Multica 负责派活、留痕和验收。</strong></p>
+<h2 id="它解决什么问题"><a href="#它解决什么问题" class="headerlink" title="它解决什么问题"></a>它解决什么问题</h2><p>单独使用一个编码智能体时，聊天记录和终端通常还能应付。智能体数量增加后，管理成本开始冒出来：</p>
+<ul>
+<li>每个智能体待在自己的会话里，任务状态分散；</li>
+<li>换会话或换工具时，需要重新交代项目背景；</li>
+<li>人要反复查看执行进度，判断它是在工作还是已经卡住；</li>
+<li>一次运行用了哪些工具、执行了什么命令，事后不容易完整追溯；</li>
+<li>团队成员很难共享同一套任务上下文和审核流程。</li>
+</ul>
+<p>Multica 把编码智能体包装成工作区里的“成员”。你可以给它起名字、选择提供方和运行机器，再像分配普通任务一样把 issue 指派给它。智能体接手后会汇报进度；遇到需要决策的事情，可以提出阻塞；完成的结果先进入审核，而不是直接进入主分支。</p>
+<p>这套思路的重点不在于让某个模型变聪明，而是让多智能体工作变得可见、可追踪。</p>
+<h2 id="一次任务如何流转"><a href="#一次任务如何流转" class="headerlink" title="一次任务如何流转"></a>一次任务如何流转</h2><p>Multica 的基本流程可以拆成四步。</p>
+<h3 id="1-建立运行时"><a href="#1-建立运行时" class="headerlink" title="1. 建立运行时"></a>1. 建立运行时</h3><p>运行时是智能体实际工作的电脑，可以是开发者的笔记本，也可以是云主机。Multica 的 daemon 运行在这台机器上，检测已经安装的智能体 CLI，并接收服务端下发的任务。</p>
+<h3 id="2-创建智能体"><a href="#2-创建智能体" class="headerlink" title="2. 创建智能体"></a>2. 创建智能体</h3><p>在工作区里创建一个智能体，选择运行时和提供方，例如 Codex、Claude Code 或 Cursor Agent。Multica 本身不附带模型，也不代替你安装或登录这些 CLI。</p>
+<h3 id="3-分配任务"><a href="#3-分配任务" class="headerlink" title="3. 分配任务"></a>3. 分配任务</h3><p>创建 issue，把智能体设为负责人。任务可以关联代码仓库和文档，减少每次执行时重新解释上下文。</p>
+<h3 id="4-查看执行并审核"><a href="#4-查看执行并审核" class="headerlink" title="4. 查看执行并审核"></a>4. 查看执行并审核</h3><p>智能体在运行时中拉起对应 CLI。执行过程持续写回任务，包括评论、工具调用、命令、错误和 Token 用量。完成后，任务进入审核环节，由人决定是否接受变更。</p>
+<p>这里有个很实际的边界：Multica 负责调度和记录，具体代码质量仍由底层智能体、任务描述和项目测试共同决定。看板不会自动把一个模糊需求变清楚。</p>
+<h2 id="它目前提供哪些能力"><a href="#它目前提供哪些能力" class="headerlink" title="它目前提供哪些能力"></a>它目前提供哪些能力</h2><p>根据项目 README，Multica 支持 20 种智能体 CLI，包括 Codex、Claude Code、Cursor Agent、GitHub Copilot CLI、Kimi、OpenCode 和 Qwen Code 等。切换提供方不需要迁移整个工作区，但对应 CLI 仍需在运行机器上安装并完成认证。</p>
+<p>围绕任务管理，它提供了这些功能：</p>
+<ul>
+<li>issue 分配、任务状态和人工审核；</li>
+<li>带时间戳的执行日志、错误记录和 Token 用量；</li>
+<li>失败重试、超时和阻塞提醒；</li>
+<li>项目、工作区、成员角色和智能体使用权限；</li>
+<li>可复用的 Skills，以及按 cron 运行的 Autopilots；</li>
+<li>GitHub、GitLab、Gitea、Forgejo 等 Git 服务集成；</li>
+<li>Slack、飞书、钉钉和企业微信等消息渠道；</li>
+<li>Web、桌面端、CLI、API，以及需要自行编译的 iOS 客户端。</li>
+</ul>
+<p>这些能力组合起来，更像“AI 工程团队的任务系统”，而不是代码编辑器。</p>
+<h2 id="它是怎么搭起来的"><a href="#它是怎么搭起来的" class="headerlink" title="它是怎么搭起来的"></a>它是怎么搭起来的</h2><p>Multica 前端使用 Next.js，桌面端基于 Electron，后端使用 Go，数据存储是 PostgreSQL 17 和 pgvector。后端通过 WebSocket 把任务发给运行在用户机器上的 daemon，再由 daemon 拉起对应的编码智能体 CLI。</p>
+<p>这套架构把管理面和执行面分开：</p>
+<ul>
+<li>管理面保存任务、成员、日志和状态；</li>
+<li>执行面靠近代码，实际命令在接入的运行机器上执行。</li>
+</ul>
+<p>项目将“代码不离开运行时”列为卖点，但这句话需要结合底层工具理解。daemon 可以在本机运行，编码智能体自身是否把代码或上下文发送给外部模型服务，仍取决于该智能体及其提供方的配置和条款。自托管 Multica 不等于整条 AI 调用链都在本地。</p>
+<h2 id="云端、桌面端和自托管"><a href="#云端、桌面端和自托管" class="headerlink" title="云端、桌面端和自托管"></a>云端、桌面端和自托管</h2><p>最快的体验方式是注册 Multica 云服务，或安装 Windows、macOS、Linux 桌面端。桌面端会把当前电脑注册为运行时，并检测本机已有的智能体 CLI。</p>
+<p>需要掌握数据和服务端部署时，可以选择自托管。官方方案使用 Docker Compose 或 Helm。基础自托管栈包括 Web 前端、Go 后端和 PostgreSQL；每个需要执行智能体的成员，还要在自己的机器上运行 CLI 与 daemon。</p>
+<p>自托管并不等于零运维。团队仍需处理数据库、认证邮件、密钥、网络入口、升级和备份。项目 README 也说明 <code>main</code> 分支更新很快，生产环境更适合固定发布版本，而不是直接追踪最新提交。</p>
+<h2 id="适合哪些团队"><a href="#适合哪些团队" class="headerlink" title="适合哪些团队"></a>适合哪些团队</h2><p>Multica 对以下情况比较有吸引力：</p>
+<ul>
+<li>团队已经同时使用两种以上编码智能体；</li>
+<li>希望把智能体任务从个人终端搬到共享看板；</li>
+<li>需要知道智能体执行过哪些命令、花了多少 Token；</li>
+<li>想让任务定时运行，同时保留人工审核；</li>
+<li>代码必须在指定开发机或自有云主机上执行；</li>
+<li>团队希望保留不同模型和 CLI 的选择权。</li>
+</ul>
+<p>如果只是个人偶尔让 Codex 修一个 bug，直接使用原工具通常更简单。Multica 增加了一层服务、daemon、权限和任务管理，只有当协调成本已经出现时，这一层才开始划算。</p>
+<h2 id="使用前要看清三件事"><a href="#使用前要看清三件事" class="headerlink" title="使用前要看清三件事"></a>使用前要看清三件事</h2><h3 id="权限边界"><a href="#权限边界" class="headerlink" title="权限边界"></a>权限边界</h3><p>daemon 会在接入机器上启动编码智能体。要限制它能访问哪些仓库、密钥和命令，不能只看 Multica 的角色设置，还要同时配置操作系统账户、容器或虚拟机隔离，以及底层智能体的审批策略。</p>
+<h3 id="人工审核不是自动安全"><a href="#人工审核不是自动安全" class="headerlink" title="人工审核不是自动安全"></a>人工审核不是自动安全</h3><p>任务进入审核状态，只表示流程上留了一道门。团队还需要明确谁看 diff、跑哪些测试、什么条件下允许合并。否则审核很容易变成点一下按钮。</p>
+<h3 id="许可证不是标准-Apache-2-0"><a href="#许可证不是标准-Apache-2-0" class="headerlink" title="许可证不是标准 Apache 2.0"></a>许可证不是标准 Apache 2.0</h3><p>项目称自己为开源、可自托管，源代码也公开可见；但仓库使用的是自定义 <strong>Multica License</strong>。该许可证包含 Apache License 2.0 全文，同时添加了托管服务、商业嵌入和品牌使用等条件。GitHub API 因此把许可证识别为 <code>NOASSERTION</code>，而不是 Apache-2.0。</p>
+<p>个人试用和内部部署可以先阅读许可证原文；如果准备向客户提供托管服务、把 Multica 嵌入商业产品，或进行品牌替换，应在实施前确认授权范围。这不是法律意见，准确权利与限制以仓库中的 LICENSE 为准。</p>
+<h2 id="怎么判断它值不值得引入"><a href="#怎么判断它值不值得引入" class="headerlink" title="怎么判断它值不值得引入"></a>怎么判断它值不值得引入</h2><p>可以先用一个小项目做两周试验，不必一上来迁移所有工作：</p>
+<ol>
+<li>接入一台隔离的运行机器和一种已在使用的编码智能体；</li>
+<li>选择十个可验证的小任务，写清测试命令和禁止修改的范围；</li>
+<li>记录人工追问次数、失败恢复时间和审核耗时；</li>
+<li>再接入第二种智能体，看统一看板是否真的减少了上下文切换；</li>
+<li>检查日志、权限和成本数据能否满足团队要求。</li>
+</ol>
+<p>如果引入后只是把“看终端”变成“看另一个看板”，收益有限。若它让任务交接、异常提醒和审核记录明显变清楚，才说明团队确实需要一个智能体协调层。</p>
+<h2 id="最后的判断"><a href="#最后的判断" class="headerlink" title="最后的判断"></a>最后的判断</h2><p>Multica 押注的不是某个模型，而是一种工作方式：编码智能体会越来越多，人需要一个地方安排它们、观察它们，也要在最后做决定。</p>
+<p>它当前最清晰的价值，是把分散在多个终端里的智能体执行过程收回到同一条任务记录中。它也带来新的系统复杂度，权限设计和许可证都值得在正式采用前仔细检查。</p>
+<p>把它理解成“编码智能体的 Jira + 运行调度 + 审计日志”，会比把它当成另一个 AI 编程工具更准确。</p>
+<h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/multica-ai/multica">Multica GitHub 仓库</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/multica-ai/multica/blob/main/README.zh.md">Multica 中文 README</a></li>
+<li><a target="_blank" rel="noopener" href="https://multica.ai/docs">官方文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://multica.ai/docs/cloud-quickstart">快速开始</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/multica-ai/multica/blob/main/SELF_HOSTING.md">自托管说明</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/multica-ai/multica/blob/main/LICENSE">Multica License</a></li>
+</ul>
+<p>本文依据项目在 2026 年 8 月 12 日公开的 README、部署文档和许可证整理。功能与支持列表可能随版本更新。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 智能体</a>
+              <a href="/tags/AI-%E7%BC%96%E7%A8%8B/" rel="tag"># AI 编程</a>
+              <a href="/tags/Multica/" rel="tag"># Multica</a>
+              <a href="/tags/%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86/" rel="tag"># 任务管理</a>
+              <a href="/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 多智能体</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/17/Langfuse%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E7%BB%99%20LLM%20%E5%BA%94%E7%94%A8%E8%A3%85%E4%B8%8A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E5%92%8C%E8%AF%84%E6%B5%8B%E9%97%AD%E7%8E%AF/" rel="prev" title="Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环">
+                  <i class="fa fa-angle-left"></i> Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/%E4%BB%8EChatGPT%E5%88%B0%E6%99%BA%E8%83%BD%E4%BD%93-AI%E5%8F%91%E5%B1%95%E7%9A%84%E5%85%AD%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%80%A7%E6%A0%87%E8%AF%86/" rel="next" title="从 ChatGPT 到智能体：AI 发展的六个阶段性标识">
+                  从 ChatGPT 到智能体：AI 发展的六个阶段性标识 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

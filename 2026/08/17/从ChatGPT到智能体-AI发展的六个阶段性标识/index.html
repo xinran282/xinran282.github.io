@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="从产品入口、能力边界、成本结构和生产方式四个角度，梳理 ChatGPT 发布以来生成式 AI 的阶段变化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 ChatGPT 到智能体：AI 发展的六个阶段性标识">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/17/%E4%BB%8EChatGPT%E5%88%B0%E6%99%BA%E8%83%BD%E4%BD%93-AI%E5%8F%91%E5%B1%95%E7%9A%84%E5%85%AD%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%80%A7%E6%A0%87%E8%AF%86/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="从产品入口、能力边界、成本结构和生产方式四个角度，梳理 ChatGPT 发布以来生成式 AI 的阶段变化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-17T02:10:00.000Z">
+<meta property="article:modified_time" content="2026-08-17T03:13:32.741Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="ChatGPT">
+<meta property="article:tag" content="多模态">
+<meta property="article:tag" content="大语言模型">
+<meta property="article:tag" content="推理模型">
+<meta property="article:tag" content="智能体">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/17/%E4%BB%8EChatGPT%E5%88%B0%E6%99%BA%E8%83%BD%E4%BD%93-AI%E5%8F%91%E5%B1%95%E7%9A%84%E5%85%AD%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%80%A7%E6%A0%87%E8%AF%86/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/17/%E4%BB%8EChatGPT%E5%88%B0%E6%99%BA%E8%83%BD%E4%BD%93-AI%E5%8F%91%E5%B1%95%E7%9A%84%E5%85%AD%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%80%A7%E6%A0%87%E8%AF%86/","path":"2026/08/17/从ChatGPT到智能体-AI发展的六个阶段性标识/","title":"从 ChatGPT 到智能体：AI 发展的六个阶段性标识"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从 ChatGPT 到智能体：AI 发展的六个阶段性标识 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-games"><a href="/game/" rel="section"><i class="fa fa-gamepad fa-fw"></i>games</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8E-ChatGPT-%E5%88%B0%E6%99%BA%E8%83%BD%E4%BD%93%EF%BC%9AAI-%E5%8F%91%E5%B1%95%E7%9A%84%E5%85%AD%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%80%A7%E6%A0%87%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">从 ChatGPT 到智能体：AI 发展的六个阶段性标识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9AChatGPT-%E6%8A%8A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%8F%98%E6%88%90%E5%A4%A7%E4%BC%97%E4%BA%A7%E5%93%81"><span class="nav-number">1.1.</span> <span class="nav-text">第一阶段：ChatGPT 把大模型变成大众产品</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9AGPT-4-%E6%8A%8A%E2%80%9C%E4%BC%9A%E8%81%8A%E5%A4%A9%E2%80%9D%E6%8E%A8%E5%90%91%E2%80%9C%E8%83%BD%E5%A4%84%E7%90%86%E5%A4%8D%E6%9D%82%E4%BB%BB%E5%8A%A1%E2%80%9D"><span class="nav-number">1.2.</span> <span class="nav-text">第二阶段：GPT-4 把“会聊天”推向“能处理复杂任务”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%BC%80%E6%BA%90%E6%A8%A1%E5%9E%8B%E5%85%B4%E8%B5%B7%EF%BC%8C%E7%AB%9E%E4%BA%89%E4%BB%8E%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%8A%9B%E6%89%A9%E5%B1%95%E5%88%B0%E7%94%9F%E6%80%81%E4%B8%8E%E6%88%90%E6%9C%AC"><span class="nav-number">1.3.</span> <span class="nav-text">第三阶段：开源模型兴起，竞争从模型能力扩展到生态与成本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E9%98%B6%E6%AE%B5%EF%BC%9A%E5%A4%9A%E6%A8%A1%E6%80%81%E4%B8%8E%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%8C%E8%AE%A9-AI-%E5%BC%80%E5%A7%8B%E7%90%86%E8%A7%A3%E5%AE%8C%E6%95%B4%E6%9D%90%E6%96%99"><span class="nav-number">1.4.</span> <span class="nav-text">第四阶段：多模态与长上下文，让 AI 开始理解完整材料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E9%98%B6%E6%AE%B5%EF%BC%9A%E6%8E%A8%E7%90%86%E6%A8%A1%E5%9E%8B%E5%87%BA%E7%8E%B0%EF%BC%8CAI-%E4%BB%8E%E5%BF%AB%E9%80%9F%E4%BD%9C%E7%AD%94%E8%BD%AC%E5%90%91%E6%8A%95%E5%85%A5%E8%AE%A1%E7%AE%97%E8%A7%A3%E5%86%B3%E9%9A%BE%E9%A2%98"><span class="nav-number">1.5.</span> <span class="nav-text">第五阶段：推理模型出现，AI 从快速作答转向投入计算解决难题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E9%98%B6%E6%AE%B5%EF%BC%9A%E6%99%BA%E8%83%BD%E4%BD%93%E8%BF%9B%E5%85%A5%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%8C%E6%A8%A1%E5%9E%8B%E5%BC%80%E5%A7%8B%E6%89%A7%E8%A1%8C%E8%80%8C%E4%B8%8D%E5%8F%AA%E6%98%AF%E5%9B%9E%E7%AD%94"><span class="nav-number">1.6.</span> <span class="nav-text">第六阶段：智能体进入工作流，模型开始执行而不只是回答</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E4%B8%AA%E9%98%B6%E6%AE%B5%E8%83%8C%E5%90%8E%E7%9A%84%E4%B8%BB%E7%BA%BF"><span class="nav-number">1.7.</span> <span class="nav-text">六个阶段背后的主线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E4%B8%80%E4%B8%AA%E9%98%B6%E6%AE%B5%E7%9C%8B%E4%BB%80%E4%B9%88"><span class="nav-number">1.8.</span> <span class="nav-text">下一个阶段看什么</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/17/%E4%BB%8EChatGPT%E5%88%B0%E6%99%BA%E8%83%BD%E4%BD%93-AI%E5%8F%91%E5%B1%95%E7%9A%84%E5%85%AD%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%80%A7%E6%A0%87%E8%AF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从 ChatGPT 到智能体：AI 发展的六个阶段性标识 | 欣然的备忘录">
+      <meta itemprop="description" content="从产品入口、能力边界、成本结构和生产方式四个角度，梳理 ChatGPT 发布以来生成式 AI 的阶段变化。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从 ChatGPT 到智能体：AI 发展的六个阶段性标识
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-17 10:10:00 / 修改时间：11:13:32" itemprop="dateCreated datePublished" datetime="2026-08-17T10:10:00+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">从产品入口、能力边界、成本结构和生产方式四个角度，梳理 ChatGPT 发布以来生成式 AI 的阶段变化。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="从-ChatGPT-到智能体：AI-发展的六个阶段性标识"><a href="#从-ChatGPT-到智能体：AI-发展的六个阶段性标识" class="headerlink" title="从 ChatGPT 到智能体：AI 发展的六个阶段性标识"></a>从 ChatGPT 到智能体：AI 发展的六个阶段性标识</h1><p>2022 年 11 月 30 日，ChatGPT 上线。它并不是第一个大语言模型，却第一次让普通人通过一个极其简单的聊天窗口，直接感受到机器可以写作、解释、编程和连续对话。</p>
+<p>回头看，这几年并不是一条均匀上升的曲线。真正值得记住的节点，通常改变了四件事中的至少一件：人们如何接触 AI，AI 能完成什么任务，使用成本有多高，以及它怎样进入真实工作。按这个标准，ChatGPT 之后的 AI 发展大致可以分为六个阶段。</p>
+<h2 id="第一阶段：ChatGPT-把大模型变成大众产品"><a href="#第一阶段：ChatGPT-把大模型变成大众产品" class="headerlink" title="第一阶段：ChatGPT 把大模型变成大众产品"></a>第一阶段：ChatGPT 把大模型变成大众产品</h2><p>时间起点是 2022 年 11 月。</p>
+<p>在此之前，GPT-3 等模型已经展示过文本生成能力，但主要活跃在研究、API 和技术社区。ChatGPT 的变化在于产品形态：用户不需要理解提示词工程，也不需要调用接口，打开网页就能与模型交谈。</p>
+<p>它带来的震动不只来自“回答得像人”。更重要的是，人们第一次发现，同一个入口可以处理写邮件、改文案、解释概念、生成代码等完全不同的任务。自然语言开始成为一种通用的人机界面。</p>
+<p>这一阶段的标识是：AI 从少数人的技术能力，变成了普通人的可用工具。</p>
+<h2 id="第二阶段：GPT-4-把“会聊天”推向“能处理复杂任务”"><a href="#第二阶段：GPT-4-把“会聊天”推向“能处理复杂任务”" class="headerlink" title="第二阶段：GPT-4 把“会聊天”推向“能处理复杂任务”"></a>第二阶段：GPT-4 把“会聊天”推向“能处理复杂任务”</h2><p>2023 年 3 月，GPT-4 发布。相比早期 ChatGPT，它在复杂指令、推理、编程和专业考试上的表现明显提升，并开始支持图像输入。</p>
+<p>这时，市场对大模型的判断发生了变化。大家不再只把它当作聊天机器人，而是开始尝试把它接入办公软件、搜索、客服、研发和内容生产。Microsoft 365 Copilot、GitHub Copilot 等产品路线也让“副驾驶”成为当时最常见的应用模式：人负责目标和审核，模型负责生成初稿、补全与整理。</p>
+<p>这一阶段的标识是：大模型开始具备跨任务的实用性，企业认真评估它能否进入工作流程。</p>
+<h2 id="第三阶段：开源模型兴起，竞争从模型能力扩展到生态与成本"><a href="#第三阶段：开源模型兴起，竞争从模型能力扩展到生态与成本" class="headerlink" title="第三阶段：开源模型兴起，竞争从模型能力扩展到生态与成本"></a>第三阶段：开源模型兴起，竞争从模型能力扩展到生态与成本</h2><p>2023 年，Meta 发布 LLaMA 系列模型，随后出现大量开源或开放权重模型及其微调版本。开发者可以在本地或私有环境部署模型，针对垂直任务进行调整，不必完全依赖少数云端 API。</p>
+<p>这件事改变了行业竞争方式。闭源模型仍在追求最强能力，开源社区则把重点放在可控性、部署方式和推理成本上。企业也多了一个现实选择：并非所有任务都需要最强模型，有些任务更看重数据不出域、响应速度和单位成本。</p>
+<p>这一阶段的标识是：大模型从单一产品竞赛变成平台和生态竞赛，“能不能用”之后，出现了“能否部署、能否负担、能否控制”的问题。</p>
+<h2 id="第四阶段：多模态与长上下文，让-AI-开始理解完整材料"><a href="#第四阶段：多模态与长上下文，让-AI-开始理解完整材料" class="headerlink" title="第四阶段：多模态与长上下文，让 AI 开始理解完整材料"></a>第四阶段：多模态与长上下文，让 AI 开始理解完整材料</h2><p>2024 年前后，多模态和长上下文成为主线。Gemini 1.5 展示了百万级上下文能力，GPT-4o 把文本、图像和语音交互做得更实时，Claude 等模型也开始一次处理更长的文档和代码库。视频生成模型 Sora 则把公众对生成式 AI 的想象从文字和图片推向连续视频。</p>
+<p>能力变化很具体。过去，用户常常需要把长文切成小段，把图片转成文字，再分别交给模型。此后，模型可以直接读取整份报告、分析截图、听取语音，并在不同媒介之间转换。</p>
+<p>这一阶段的标识是：输入不再局限于一句话，AI 开始面对文档、图像、声音和视频组成的真实信息环境。</p>
+<h2 id="第五阶段：推理模型出现，AI-从快速作答转向投入计算解决难题"><a href="#第五阶段：推理模型出现，AI-从快速作答转向投入计算解决难题" class="headerlink" title="第五阶段：推理模型出现，AI 从快速作答转向投入计算解决难题"></a>第五阶段：推理模型出现，AI 从快速作答转向投入计算解决难题</h2><p>2024 年下半年，OpenAI o1 等推理模型受到关注。它们不会只追求立即给出答案，而是在输出前投入更多计算，处理数学、编程和多步推理问题。随后，DeepSeek-R1 等模型进一步证明，较强的推理能力可以通过不同技术路线实现，并推动推理模型的成本继续下降。</p>
+<p>这带来一个重要区分：模型能力不再只由参数规模或一次前向计算决定，还取决于它在回答时愿意投入多少计算。简单任务可以快速处理，困难任务则允许模型“多想一会儿”。</p>
+<p>这一阶段的标识是：大模型开始形成快慢两种工作方式，测试时计算成为提升能力的重要手段。</p>
+<h2 id="第六阶段：智能体进入工作流，模型开始执行而不只是回答"><a href="#第六阶段：智能体进入工作流，模型开始执行而不只是回答" class="headerlink" title="第六阶段：智能体进入工作流，模型开始执行而不只是回答"></a>第六阶段：智能体进入工作流，模型开始执行而不只是回答</h2><p>从 2024 年末到 2026 年，行业重心逐渐转向智能体。模型可以调用搜索、浏览器、代码执行器和企业系统，在较少人工介入的情况下完成多步任务。深度研究、计算机操作和编程智能体是其中较清楚的方向。</p>
+<p>回答问题与完成任务之间有一道实际门槛。前者只需生成文本，后者需要制定步骤、使用工具、读取结果、发现错误并继续修正。智能体一旦接触真实系统，还会遇到权限、审计、安全和责任归属等问题。因此，这一阶段远未成熟，演示效果与稳定生产之间仍有距离。</p>
+<p>这一阶段的标识是：评价 AI 的标准从“回答得好不好”转向“能否可靠地把事情做完”。</p>
+<h2 id="六个阶段背后的主线"><a href="#六个阶段背后的主线" class="headerlink" title="六个阶段背后的主线"></a>六个阶段背后的主线</h2><p>把这些节点放在一起，可以看到一条比模型排行榜更稳定的主线：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>核心变化</th>
+<th>判断标识</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ChatGPT 大众化</td>
+<td>从技术演示到人人可用</td>
+<td>自然语言成为通用入口</td>
+</tr>
+<tr>
+<td>GPT-4 实用化</td>
+<td>从聊天到复杂任务</td>
+<td>企业开始接入工作流程</td>
+</tr>
+<tr>
+<td>开源生态扩张</td>
+<td>从单一模型到多种部署路线</td>
+<td>成本、隐私和控制权进入决策</td>
+</tr>
+<tr>
+<td>多模态与长上下文</td>
+<td>从短文本到完整材料</td>
+<td>模型能够处理多种媒介和长文档</td>
+</tr>
+<tr>
+<td>推理模型</td>
+<td>从即时生成到计算换能力</td>
+<td>困难任务获得更长的推理过程</td>
+</tr>
+<tr>
+<td>智能体</td>
+<td>从提供答案到执行任务</td>
+<td>模型调用工具并完成多步流程</td>
+</tr>
+</tbody></table>
+<p>这条主线也说明，AI 的进步不是单纯“越来越聪明”。它先变得容易使用，再变得更可靠、更便宜，随后获得更多感官和更长记忆，最后开始接触工具与行动。</p>
+<h2 id="下一个阶段看什么"><a href="#下一个阶段看什么" class="headerlink" title="下一个阶段看什么"></a>下一个阶段看什么</h2><p>下一阶段是否真正到来，不应只看一次发布会或一组基准测试。更可信的信号有四个：智能体能否在长任务中保持稳定，单位任务成本能否低于人工协作成本，企业是否建立清晰的权限与审计机制，以及普通用户是否愿意把结果责任交给系统。</p>
+<p>如果这些条件逐步满足，AI 会从“个人副驾驶”走向可以分工协作的数字劳动力。如果做不到，智能体仍会是很好看的演示，以及需要人类不断收拾残局的半成品。</p>
+<p>所以，ChatGPT 之后最重要的变化并不是模型版本号越来越大，而是 AI 与人的关系在不断移动：先是对话对象，随后是辅助工具，现在正尝试成为任务执行者。这个变化还没有结束。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="tag"># 大语言模型</a>
+              <a href="/tags/%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 智能体</a>
+              <a href="/tags/ChatGPT/" rel="tag"># ChatGPT</a>
+              <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" rel="tag"># 多模态</a>
+              <a href="/tags/%E6%8E%A8%E7%90%86%E6%A8%A1%E5%9E%8B/" rel="tag"># 推理模型</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/17/Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA%20AI%20%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF/" rel="prev" title="Multica：把多个 AI 编码智能体放进同一块任务看板">
+                  <i class="fa fa-angle-left"></i> Multica：把多个 AI 编码智能体放进同一块任务看板
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Erlang-OTP%2027%20%E7%9A%84%20GC-%E8%BF%9B%E7%A8%8B-%E6%B6%88%E6%81%AF%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%BC%95%E7%94%A8/" rel="next" title="从源码看 Erlang&#x2F;OTP 27 的 GC：进程、消息和二进制引用">
+                  从源码看 Erlang/OTP 27 的 GC：进程、消息和二进制引用 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

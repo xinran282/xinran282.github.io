@@ -2,9 +2,10 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.2">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,625 +14,113 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
-  </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-  <meta name="description" content="常用启动参数启动方式： erl   argument有三种标签：  虚拟机机标签，以+开头 系统标签，以-开头，这里有部分是启动标签，即启动时被调用如-s，其他为用户标签，存储在虚拟机内，通过init:get_argument(sname).可以得到，用户标签相当于在启动时设置了key-value值 计划标签，放在最前面，或在–，-extra之后，通过init:get_plain_argument">
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="汇总 Erlang 的启动参数、进程、消息和常用运行时知识。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="erlang汇总">
-<meta property="og:url" content="http://example.com/2022/04/14/erlang%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:title" content="Erlang 常用知识汇总">
+<meta property="og:url" content="https://xinran282.github.io/2022/04/14/erlang%E6%B1%87%E6%80%BB/index.html">
 <meta property="og:site_name" content="欣然的备忘录">
-<meta property="og:description" content="常用启动参数启动方式： erl   argument有三种标签：  虚拟机机标签，以+开头 系统标签，以-开头，这里有部分是启动标签，即启动时被调用如-s，其他为用户标签，存储在虚拟机内，通过init:get_argument(sname).可以得到，用户标签相当于在启动时设置了key-value值 计划标签，放在最前面，或在–，-extra之后，通过init:get_plain_argument">
+<meta property="og:description" content="汇总 Erlang 的启动参数、进程、消息和常用运行时知识。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-04-14T01:26:33.000Z">
-<meta property="article:modified_time" content="2022-04-14T01:32:29.522Z">
+<meta property="article:modified_time" content="2026-08-17T03:14:55.294Z">
 <meta property="article:author" content="欣然">
+<meta property="article:tag" content="BEAM">
+<meta property="article:tag" content="Erlang">
+<meta property="article:tag" content="OTP">
+<meta property="article:tag" content="并发">
+<meta property="article:tag" content="虚拟机">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2022/04/14/erlang%E6%B1%87%E6%80%BB/">
+
+<link rel="canonical" href="https://xinran282.github.io/2022/04/14/erlang%E6%B1%87%E6%80%BB/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2022/04/14/erlang%E6%B1%87%E6%80%BB/","path":"2022/04/14/erlang汇总/","title":"Erlang 常用知识汇总"}</script>
 
-  <title>erlang汇总 | 欣然的备忘录</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Erlang 常用知识汇总 | 欣然的备忘录</title>
   
 
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
   <div class="site-meta">
 
     <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">欣然的备忘录</h1>
-      <span class="logo-line-after"><i></i></span>
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
     </a>
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
     </div>
   </div>
 </div>
 
 
 
-
 <nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
   </ul>
 </nav>
 
 
 
 
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
-    
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/14/erlang%E6%B1%87%E6%80%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="欣然">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欣然的备忘录">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          erlang汇总
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-14 09:26:33 / 修改时间：09:32:29" itemprop="dateCreated datePublished" datetime="2022-04-14T09:26:33+08:00">2022-04-14</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/erlang/" itemprop="url" rel="index"><span itemprop="name">erlang</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <h4 id="常用启动参数"><a href="#常用启动参数" class="headerlink" title="常用启动参数"></a>常用启动参数</h4><p>启动方式： erl <argument>  argument有三种标签：</p>
-<ol>
-<li>虚拟机机标签，以+开头</li>
-<li>系统标签，以-开头，这里有部分是启动标签，即启动时被调用如-s，其他为用户标签，存储在虚拟机内，通过init:get_argument(sname).可以得到，用户标签相当于在启动时设置了key-value值</li>
-<li>计划标签，放在最前面，或在–，-extra之后，通过init:get_plain_arguments().获得</li>
-</ol>
-<p>常用参数如下：</p>
-<ul>
-<li>-detached <br><br>  用于运行守护或后台进程</li>
-<li>-remsh Node <br><br>  连接到某个节点</li>
-<li>-connect_all false<br>  禁止节点自动连通，且不能使用全局注册（global）</li>
-<li>+sub true|false <br><br>  开启或关闭进程调度的负载平衡，默认false</li>
-<li>+S Num <br><br>  开启smp时设置调度进程数量</li>
-<li>+P Number <br><br>  设置进程数量上限</li>
-<li>-setcookie <br><br>  指定cookie</li>
-<li>-hidden <br><br>  设置为隐藏节点，在多节点中不会被其他节点自动连接，需要显示调用net_kernel:connect/1</li>
-<li>+sub true <br><br>  开启调度程序负载平衡</li>
-<li>-extra <br><br>  设置启动参数，通过init:get_plain_arguments/0获得</li>
-<li>-config <br><br>  指定应用的配置，通过application:get_env/2获得</li>
-<li>+pc unicode | latin1    <br><br>  启动时指定字符格式<ul>
-<li>latin1：只有ISO-latin-1范围内的字符才能被认为是可打印的，这意味着代码点大于255的字符将永远不会被打印，并且包含此类字符的列表将被工具显示为整数列表，而不是文本字符串</li>
-<li>unicode：在决定是否以字符串语法显示整数列表时，将考虑所有可打印的Unicode字符。这可能会带来意想不到的结果，例如，如果您的字体没有涵盖所有Unicode字符</li>
-<li>io:printable_range().  查看shell的字符格式</li>
-</ul>
-</li>
-<li>args_file FileName <br><br>  从一个文件里读取命令参数，注释以 # 开头，\ 作为引用符，禁止再嵌套-args_file FileName，在文件里，-extra被视为命令结束符</li>
-<li>compile Mod1 Mod2 … <br><br>  编译模块</li>
-<li>+sbwt none|very_short|short|medium|long|very_long <br><br>  设置调度程序繁忙等待阈值。默认为中。该阈值确定了在没有工作之前要进入睡眠状态的调度程序要等待多长时间</li>
-<li>+Q Num <br><br>  erlang open_port的数量默认是65536，win为8192，若要超过这个数，则需要启动时用此参数指定，当然系统的限制也要打开，否则也是用不了的，可以通过erlang:system_info(port_limit) 来确认限制</li>
-</ul>
-<h4 id="编译选项"><a href="#编译选项" class="headerlink" title="编译选项"></a>编译选项</h4><ul>
-<li>inline 开启自动内联函数，即把一些短小的函数内嵌到调用者函数体里面，减少函数调用的开销，默认大小为24，并不是指行数，可以通过{inline_size, Num}来改变大小，存在破坏尾递归的可能，也可以在源文件中用 <strong>-compile({inline, [Fun/Arty]}).</strong> 的方式显示指定哪个函数需要内联，但这种会被提示成old inline</li>
-<li>debug_info 添加调试信息，加了这个可以由beam导出erl</li>
-<li>warning_as_errors 警告当做错误输出</li>
-<li>report 输出警告、错误信息</li>
-<li>verbose 输出详细编译信息<br><a target="_blank" rel="noopener" href="https://www.erlang.org/doc/man/compile.html">其他</a></li>
-</ul>
-<h4 id="编程规范"><a href="#编程规范" class="headerlink" title="编程规范"></a><a target="_blank" rel="noopener" href="http://www.erlang.se/doc/programming_rules.shtml#REF19691">编程规范</a></h4><h5 id="官网推荐-基本要求"><a href="#官网推荐-基本要求" class="headerlink" title="官网推荐 = 基本要求"></a>官网推荐 = 基本要求</h5><ol>
-<li>不要写深度嵌套代码</li>
-<li>不要写非常大的模块，模块行数控制在1000行内</li>
-<li>不要写很大的函数 尽量控制一个屏幕能显示完整</li>
-<li>不要写太长的代码，太长时就换行</li>
-<li>变量命名，驼峰式命名  后面跟数字的前面可以加’_’,以突出显示 如Player_2</li>
-<li>函数名、模块名，单词以_分隔</li>
-<li>代码间隔格式 ,后面加空格 看起来比较直观 如{12, 23, 45}<h5 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h5></li>
-<li>不要在其他功能模块插入自己功能的一长段代码，应封装好后供其调用</li>
-<li>功能目录下的模块命名前缀尽量跟目录名一致</li>
-<li>涉及到玩家个人零点清次数的，要么用daily模块，要么state里存个更新时间T，根据T去判断要不要清次数或重置数据</li>
-<li>任务监听的，生成配置时要列出改功能用到的任务标签，代码做判断时优先根据这标签列表做过滤</li>
-<li>后面涉及到玩家个人零点清次数的，要么用daily模块，要么state里存个更新时间T，根据T去判断要不要清次数或重置数据，可以参考task_daily模块</li>
-<li>会存机器人key的玩法，登陆初始化时要判断下key还在不在，因为每次重启时不能保证相同key的机器人还在</li>
-</ol>
-<h4 id="运维常用"><a href="#运维常用" class="headerlink" title="运维常用"></a>运维常用</h4><figure class="highlight erl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">recon:scheduler_usage(<span class="number">1000</span>).    <span class="comment">%% 查看一定时间内调度器程序使用率 参数为毫秒</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%% Type = used | allocated | unused | usage | allocated_types | allocated_instances</span></span><br><span class="line"><span class="comment">%% usage 使用率 = used/allocated</span></span><br><span class="line"><span class="comment">%% allocated 系统分配的</span></span><br><span class="line"><span class="comment">%% allocated_types 各种数据类型的占用</span></span><br><span class="line"><span class="comment">%% allocated_instances 调度程序占用，0代表所有</span></span><br><span class="line">recon_alloc:memory(Type).       <span class="comment">%% 内存查看 单位b</span></span><br><span class="line"></span><br><span class="line">reconcile:info(Pid). <span class="comment">%% 获取进程信息 类似process_info/1 但相对安全，不安全的如binary、dictionary、messages</span></span><br><span class="line"><span class="comment">%% 按Type值排序取前Num个进程的信息</span></span><br><span class="line"><span class="comment">%% Type = memory | message_queue_len | heap_size | binary_memory | reductions</span></span><br><span class="line"><span class="comment">%% 上述为常用选项，其实就是类似process_info里的key</span></span><br><span class="line">recon:proc_count(Type, Num).</span><br><span class="line">recon:proc_window(Type, Num, Milliseconds)  <span class="comment">%% 同上，但会在给定时间内采样两次取均值</span></span><br><span class="line"></span><br><span class="line">recon:port_types(). <span class="comment">%% 查看端口类型数量</span></span><br><span class="line">recon:port_info(<span class="string">&quot;#Port&lt;0.3440&gt;&quot;</span>).   <span class="comment">%% 查看端口信息</span></span><br><span class="line"><span class="comment">%% 查看按属性排序的前N个端口信息</span></span><br><span class="line"><span class="comment">%% Attribute = &#x27;recv_cnt&#x27; | &#x27;recv_oct&#x27; | &#x27;send_cnt&#x27; | &#x27;send_oct&#x27; | &#x27;cnt&#x27; | &#x27;oct&#x27;</span></span><br><span class="line"><span class="comment">%% oct：流量字节数，cnt包数</span></span><br><span class="line">recon:inet_count(Attribute, Num).</span><br><span class="line">recon:inet_window(Attribute, Count, Milliseconds). <span class="comment">%% 同上</span></span><br><span class="line"></span><br><span class="line">recon:bin_leak(N). <span class="comment">%% 对比gc前后binary内存变化，得出变化最大的N个进程</span></span><br><span class="line">recon_trace:calls(&#123;queue, in, <span class="number">2</span>&#125;, <span class="number">1</span>).   <span class="comment">%% 追踪函数调用</span></span><br><span class="line"></span><br><span class="line">rb:start() <span class="comment">%% 查看系统自带日志输出</span></span><br><span class="line">crashdump_viewer:start() <span class="comment">%% win端查看节点挂掉的dump文件</span></span><br><span class="line">observer:start()    <span class="comment">%% 具象化看节点信息</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">%% ets表占用内存排序</span></span><br><span class="line">lists:reverse(lists:keysort(<span class="number">2</span>, [&#123;Name, ets:info(Name, memory)&#125;||Name&lt;-ets:all()])).</span><br><span class="line"><span class="comment">%% 显示10秒内内核进程的使用率</span></span><br><span class="line">msacc:start(<span class="number">10000</span>),msacc:print().</span><br></pre></td></tr></table></figure>
-
-<h4 id="dialyzer-静态分析"><a href="#dialyzer-静态分析" class="headerlink" title="dialyzer 静态分析"></a>dialyzer <a target="_blank" rel="noopener" href="https://erlangdisplay.iteye.com/blog/404570">静态分析</a></h4><p>使用示例</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dialyzer --build_plt -r &quot;C:\Program Files\erl7.3\lib\erts-7.3\ebin&quot; &quot;C:\Program Files\erl7.3\lib\kernel-4.2\ebin&quot; &quot;C:\Program Files\erl7.3\lib\stdlib-2.8\ebin&quot; &quot;C:\Program Files\erl7.3\lib\mnesia-4.13.3\ebin&quot; &quot;C:\Program Files\erl7.3\lib\crypto-3.6.3\ebin&quot; &quot;C:\Program Files\erl7.3\lib\sasl-2.7\ebin&quot;</span><br><span class="line">dialyzer -Werror_handling -r E:\work\cshx\server\script\../ebin &gt; </span><br></pre></td></tr></table></figure>
-<h4 id="gen-server-exit"><a href="#gen-server-exit" class="headerlink" title="gen_server exit"></a>gen_server exit</h4><table>
-<thead>
-<tr>
-<th>type</th>
-<th>trap_exit</th>
-<th>exit原因</th>
-<th>进程终止否</th>
-<th>teminate执行否</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>gen_server</td>
-<td>false</td>
-<td>test、shutdown、kill、other</td>
-<td>是</td>
-<td>否</td>
-</tr>
-<tr>
-<td>gen_server</td>
-<td>false</td>
-<td>normal</td>
-<td>否</td>
-<td>否</td>
-</tr>
-<tr>
-<td>gen_server</td>
-<td>true</td>
-<td>normal、shutdown、test、other、killed</td>
-<td>否</td>
-<td>否</td>
-</tr>
-<tr>
-<td>gen_server</td>
-<td>true</td>
-<td>kill</td>
-<td>是</td>
-<td>否</td>
-</tr>
-<tr>
-<td>spawn</td>
-<td>false</td>
-<td>test、shutdown、kill、other</td>
-<td>是</td>
-<td></td>
-</tr>
-<tr>
-<td>spawn</td>
-<td>false</td>
-<td>normal</td>
-<td>否</td>
-<td></td>
-</tr>
-<tr>
-<td>spawn</td>
-<td>true</td>
-<td>kill、shutdown、test、other、killed</td>
-<td>否</td>
-<td></td>
-</tr>
-<tr>
-<td>spawn</td>
-<td>true</td>
-<td>normal</td>
-<td>是</td>
-<td></td>
-</tr>
-<tr>
-<td>ps：游戏节点终止会用init:stop/0,通知到gen_server退出的原因是shutdown</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<h4 id="xrl-yrl-erlydtl"><a href="#xrl-yrl-erlydtl" class="headerlink" title="xrl yrl  erlydtl"></a>xrl yrl  erlydtl</h4><p><a target="_blank" rel="noopener" href="http://www.erlang.org/doc/man/leex.html">.xrl</a><br><a target="_blank" rel="noopener" href="http://www.erlang.org/doc/man/yecc.html">.yrl</a><br>具体看官方文档，大意是按一定规制写文件，然后可以用erlc编译生成.erl文件<br><br><a target="_blank" rel="noopener" href="http://www.erlang.org/doc/man/erlc.html">erlc可支持编译的文件格式</a></p>
-<p>erlang模板引擎<br><br><a target="_blank" rel="noopener" href="https://github.com/erlydtl/erlydtl">https://github.com/erlydtl/erlydtl</a> <br><br><a target="_blank" rel="noopener" href="https://github.com/erlydtl/erlydtl/wiki">https://github.com/erlydtl/erlydtl/wiki</a>  例子</p>
-<h4 id="运算符号"><a href="#运算符号" class="headerlink" title="运算符号"></a>运算符号</h4><table>
-<thead>
-<tr>
-<th>运算符</th>
-<th>说明</th>
-<th>参数类型</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>‘+’</td>
-<td>一元  +</td>
-<td>number</td>
-</tr>
-<tr>
-<td>‘-‘</td>
-<td>一元  -</td>
-<td>number</td>
-</tr>
-<tr>
-<td>‘*’</td>
-<td>乘法</td>
-<td>number</td>
-</tr>
-<tr>
-<td>‘/‘</td>
-<td>浮点除法</td>
-<td>number</td>
-</tr>
-<tr>
-<td>div</td>
-<td>整数除法</td>
-<td>integer</td>
-</tr>
-<tr>
-<td>bnot</td>
-<td>一元 not 位运算</td>
-<td>integer</td>
-</tr>
-<tr>
-<td>rem</td>
-<td>整数求余</td>
-<td>integer</td>
-</tr>
-<tr>
-<td>band</td>
-<td>与运算</td>
-<td>integer</td>
-</tr>
-<tr>
-<td>bor</td>
-<td>或运算</td>
-<td>integer</td>
-</tr>
-<tr>
-<td>bxor</td>
-<td>异或运算</td>
-<td>integer</td>
-</tr>
-<tr>
-<td>bsl</td>
-<td>左移运算</td>
-<td>integer</td>
-</tr>
-<tr>
-<td>bsr</td>
-<td>右移运算</td>
-<td>integer</td>
-</tr>
-</tbody></table>
-<h4 id="全局宏"><a href="#全局宏" class="headerlink" title="全局宏"></a><a target="_blank" rel="noopener" href="http://erlang.org/doc/reference_manual/macros.html">全局宏</a></h4><table>
-<thead>
-<tr>
-<th>宏名</th>
-<th>类型</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>?MODULE</td>
-<td>atom</td>
-<td>当前模块</td>
-</tr>
-<tr>
-<td>?LINE</td>
-<td>integer</td>
-<td>当前行数</td>
-</tr>
-<tr>
-<td>?FILE</td>
-<td>string</td>
-<td>当前文件名</td>
-</tr>
-<tr>
-<td>?FUNCTION_NAME</td>
-<td>atom</td>
-<td>当前函数名</td>
-</tr>
-<tr>
-<td>?FUNCTION_ARITY</td>
-<td>integer</td>
-<td>当前函数参数数量</td>
-</tr>
-<tr>
-<td>?MACHINE</td>
-<td>string</td>
-<td>当前执行程序名 ‘BEAM’</td>
-</tr>
-<tr>
-<td>?MODULE_STRING</td>
-<td>string</td>
-<td>当前模块</td>
-</tr>
-<tr>
-<td>?OTP_RELEASE</td>
-<td>integer</td>
-<td>OTP版本 = erlang:system_info(otp_release) = 21</td>
-</tr>
-</tbody></table>
-<h4 id="字符编码"><a href="#字符编码" class="headerlink" title="字符编码"></a>字符编码</h4><h5 id="源文件的编码"><a href="#源文件的编码" class="headerlink" title="源文件的编码"></a>源文件的编码</h5><p>编译器会用正则\s*[:=]\s*([-a-zA-Z0-9]检索erl文件头两行，若命中，则以声明的编码格式编译文件，R16B之前默认是Latin-1,之后是UTF-8。如可以用以下任意一种声明方式</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%% coding: utf-8</span><br><span class="line">%% For this file we have chosen encoding = Latin-1</span><br><span class="line">%% -*- coding: latin-1 -*-</span><br></pre></td></tr></table></figure>
-
-<h5 id="位语法"><a href="#位语法" class="headerlink" title="位语法"></a>位语法</h5><p>Flag = utf8、utf16、utf32、little、big、binary</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;&lt;Ch/utf8,_/binary&gt;&gt; = Bin1,</span><br><span class="line">&lt;&lt;Ch/utf16-little,_/binary&gt;&gt; = Bin2,</span><br><span class="line">Bin3 = &lt;&lt;$H/utf32-little, $e/utf32-little, $l/utf32-little, $l/utf32-little,</span><br><span class="line">$o/utf32-little&gt;&gt;</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="erlang-system-monitor-MonitorPid-Options-gt-MonSettings"><a href="#erlang-system-monitor-MonitorPid-Options-gt-MonSettings" class="headerlink" title="erlang:system_monitor(MonitorPid, Options) -&gt; MonSettings"></a>erlang:system_monitor(MonitorPid, Options) -&gt; MonSettings</h4><p>监控某个进程，Options如下：<br></p>
-<ul>
-<li>{long_gc, Time} <br><br>若GC时间&gt;=Time,监控进程会收到{monitor, GcPid, long_gc, Info} <br><br>Info = [ {timeout, GcTime} | {Key, Val} ] <br><br>GcTime = 实际GC的毫秒数 Key = <br><ul>
-<li>heap_size         堆容量</li>
-<li>heap_block_size   堆栈容量</li>
-<li>old_heap_size</li>
-<li>old_heap_block_size</li>
-<li>stack_size</li>
-<li>recent_size       上次GC后的数据容量</li>
-<li>mbuf_size         消息缓冲区容量</li>
-<li>bin_vheap_size    从进程堆引用的唯一堆外二进制文件的总容量</li>
-<li>bin_old_vheap_size </li>
-<li>bin_vheap_block_size  GC前，虚拟堆中允许的二进制文件的容量上限</li>
-<li>bin_old_vheap_block_size</li>
-</ul>
-</li>
-<li>{long_schedule, Time} <br><br>若端口或进程在内核调用的时间&gt;=Time,则收到{monitor, PidOrPort, long_schedule, Info} <br><ul>
-<li>被监控的是pid()时，Info内容有：<ul>
-<li>{timeout, Millis}</li>
-<li>{in, Location}</li>
-<li>{out, Location} <br><br>Location = {Module, Function, Arity} | undefined</li>
-</ul>
-</li>
-<li>被监控的是port()时 <br><br>可用于检测NIFs(内建函数)或驱动的运行时间，最好不要超过1ms，但在分时系统，只要&lt;100ms，都可以被认为正常<ul>
-<li>{timeout, Millis}</li>
-<li>{port_op,Op} <br><br>Op = proc_sig | timeout | input | output | event | dist_cmd</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>{large_heap, Size} <br><br>若GC后堆大小&gt;=Size，则收到{monitor, GcPid, large_heap, Info}，Info跟long_gc的一致，除了没有timeout<br><br>若被监控进程自身超过max_heap_size而被kill，则监控进程不会收到信息，因为其还没进行GC或GC完</li>
-<li>busy_port <br><br>若被监控进程因为向繁忙端口发送消息而被挂机，则监控者收到{monitor, SusPid, busy_dist_port, Port}</li>
-<li>busy_dist_port <br><br>同上，不同的是节点间的调用，{monitor, SusPid, busy_dist_port, Port}</li>
-</ul>
-<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><p>内存块 18位对齐 所以最小256KB <br><br>载体 = 1~n个内存块 <br><br>堆分配器，二进制分配器，驱动程序分配器和ets分配器 <br><br>erl_alloc.types 具体的内存分配映射处理表,在源码中可见(erl_alloc.types) <br></p>
-<p>内存增长的原因：</p>
-<ol>
-<li>消息队列过长</li>
-<li>ets不规范操作</li>
-<li>进程字典</li>
-<li>binary数据引用</li>
-</ol>
-<h4 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h4><h4 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h4><ol>
-<li>erlang c源码查看关联 如lists:reverse/1  = lists_reverse_1 <br><br>内建函数BIF表 = bif.tab</li>
-<li>dict:fetch/2 用于查找已存在key的数据，不存在时会报错<br><br>dict:find/2 也是查找数据，不存在时返回error   </li>
-<li>Erlang的binary分为两大类：ProcBin和Refc binary 。64 字节及以下的binary都直接在进程自己的堆上分配，其整个生命期都在堆中。大于 64 字节的binary会分配在一个binary专用的全局堆上，每个使用它的进程都会在自己的局部堆中持有一个对其的本地引用</li>
-<li>erl_alloc.types 内存类型总览的源码文件</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">%%% -*- coding: utf8 -*-</span><br><span class="line">% 指定编译编码格式</span><br><span class="line"></span><br><span class="line">erlc -S 文件   %% 生成中间代码 .S文件</span><br><span class="line"></span><br><span class="line">% SHA256加密</span><br><span class="line">hmax_sha256(Key, Data)-&gt;</span><br><span class="line">    lists:flatten([[integer_to_list(N, 16) || &lt;&lt;N:4&gt;&gt; &lt;= crypto:hmac(sha256, Key, Data)]]).</span><br><span class="line">    </span><br><span class="line">-compile(&#123;parse_transform,ms_transform&#125;).</span><br><span class="line">erlang编译时，会先生成abstract_code，再回调这个参数指定的模块，最终生成vm执行的opccode</span><br><span class="line">也可以在emakefile中作为参数</span><br><span class="line">%% 查看abstract_code，编译时需用 debug_info参数</span><br><span class="line">&#123;ok,&#123;_,[&#123;abstract_code,&#123;_,AC&#125;&#125;]&#125;&#125; = beam_lib:chunks(filename:dirname(code:which(test)) ++ &quot;/test.beam&quot;,[abstract_code]).</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><ol>
-<li>erlang的缺陷<ol>
-<li>使用耗时的nif时，会影响其调度公平</li>
-<li>存在进程字典、ets，妨碍了函数式的幂等性</li>
-</ol>
-</li>
-</ol>
-<h4 id="其他文档"><a href="#其他文档" class="headerlink" title="其他文档"></a>其他文档</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/5c3d4a55e4b0641c83dc0772#map">cowboy websocket分析</a></li>
-<li><a target="_blank" rel="noopener" href="https://code.google.com/p/mypeb/downloads/list">php使用erlang</a></li>
-<li><a target="_blank" rel="noopener" href="http://erlang.org/doc/apps/erts/erl_ext_dist.html">erlang数据结构的二进制表示</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011583927/article/details/80905740">SHA256算法原理详解</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_40811410/article/details/81950142">Base64 的原理、实现及应用</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.iteye.com/blog/jzhihui-1482175">Erlang并发机制 –进程调度</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.iteye.com/blog/mryufeng-334744">Erlang ERTS的Trap机制的设计及其用途</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/softn/article/details/51872232">软实时和硬实时操作系统的区别</a> <br>如果系统响应不能满足时限的要求，即使它能得到正确的输出，我们也只能说他是一个失败的响应。“软”意味着如果没有满足指定的时间约束并不会导致灾难性后果，而对硬实时系统来说却是灾难性的</li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qHJiTjpvDikFcdl9SRL97Q">深入理解 MySQL 索引底层原理</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.iteye.com/blog/jzhihui-1506756">Erlang并发机制 – 消息传递</a></li>
-<li><a target="_blank" rel="noopener" href="http://beam-wisdoms.clau.se/en/latest/indepth-memory-layout.html">Erlang类型数据的内存存储格式</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/me-sa/archive/2012/01/09/erlang0029.html">Erlang Inline编译 内联函数</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/mycwq/article/details/28660813">分析和解决mnesia过载问题</a></li>
-<li><a target="_blank" rel="noopener" href="https://wudaijun.com/2015/12/erlang-datastructures/">Erlang 常用数据结构实现</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/mycwq/article/details/26613275">Erlang进程堆垃圾回收机制</a></li>
-<li><a target="_blank" rel="noopener" href="https://hamidreza-s.github.io/erlang%20garbage%20collection%20memory%20layout%20soft%20realtime/2015/08/24/erlang-garbage-collection-details-and-why-it-matters.html">Erlang垃圾回收细节</a></li>
-</ul>
-<h4 id="资料"><a href="#资料" class="headerlink" title="资料"></a>资料</h4><ul>
-<li><a target="_blank" rel="noopener" href="http://erlang.shiningray.cn/otp-design-principles/index.html">Erlang OTP 设计原理文档</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/me-sa/">坚强2002的博客</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.yufeng.info/">系统技术非业余研究</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.iteye.com/blog/user/mryufeng">yufeng原博客</a></li>
-<li><a target="_blank" rel="noopener" href="https://erlangdisplay.iteye.com/category/127758">成立涛的博客</a></li>
-<li><a target="_blank" rel="noopener" href="http://gashero.yeax.com/?cat=6">惊帆之静默</a></li>
-<li><a target="_blank" rel="noopener" href="https://cryolite.iteye.com/category/30938?page=2">cryolite</a></li>
-<li><a target="_blank" rel="noopener" href="https://wudaijun.com/">wudaijun</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.yuque.com/mouwen/weekly/qa">Erlang/Elixir精选</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.erlang.org/">Erlang开发组博客</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/erlware/Erlang-and-OTP-in-Action-Source">Erlang-and-OTP-in-Action</a></li>
-<li><a target="_blank" rel="noopener" href="http://trapexit.org/">http://trapexit.org</a> （国内封锁）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/0xAX/erlang-bookmarks/blob/master/ErlangBookmarks.md">erlang书签</a></li>
-<li><a target="_blank" rel="noopener" href="https://iowiki.com/erlang/erlang_index.html">erlang 教程wiki</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hstcscolor/awesome-erlang-cn">Erlang资源大全中文版</a></li>
-<li><a target="_blank" rel="noopener" href="https://sites.google.com/a/chaoskey.com/erlang/">Erlang程序设计</a></li>
-<li><a target="_blank" rel="noopener" href="https://erldoc.com/">Erlang中文手册</a></li>
-<li><a target="_blank" rel="noopener" href="https://szpzs.oschina.io/categories/">彭政生的博客</a></li>
-<li><a target="_blank" rel="noopener" href="https://ferd.ca/">learn you some erlang作者博客</a></li>
-</ul>
-
-    </div>
-
-    
-    
-    
-
-      <footer class="post-footer">
-
+</header>
         
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2022/04/13/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" rel="prev" title="linux常用指令">
-      <i class="fa fa-chevron-left"></i> linux常用指令
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/04/14/lua%E7%AC%94%E8%AE%B0/" rel="next" title="lua笔记">
-      lua笔记 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
   
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
   <aside class="sidebar">
-    <div class="sidebar-inner">
 
-      <ul class="sidebar-nav motion-element">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
         </li>
@@ -640,123 +129,358 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">常用启动参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9"><span class="nav-number">2.</span> <span class="nav-text">编译选项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83"><span class="nav-number">3.</span> <span class="nav-text">编程规范</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%98%E7%BD%91%E6%8E%A8%E8%8D%90-%E5%9F%BA%E6%9C%AC%E8%A6%81%E6%B1%82"><span class="nav-number">3.1.</span> <span class="nav-text">官网推荐 &#x3D; 基本要求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%99%84%E5%8A%A0"><span class="nav-number">3.2.</span> <span class="nav-text">附加</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">运维常用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dialyzer-%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">dialyzer 静态分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gen-server-exit"><span class="nav-number">6.</span> <span class="nav-text">gen_server exit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#xrl-yrl-erlydtl"><span class="nav-number">7.</span> <span class="nav-text">xrl yrl  erlydtl</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E5%8F%B7"><span class="nav-number">8.</span> <span class="nav-text">运算符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%AE%8F"><span class="nav-number">9.</span> <span class="nav-text">全局宏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81"><span class="nav-number">10.</span> <span class="nav-text">字符编码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%BA%90%E6%96%87%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81"><span class="nav-number">10.1.</span> <span class="nav-text">源文件的编码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%8D%E8%AF%AD%E6%B3%95"><span class="nav-number">10.2.</span> <span class="nav-text">位语法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#erlang-system-monitor-MonitorPid-Options-gt-MonSettings"><span class="nav-number">11.</span> <span class="nav-text">erlang:system_monitor(MonitorPid, Options) -&gt; MonSettings</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">12.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E7%BC%96%E8%AF%91"><span class="nav-number">13.</span> <span class="nav-text">反编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ps"><span class="nav-number">14.</span> <span class="nav-text">ps</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">15.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%96%87%E6%A1%A3"><span class="nav-number">16.</span> <span class="nav-text">其他文档</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B5%84%E6%96%99"><span class="nav-number">17.</span> <span class="nav-text">资料</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">常用启动参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9"><span class="nav-number">2.</span> <span class="nav-text">编译选项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83"><span class="nav-number">3.</span> <span class="nav-text">编程规范</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%98%E7%BD%91%E6%8E%A8%E8%8D%90-%E5%9F%BA%E6%9C%AC%E8%A6%81%E6%B1%82"><span class="nav-number">3.1.</span> <span class="nav-text">官网推荐 &#x3D; 基本要求</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">运维常用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dialyzer-%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">dialyzer 静态分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gen-server-exit"><span class="nav-number">6.</span> <span class="nav-text">gen_server exit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#xrl-yrl-erlydtl"><span class="nav-number">7.</span> <span class="nav-text">xrl yrl  erlydtl</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E5%8F%B7"><span class="nav-number">8.</span> <span class="nav-text">运算符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E5%AE%8F"><span class="nav-number">9.</span> <span class="nav-text">全局宏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81"><span class="nav-number">10.</span> <span class="nav-text">字符编码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%BA%90%E6%96%87%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81"><span class="nav-number">10.1.</span> <span class="nav-text">源文件的编码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%8D%E8%AF%AD%E6%B3%95"><span class="nav-number">10.2.</span> <span class="nav-text">位语法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#erlang-system-monitor-MonitorPid-Options-MonSettings"><span class="nav-number">11.</span> <span class="nav-text">erlang:system_monitor(MonitorPid, Options) -&gt; MonSettings</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">12.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E7%BC%96%E8%AF%91"><span class="nav-number">13.</span> <span class="nav-text">反编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ps"><span class="nav-number">14.</span> <span class="nav-text">ps</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="欣然"
       src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">欣然</p>
   <div class="site-description" itemprop="description"></div>
 </div>
-<div class="site-state-wrap motion-element">
+<div class="site-state-wrap animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">6</span>
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">4</span>
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">1</span>
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
 
-
-
+        </div>
       </div>
+    </div>
+
+    
+  </aside>
+
 
     </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
+
+    <div class="main-inner post posts-expand">
 
 
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
   
-  &copy; 
-  <span itemprop="copyrightYear">2022</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">欣然</span>
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2022/04/14/erlang%E6%B1%87%E6%80%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Erlang 常用知识汇总 | 欣然的备忘录">
+      <meta itemprop="description" content="汇总 Erlang 的启动参数、进程、消息和常用运行时知识。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Erlang 常用知识汇总
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-04-14 09:26:33" itemprop="dateCreated datePublished" datetime="2022-04-14T09:26:33+08:00">2022-04-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-17 11:14:55" itemprop="dateModified" datetime="2026-08-17T11:14:55+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Erlang/" itemprop="url" rel="index"><span itemprop="name">Erlang</span></a>
+        </span>
+    </span>
+
+  
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
-  </div>
+
+            <div class="post-description">汇总 Erlang 的启动参数、进程、消息和常用运行时知识。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="常用启动参数"><a href="#常用启动参数" class="headerlink" title="常用启动参数"></a>常用启动参数</h4><p>启动方式： erl   argument有三种标签：</p>
+<p>虚拟机机标签，以+开头<br>系统标签，以-开头，这里有部分是启动标签，即启动时被调用如-s，其他为用户标签，存储在虚拟机内，通过init:get_argument(sname).可以得到，用户标签相当于在启动时设置了key-value值<br>计划标签，放在最前面，或在–，-extra之后，通过init:get_plain_arguments().获得</p>
+<p>常用参数如下：</p>
+<p>-detached</p>
+<p>  用于运行守护或后台进程<br>-remsh Node</p>
+<p>  连接到某个节点<br>-connect_all false<br>  禁止节点自动连通，且不能使用全局注册（global）<br>+sub true|false</p>
+<p>  开启或关闭进程调度的负载平衡，默认false<br>+S Num</p>
+<p>  开启smp时设置调度进程数量<br>+P Number</p>
+<p>  设置进程数量上限<br>-setcookie</p>
+<p>  指定cookie<br>-hidden</p>
+<p>  设置为隐藏节点，在多节点中不会被其他节点自动连接，需要显示调用net_kernel:connect&#x2F;1<br>+sub true</p>
+<p>  开启调度程序负载平衡<br>-extra</p>
+<p>  设置启动参数，通过init:get_plain_arguments&#x2F;0获得<br>-config</p>
+<p>  指定应用的配置，通过application:get_env&#x2F;2获得<br>+pc unicode | latin1</p>
+<p>  启动时指定字符格式<br>latin1：只有ISO-latin-1范围内的字符才能被认为是可打印的，这意味着代码点大于255的字符将永远不会被打印，并且包含此类字符的列表将被工具显示为整数列表，而不是文本字符串<br>unicode：在决定是否以字符串语法显示整数列表时，将考虑所有可打印的Unicode字符。这可能会带来意想不到的结果，例如，如果您的字体没有涵盖所有Unicode字符<br>io:printable_range().  查看shell的字符格式</p>
+<p>args_file FileName</p>
+<p>  从一个文件里读取命令参数，注释以 # 开头，\ 作为引用符，禁止再嵌套-args_file FileName，在文件里，-extra被视为命令结束符<br>compile Mod1 Mod2 …</p>
+<p>  编译模块<br>+sbwt none|very_short|short|medium|long|very_long</p>
+<p>  设置调度程序繁忙等待阈值。默认为中。该阈值确定了在没有工作之前要进入睡眠状态的调度程序要等待多长时间<br>+Q Num</p>
+<p>  erlang open_port的数量默认是65536，win为8192，若要超过这个数，则需要启动时用此参数指定，当然系统的限制也要打开，否则也是用不了的，可以通过erlang:system_info(port_limit) 来确认限制</p>
+<h4 id="编译选项"><a href="#编译选项" class="headerlink" title="编译选项"></a>编译选项</h4><p>inline 开启自动内联函数，即把一些短小的函数内嵌到调用者函数体里面，减少函数调用的开销，默认大小为24，并不是指行数，可以通过{inline_size, Num}来改变大小，存在破坏尾递归的可能，也可以在源文件中用 <strong>-compile({inline, [Fun&#x2F;Arty]}).</strong> 的方式显示指定哪个函数需要内联，但这种会被提示成old inline<br>debug_info 添加调试信息，加了这个可以由beam导出erl<br>warning_as_errors 警告当做错误输出<br>report 输出警告、错误信息<br>verbose 输出详细编译信息<br><a target="_blank" rel="noopener" href="https://www.erlang.org/doc/man/compile.html">其他</a></p>
+<h4 id="编程规范"><a href="#编程规范" class="headerlink" title="编程规范"></a>编程规范</h4><h5 id="官网推荐-基本要求"><a href="#官网推荐-基本要求" class="headerlink" title="官网推荐 &#x3D; 基本要求"></a>官网推荐 &#x3D; 基本要求</h5><p>不要写深度嵌套代码<br>不要写非常大的模块，模块行数控制在1000行内<br>不要写很大的函数 尽量控制一个屏幕能显示完整<br>不要写太长的代码，太长时就换行<br>变量命名，驼峰式命名  后面跟数字的前面可以加’_’,以突出显示 如Player_2<br>函数名、模块名，单词以_分隔<br>代码间隔格式 ,后面加空格 看起来比较直观 如{12, 23, 45}##### 附加</p>
+<p>不要在其他功能模块插入自己功能的一长段代码，应封装好后供其调用<br>功能目录下的模块命名前缀尽量跟目录名一致<br>涉及到玩家个人零点清次数的，要么用daily模块，要么state里存个更新时间T，根据T去判断要不要清次数或重置数据<br>任务监听的，生成配置时要列出改功能用到的任务标签，代码做判断时优先根据这标签列表做过滤<br>后面涉及到玩家个人零点清次数的，要么用daily模块，要么state里存个更新时间T，根据T去判断要不要清次数或重置数据，可以参考task_daily模块<br>会存机器人key的玩法，登陆初始化时要判断下key还在不在，因为每次重启时不能保证相同key的机器人还在</p>
+<h4 id="运维常用"><a href="#运维常用" class="headerlink" title="运维常用"></a>运维常用</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">recon:scheduler_usage(1000</span><br><span class="line"></span><br><span class="line">%% Type = used | allocated | unused | usage | allocated_types | allocated_instances</span><br><span class="line">%% usage 使用率 = used/allocated</span><br><span class="line">%% allocated 系统分配的</span><br><span class="line">%% allocated_types 各种数据类型的占用</span><br><span class="line">%% allocated_instances 调度程序占用，0代表所有</span><br><span class="line">recon_alloc:memory(Type).       %% 内存查看 单位b</span><br><span class="line"></span><br><span class="line">reconcile:info(Pid). %% 获取进程信息 类似process_info/1 但相对安全，不安全的如binary、dictionary、messages</span><br><span class="line">%% 按Type值排序取前Num个进程的信息</span><br><span class="line">%% Type = memory | message_queue_len | heap_size | binary_memory | reductions</span><br><span class="line">%% 上述为常用选项，其实就是类似process_info里的key</span><br><span class="line">recon:proc_count(Type, Num).</span><br><span class="line">recon:proc_window(Type, Num, Milliseconds)  %% 同上，但会在给定时间内采样两次取均值</span><br><span class="line"></span><br><span class="line">recon:port_types(). %% 查看端口类型数量</span><br><span class="line">recon:port_info(&quot;#Port&quot;</span><br><span class="line">%% 查看按属性排序的前N个端口信息</span><br><span class="line">%% Attribute = &#x27;recv_cnt&#x27; | &#x27;recv_oct&#x27; | &#x27;send_cnt&#x27; | &#x27;send_oct&#x27; | &#x27;cnt&#x27; | &#x27;oct&#x27;</span><br><span class="line">%% oct：流量字节数，cnt包数</span><br><span class="line">recon:inet_count(Attribute, Num).</span><br><span class="line">recon:inet_window(Attribute, Count, Milliseconds). %% 同上</span><br><span class="line"></span><br><span class="line">recon:bin_leak(N). %% 对比gc前后binary内存变化，得出变化最大的N个进程</span><br><span class="line">recon_trace:calls(&#123;queue, in, 2</span><br><span class="line"></span><br><span class="line">rb:start() %% 查看系统自带日志输出</span><br><span class="line">crashdump_viewer:start() %% win端查看节点挂掉的dump文件</span><br><span class="line">observer:start()    %% 具象化看节点信息</span><br><span class="line"></span><br><span class="line">%% ets表占用内存排序</span><br><span class="line">lists:reverse(lists:keysort(2</span><br><span class="line">%% 显示10秒内内核进程的使用率</span><br><span class="line">msacc:start(10000</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="dialyzer-静态分析"><a href="#dialyzer-静态分析" class="headerlink" title="dialyzer 静态分析"></a>dialyzer 静态分析</h4><p>使用示例</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dialyzer --build_plt -r &quot;C:\Program Files\erl7.3\lib\erts-7.3\ebin&quot; &quot;C:\Program Files\erl7.3\lib\kernel-4.2\ebin&quot; &quot;C:\Program Files\erl7.3\lib\stdlib-2.8\ebin&quot; &quot;C:\Program Files\erl7.3\lib\mnesia-4.13.3\ebin&quot; &quot;C:\Program Files\erl7.3\lib\crypto-3.6.3\ebin&quot; &quot;C:\Program Files\erl7.3\lib\sasl-2.7\ebin&quot;</span><br><span class="line">dialyzer -Werror_handling -r E:\work\cshx\server\script\../ebin &gt;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="gen-server-exit"><a href="#gen-server-exit" class="headerlink" title="gen_server exit"></a>gen_server exit</h4><p>type<br>trap_exit<br>exit原因<br>进程终止否<br>teminate执行否</p>
+<p>gen_server<br>false<br>test、shutdown、kill、other<br>是<br>否</p>
+<p>gen_server<br>false<br>normal<br>否<br>否</p>
+<p>gen_server<br>true<br>normal、shutdown、test、other、killed<br>否<br>否</p>
+<p>gen_server<br>true<br>kill<br>是<br>否</p>
+<p>spawn<br>false<br>test、shutdown、kill、other<br>是</p>
+<p>spawn<br>false<br>normal<br>否</p>
+<p>spawn<br>true<br>kill、shutdown、test、other、killed<br>否</p>
+<p>spawn<br>true<br>normal<br>是</p>
+<p>ps：游戏节点终止会用init:stop&#x2F;0,通知到gen_server退出的原因是shutdown</p>
+<h4 id="xrl-yrl-erlydtl"><a href="#xrl-yrl-erlydtl" class="headerlink" title="xrl yrl  erlydtl"></a>xrl yrl  erlydtl</h4><p><a target="_blank" rel="noopener" href="http://www.erlang.org/doc/man/leex.html">.xrl</a><br><a target="_blank" rel="noopener" href="http://www.erlang.org/doc/man/yecc.html">.yrl</a><br>具体看官方文档，大意是按一定规制写文件，然后可以用erlc编译生成.erl文件</p>
+<p><a target="_blank" rel="noopener" href="http://www.erlang.org/doc/man/erlc.html">erlc可支持编译的文件格式</a></p>
+<p>erlang模板引擎</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/erlydtl/erlydtl">https://github.com/erlydtl/erlydtl</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/erlydtl/erlydtl/wiki">https://github.com/erlydtl/erlydtl/wiki</a>  例子</p>
+<h4 id="运算符号"><a href="#运算符号" class="headerlink" title="运算符号"></a>运算符号</h4><p>运算符<br>说明<br>参数类型</p>
+<p>‘+’<br>一元  +<br>number</p>
+<p>‘-‘<br>一元  -<br>number</p>
+<p>‘*’<br>乘法<br>number</p>
+<p>‘&#x2F;‘<br>浮点除法<br>number</p>
+<p>div<br>整数除法<br>integer</p>
+<p>bnot<br>一元 not 位运算<br>integer</p>
+<p>rem<br>整数求余<br>integer</p>
+<p>band<br>与运算<br>integer</p>
+<p>bor<br>或运算<br>integer</p>
+<p>bxor<br>异或运算<br>integer</p>
+<p>bsl<br>左移运算<br>integer</p>
+<p>bsr<br>右移运算<br>integer</p>
+<h4 id="全局宏"><a href="#全局宏" class="headerlink" title="全局宏"></a>全局宏</h4><p>宏名<br>类型<br>说明</p>
+<p>?MODULE<br>atom<br>当前模块</p>
+<p>?LINE<br>integer<br>当前行数</p>
+<p>?FILE<br>string<br>当前文件名</p>
+<p>?FUNCTION_NAME<br>atom<br>当前函数名</p>
+<p>?FUNCTION_ARITY<br>integer<br>当前函数参数数量</p>
+<p>?MACHINE<br>string<br>当前执行程序名 ‘BEAM’</p>
+<p>?MODULE_STRING<br>string<br>当前模块</p>
+<p>?OTP_RELEASE<br>integer<br>OTP版本 &#x3D; erlang:system_info(otp_release) &#x3D; 21</p>
+<h4 id="字符编码"><a href="#字符编码" class="headerlink" title="字符编码"></a>字符编码</h4><h5 id="源文件的编码"><a href="#源文件的编码" class="headerlink" title="源文件的编码"></a>源文件的编码</h5><p>编译器会用正则\s*[:&#x3D;]\s*([-a-zA-Z0-9]检索erl文件头两行，若命中，则以声明的编码格式编译文件，R16B之前默认是Latin-1,之后是UTF-8。如可以用以下任意一种声明方式</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%% coding: utf-8</span><br><span class="line">%% For this file we have chosen encoding = Latin-1</span><br><span class="line">%% -*- coding: latin-1 -*-</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="位语法"><a href="#位语法" class="headerlink" title="位语法"></a>位语法</h5><p>Flag &#x3D; utf8、utf16、utf32、little、big、binary</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; = Bin1,</span><br><span class="line">&gt; = Bin2,</span><br><span class="line">Bin3 = &gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h4 id="erlang-system-monitor-MonitorPid-Options-MonSettings"><a href="#erlang-system-monitor-MonitorPid-Options-MonSettings" class="headerlink" title="erlang:system_monitor(MonitorPid, Options) -&gt; MonSettings"></a>erlang:system_monitor(MonitorPid, Options) -&gt; MonSettings</h4><p>监控某个进程，Options如下：</p>
+<p>{long_gc, Time}</p>
+<p>若GC时间&gt;&#x3D;Time,监控进程会收到{monitor, GcPid, long_gc, Info}</p>
+<p>Info &#x3D; [ {timeout, GcTime} | {Key, Val} ]</p>
+<p>GcTime &#x3D; 实际GC的毫秒数 Key &#x3D;</p>
+<p>heap_size         堆容量<br>heap_block_size   堆栈容量<br>old_heap_size<br>old_heap_block_size<br>stack_size<br>recent_size       上次GC后的数据容量<br>mbuf_size         消息缓冲区容量<br>bin_vheap_size    从进程堆引用的唯一堆外二进制文件的总容量<br>bin_old_vheap_size<br>bin_vheap_block_size  GC前，虚拟堆中允许的二进制文件的容量上限<br>bin_old_vheap_block_size</p>
+<p>{long_schedule, Time}</p>
+<p>若端口或进程在内核调用的时间&gt;&#x3D;Time,则收到{monitor, PidOrPort, long_schedule, Info}</p>
+<p>被监控的是pid()时，Info内容有：<br>{timeout, Millis}<br>{in, Location}<br>{out, Location}</p>
+<p>Location &#x3D; {Module, Function, Arity} | undefined</p>
+<p>被监控的是port()时</p>
+<p>可用于检测NIFs(内建函数)或驱动的运行时间，最好不要超过1ms，但在分时系统，只要&lt;100ms，都可以被认为正常<br>{timeout, Millis}<br>{port_op,Op}</p>
+<p>Op &#x3D; proc_sig | timeout | input | output | event | dist_cmd</p>
+<p>{large_heap, Size}</p>
+<p>若GC后堆大小&gt;&#x3D;Size，则收到{monitor, GcPid, large_heap, Info}，Info跟long_gc的一致，除了没有timeout</p>
+<p>若被监控进程自身超过max_heap_size而被kill，则监控进程不会收到信息，因为其还没进行GC或GC完<br>busy_port</p>
+<p>若被监控进程因为向繁忙端口发送消息而被挂机，则监控者收到{monitor, SusPid, busy_dist_port, Port}<br>busy_dist_port</p>
+<p>同上，不同的是节点间的调用，{monitor, SusPid, busy_dist_port, Port}</p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><p>内存块 18位对齐 所以最小256KB</p>
+<p>载体 &#x3D; 1~n个内存块</p>
+<p>堆分配器，二进制分配器，驱动程序分配器和ets分配器</p>
+<p>erl_alloc.types 具体的内存分配映射处理表,在源码中可见(erl_alloc.types)</p>
+<p>内存增长的原因：</p>
+<p>消息队列过长<br>ets不规范操作<br>进程字典<br>binary数据引用</p>
+<h4 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h4><h4 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h4><p>erlang c源码查看关联 如lists:reverse&#x2F;1  &#x3D; lists_reverse_1</p>
+<p>内建函数BIF表 &#x3D; bif.tab<br>dict:fetch&#x2F;2 用于查找已存在key的数据，不存在时会报错</p>
+<p>dict:find&#x2F;2 也是查找数据，不存在时返回error<br>Erlang的binary分为两大类：ProcBin和Refc binary 。64 字节及以下的binary都直接在进程自己的堆上分配，其整个生命期都在堆中。大于 64 字节的binary会分配在一个binary专用的全局堆上，每个使用它的进程都会在自己的局部堆中持有一个对其的本地引用<br>erl_alloc.types 内存类型总览的源码文件</p>
+<pre><code class="language-text">%%% -*- coding: utf8 -*-
+% 指定编译编码格式
+
+erlc -S 文件   %% 生成中间代码 .S文件
+
+% SHA256加密
+hmax_sha256(Key, Data)-&gt;
+lists:flatten([[integer_to_list(N, 16) || &gt; 
+erlang的缺陷
+使用耗时的nif时，会影响其调度公平
+存在进程字典、ets，妨碍了函数式的幂等性
+
+
+
+#### 其他文档
+
+
+[cowboy websocket分析](https://www.processon.com/view/link/5c3d4a55e4b0641c83dc0772#map)
+[php使用erlang](https://code.google.com/p/mypeb/downloads/list)
+[erlang数据结构的二进制表示](http://erlang.org/doc/apps/erts/erl_ext_dist.html)
+[SHA256算法原理详解](https://blog.csdn.net/u011583927/article/details/80905740)
+[Base64 的原理、实现及应用](https://blog.csdn.net/weixin_40811410/article/details/81950142)
+[Erlang并发机制 –进程调度](https://www.iteye.com/blog/jzhihui-1482175)
+[Erlang ERTS的Trap机制的设计及其用途](https://www.iteye.com/blog/mryufeng-334744)
+[软实时和硬实时操作系统的区别](https://blog.csdn.net/softn/article/details/51872232)
+如果系统响应不能满足时限的要求，即使它能得到正确的输出，我们也只能说他是一个失败的响应。“软”意味着如果没有满足指定的时间约束并不会导致灾难性后果，而对硬实时系统来说却是灾难性的
+[深入理解 MySQL 索引底层原理](https://mp.weixin.qq.com/s/qHJiTjpvDikFcdl9SRL97Q)
+[Erlang并发机制 – 消息传递](https://www.iteye.com/blog/jzhihui-1506756)
+[Erlang类型数据的内存存储格式](http://beam-wisdoms.clau.se/en/latest/indepth-memory-layout.html)
+[Erlang Inline编译 内联函数](https://www.cnblogs.com/me-sa/archive/2012/01/09/erlang0029.html)
+[分析和解决mnesia过载问题](https://blog.csdn.net/mycwq/article/details/28660813)
+[Erlang 常用数据结构实现](https://wudaijun.com/2015/12/erlang-datastructures/)
+[Erlang进程堆垃圾回收机制](https://blog.csdn.net/mycwq/article/details/26613275)
+[Erlang垃圾回收细节](https://hamidreza-s.github.io/erlang%20garbage%20collection%20memory%20layout%20soft%20realtime/2015/08/24/erlang-garbage-collection-details-and-why-it-matters.html)
+
+#### 资料
+
+
+[Erlang OTP 设计原理文档](http://erlang.shiningray.cn/otp-design-principles/index.html)
+[坚强2002的博客](https://www.cnblogs.com/me-sa/)
+[系统技术非业余研究](http://blog.yufeng.info/)
+[yufeng原博客](https://www.iteye.com/blog/user/mryufeng)
+[成立涛的博客](https://erlangdisplay.iteye.com/category/127758)
+[惊帆之静默](http://gashero.yeax.com/?cat=6)
+[cryolite](https://cryolite.iteye.com/category/30938?page=2)
+[wudaijun](https://wudaijun.com/)
+[Erlang/Elixir精选](https://www.yuque.com/mouwen/weekly/qa)
+[Erlang开发组博客](https://blog.erlang.org/)
+[Erlang-and-OTP-in-Action](https://github.com/erlware/Erlang-and-OTP-in-Action-Source)
+[http://trapexit.org](http://trapexit.org/) （国内封锁）
+[erlang书签](https://github.com/0xAX/erlang-bookmarks/blob/master/ErlangBookmarks.md)
+[erlang 教程wiki](https://iowiki.com/erlang/erlang_index.html)
+[Erlang资源大全中文版](https://github.com/hstcscolor/awesome-erlang-cn)
+[Erlang程序设计](https://sites.google.com/a/chaoskey.com/erlang/)
+[Erlang中文手册](https://erldoc.com/)
+[彭政生的博客](https://szpzs.oschina.io/categories/)
+[learn you some erlang作者博客](https://ferd.ca/)
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Erlang/" rel="tag"># Erlang</a>
+              <a href="/tags/OTP/" rel="tag"># OTP</a>
+              <a href="/tags/BEAM/" rel="tag"># BEAM</a>
+              <a href="/tags/%E5%B9%B6%E5%8F%91/" rel="tag"># 并发</a>
+              <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"># 虚拟机</a>
+          </div>
 
         
 
-
-
-
-
-
-
-
-      </div>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/13/linux%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" rel="prev" title="Linux 常用指令">
+                  <i class="fa fa-angle-left"></i> Linux 常用指令
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/14/lua%E7%AC%94%E8%AE%B0/" rel="next" title="Lua 笔记">
+                  Lua 笔记 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
+    </div>
+  </footer>
 
   
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

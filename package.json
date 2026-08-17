@@ -1,0 +1,31 @@
+{
+  "name": "xinran282.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "new": "node tools/hexo-runner.mjs new post",
+    "clean": "node tools/hexo-runner.mjs clean",
+    "build": "node tools/hexo-runner.mjs generate",
+    "server": "node tools/hexo-runner.mjs server",
+    "migrate:posts": "node tools/migrate-static-posts.mjs",
+    "publish:root": "node tools/hexo-runner.mjs clean && node tools/hexo-runner.mjs generate && node tools/publish-to-root.mjs",
+    "deploy": "node tools/hexo-runner.mjs deploy"
+  },
+  "dependencies": {
+    "hexo": "8.1.2",
+    "hexo-deployer-git": "4.0.0",
+    "hexo-generator-archive": "latest",
+    "hexo-generator-category": "latest",
+    "hexo-generator-index": "latest",
+    "hexo-generator-tag": "latest",
+    "hexo-renderer-ejs": "latest",
+    "hexo-renderer-marked": "latest",
+    "hexo-renderer-stylus": "latest",
+    "hexo-server": "latest",
+    "hexo-theme-next": "8.29.0",
+    "iconv-lite": "latest"
+  },
+  "devDependencies": {
+    "hexo-cli": "latest"
+  }
+}

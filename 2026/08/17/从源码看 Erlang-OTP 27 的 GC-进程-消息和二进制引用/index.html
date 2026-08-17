@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="面向初学者的 Erlang&#x2F;OTP 27 GC 介绍，从进程堆讲到消息队列、off-heap binary 和排查方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从源码看 Erlang&#x2F;OTP 27 的 GC：进程、消息和二进制引用">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/17/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Erlang-OTP%2027%20%E7%9A%84%20GC-%E8%BF%9B%E7%A8%8B-%E6%B6%88%E6%81%AF%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%BC%95%E7%94%A8/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="面向初学者的 Erlang&#x2F;OTP 27 GC 介绍，从进程堆讲到消息队列、off-heap binary 和排查方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-17T02:20:00.000Z">
+<meta property="article:modified_time" content="2026-08-17T03:13:34.823Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="BEAM">
+<meta property="article:tag" content="Erlang&#x2F;OTP">
+<meta property="article:tag" content="二进制">
+<meta property="article:tag" content="内存管理">
+<meta property="article:tag" content="垃圾回收">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/17/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Erlang-OTP%2027%20%E7%9A%84%20GC-%E8%BF%9B%E7%A8%8B-%E6%B6%88%E6%81%AF%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%BC%95%E7%94%A8/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/17/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Erlang-OTP%2027%20%E7%9A%84%20GC-%E8%BF%9B%E7%A8%8B-%E6%B6%88%E6%81%AF%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%BC%95%E7%94%A8/","path":"2026/08/17/从源码看 Erlang-OTP 27 的 GC-进程-消息和二进制引用/","title":"从源码看 Erlang/OTP 27 的 GC：进程、消息和二进制引用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从源码看 Erlang/OTP 27 的 GC：进程、消息和二进制引用 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B-Erlang-OTP-27-%E7%9A%84-GC%EF%BC%9A%E8%BF%9B%E7%A8%8B%E3%80%81%E6%B6%88%E6%81%AF%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%BC%95%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">从源码看 Erlang&#x2F;OTP 27 的 GC：进程、消息和二进制引用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E7%9C%8B%E8%BF%9B%E7%A8%8B%E8%BF%99%E5%BC%A0%E2%80%9C%E5%86%85%E5%AD%98%E8%B4%A6%E6%9C%AC%E2%80%9D"><span class="nav-number">1.1.</span> <span class="nav-text">先看进程这张“内存账本”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GC-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%8F%91%E7%94%9F"><span class="nav-number">1.2.</span> <span class="nav-text">GC 什么时候发生</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#minor-GC%EF%BC%9A%E5%85%88%E6%B8%85%E5%B9%B4%E8%BD%BB%E4%BB%A3"><span class="nav-number">1.3.</span> <span class="nav-text">minor GC：先清年轻代</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#major-GC%EF%BC%9A%E8%BF%9E%E8%80%81%E5%B9%B4%E4%BB%A3%E4%B8%80%E8%B5%B7%E6%95%B4%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">major GC：连老年代一起整理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%BD%B1%E5%93%8D-GC"><span class="nav-number">1.5.</span> <span class="nav-text">消息队列为什么会影响 GC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B8%B8%E5%B8%B8%E6%94%BE%E5%9C%A8-off-heap"><span class="nav-number">1.6.</span> <span class="nav-text">二进制为什么常常放在 off-heap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E5%88%87%E7%89%87%E6%8B%96%E4%BD%8F%E5%A4%A7-binary"><span class="nav-number">1.7.</span> <span class="nav-text">小切片拖住大 binary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E6%A3%80%E6%B5%8B%E8%BF%99%E7%A7%8D%E6%83%85%E5%86%B5"><span class="nav-number">1.8.</span> <span class="nav-text">怎么检测这种情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E6%BA%90%E7%A0%81%E7%9A%84%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.9.</span> <span class="nav-text">读源码的顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E6%80%BB%E7%BB%93"><span class="nav-number">1.10.</span> <span class="nav-text">最后总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/17/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Erlang-OTP%2027%20%E7%9A%84%20GC-%E8%BF%9B%E7%A8%8B-%E6%B6%88%E6%81%AF%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%BC%95%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从源码看 Erlang&#x2F;OTP 27 的 GC：进程、消息和二进制引用 | 欣然的备忘录">
+      <meta itemprop="description" content="面向初学者的 Erlang&#x2F;OTP 27 GC 介绍，从进程堆讲到消息队列、off-heap binary 和排查方法。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从源码看 Erlang/OTP 27 的 GC：进程、消息和二进制引用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-17 10:20:00 / 修改时间：11:13:34" itemprop="dateCreated datePublished" datetime="2026-08-17T10:20:00+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Erlang/" itemprop="url" rel="index"><span itemprop="name">Erlang</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">面向初学者的 Erlang/OTP 27 GC 介绍，从进程堆讲到消息队列、off-heap binary 和排查方法。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="从源码看-Erlang-OTP-27-的-GC：进程、消息和二进制引用"><a href="#从源码看-Erlang-OTP-27-的-GC：进程、消息和二进制引用" class="headerlink" title="从源码看 Erlang&#x2F;OTP 27 的 GC：进程、消息和二进制引用"></a>从源码看 Erlang&#x2F;OTP 27 的 GC：进程、消息和二进制引用</h1><p>理解 Erlang 的 GC，最好先忘掉“整个虚拟机一起停下来大扫除”的画面。BEAM 的思路更局部：每个 Erlang 进程有自己的堆，GC 也主要围绕单个进程展开。一个进程产生了临时列表、元组、闭包、消息里的数据，空间紧了，就整理自己的那一小块内存。</p>
+<p>这也是 Erlang 能支撑大量并发进程的原因之一。GC 不需要动不动扫描全局对象图，大多数时候只处理某个进程自己的堆和它挂着的 off-heap 引用。</p>
+<h2 id="先看进程这张“内存账本”"><a href="#先看进程这张“内存账本”" class="headerlink" title="先看进程这张“内存账本”"></a>先看进程这张“内存账本”</h2><p>GC 的第一现场在 <code>erts/emulator/beam/erl_process.h</code>。这里的 <code>Process</code> 结构里有几组很关键的字段：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Uint16 gen_gcs;</span><br><span class="line">Uint16 max_gen_gcs;</span><br><span class="line">Eterm *high_water;</span><br><span class="line">Eterm *old_hend;</span><br><span class="line">Eterm *old_htop;</span><br><span class="line">Eterm *old_heap;</span><br><span class="line">ErlOffHeap off_heap;</span><br><span class="line">ErlHeapFragment* mbuf;</span><br><span class="line">Uint64 bin_vheap_sz;</span><br><span class="line">Uint64 bin_old_vheap_sz;</span><br><span class="line">Uint64 bin_old_vheap;</span><br></pre></td></tr></table></figure>
+
+<p>粗略说，<code>heap</code> 是年轻对象待的地方，<code>old_heap</code> 是活得久的对象待的地方，<code>off_heap</code> 记录那些不直接放进普通进程堆的对象，比如较大的引用计数 binary。<code>gen_gcs</code> 和 <code>max_gen_gcs</code> 则决定一个进程做了多少次小回收后，该不该来一次更彻底的 fullsweep。</p>
+<p>把这几个字段看懂，再读 <code>erl_gc.c</code> 会轻松很多。否则你会觉得源码一直在搬指针，其实它是在围着这些边界整理房间。</p>
+<h2 id="GC-什么时候发生"><a href="#GC-什么时候发生" class="headerlink" title="GC 什么时候发生"></a>GC 什么时候发生</h2><p>触发判断在 <code>erts/emulator/beam/erl_gc.h</code> 里能看到。核心条件并不神秘：</p>
+<ul>
+<li>进程堆剩余空间不够；</li>
+<li>off-heap binary 的虚拟堆压力超过阈值；</li>
+<li>进程被设置了强制 GC 标记。</li>
+</ul>
+<p>JIT 和解释执行路径都会在合适的分配点插入检查。比如 <code>erts/emulator/beam/jit/beam_jit_common.cpp</code> 里会调用 <code>erts_garbage_collect_nobump()</code>，BIF 返回后也可能通过 <code>erts_gc_after_bif_call_lhf()</code> 补一次检查。</p>
+<p>这不是“定时打扫”，更像“每次要继续放东西之前，先看桌面还够不够”。</p>
+<h2 id="minor-GC：先清年轻代"><a href="#minor-GC：先清年轻代" class="headerlink" title="minor GC：先清年轻代"></a>minor GC：先清年轻代</h2><p>主入口在 <code>erts/emulator/beam/erl_gc.c</code> 的 <code>garbage_collect()</code>。它先判断进程状态：如果进程正在退出，或者 GC 被 BIF 临时禁止，就会走延迟路径。状态允许时，再根据 <code>GEN_GCS(p) &lt; MAX_GEN_GCS(p)</code> 这样的条件选择 minor GC 或 major GC。</p>
+<p>minor GC 对应 <code>minor_collection()</code>。它的目标很明确：尽量只处理年轻代。</p>
+<p>Erlang 程序里大量对象都很短命。一次函数调用里临时构造的列表、匹配时产生的中间值、很快就不用的元组，多数撑不过几次调度。minor GC 利用这个事实，只复制还活着的对象，把不再被栈、寄存器、消息或其他根引用到的对象留在原地，整块旧空间随后就可以丢掉。</p>
+<p>这就是复制式 GC 的好处：它不需要逐个释放死对象，而是搬走活对象。</p>
+<h2 id="major-GC：连老年代一起整理"><a href="#major-GC：连老年代一起整理" class="headerlink" title="major GC：连老年代一起整理"></a>major GC：连老年代一起整理</h2><p>minor GC 做多了，或者进程带着 <code>F_NEED_FULLSWEEP</code> 之类的标记，就会进入 <code>major_collection()</code>。</p>
+<p>major GC 会把年轻代和老年代一起纳入整理。它成本更高，但能处理老年代里累积下来的长期对象，也能重新计算堆大小、释放不再需要的旧堆。</p>
+<p>可以这样记：</p>
+<ul>
+<li>minor GC 是收拾桌面；</li>
+<li>major GC 是重新整理整个房间。</li>
+</ul>
+<p>BEAM 不会轻易做 major GC，因为大多数场景用 minor GC 就够了。但长期运行的 server 进程、缓存进程、消息堆积的进程，迟早会把老年代也卷进来。</p>
+<h2 id="消息队列为什么会影响-GC"><a href="#消息队列为什么会影响-GC" class="headerlink" title="消息队列为什么会影响 GC"></a>消息队列为什么会影响 GC</h2><p>Erlang 的并发靠消息传递。消息不是凭空存在的，它要进入接收进程的信号队列。源码注释在 <code>erts/emulator/beam/erl_proc_sig_queue.h</code> 里把队列分成三层：外部队列、中间队列、内部队列。</p>
+<p>外部队列表示消息还在路上；中间队列表示消息已经到达接收进程；内部队列才是 <code>receive</code> 真正可以匹配的消息。</p>
+<p>这和 GC 有直接关系。消息如果存在进程堆上，GC 要扫描它；消息如果带着 off-heap binary，GC 还要维护外部引用。消息越多，进程越容易触发 GC，单次 GC 要看的东西也越多。</p>
+<p>Erlang 进程还可以选择消息队列数据放在 on-heap 还是 off-heap。相关标志在 <code>erl_process.h</code> 里：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> FS_OFF_HEAP_MSGQ       (1 &lt;&lt; 0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> FS_ON_HEAP_MSGQ        (1 &lt;&lt; 1)</span></span><br></pre></td></tr></table></figure>
+
+<p>on-heap 消息队列让消息更贴近进程堆，访问可能更直接，但 GC 压力也更明显。off-heap 消息队列能减少某些大消息对进程堆的冲击，不过它不是万能开关，还是要看进程的消息形态。</p>
+<h2 id="二进制为什么常常放在-off-heap"><a href="#二进制为什么常常放在-off-heap" class="headerlink" title="二进制为什么常常放在 off-heap"></a>二进制为什么常常放在 off-heap</h2><p>普通小对象复制起来便宜，大 binary 不一样。如果每次 GC 都复制一个几 MB 的 binary，成本会很难看。BEAM 的做法是：较大的 binary 通常作为引用计数对象放在进程堆外，进程堆里只保留一个引用。</p>
+<p><code>erts/emulator/beam/erl_binary.h</code> 里的 <code>Binary</code> 结构有 <code>refc</code> 字段；<code>erl_gc.c</code> 里的 <code>sweep_off_heap()</code> 会处理 <code>BIN_REF_SUBTAG</code>，根据对象是否仍然活着维护引用计数和虚拟 binary heap 统计。</p>
+<p>这带来一个非常实用的结论：进程堆看起来不大，不代表这个进程没有拖住大块 binary 内存。</p>
+<h2 id="小切片拖住大-binary"><a href="#小切片拖住大-binary" class="headerlink" title="小切片拖住大 binary"></a>小切片拖住大 binary</h2><p>最容易让人误判为“内存泄漏”的情况，是 sub-binary。</p>
+<p>假设你读入一个 10 MB 的包，只取里面 20 字节作为 ID，然后把这个 ID 长期放进进程状态。如果这个 20 字节值仍然引用原始 binary，而不是复制出来的新 binary，那么那块 10 MB 的原始数据就不能释放。</p>
+<p>可以用一张图理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">10 MB 原始 binary</span><br><span class="line">        |</span><br><span class="line">        v</span><br><span class="line">切出 20 字节 sub-binary</span><br><span class="line">        |</span><br><span class="line">        v</span><br><span class="line">保存到进程状态 / ETS / 消息队列</span><br><span class="line">        |</span><br><span class="line">        v</span><br><span class="line">20 字节还活着，10 MB 也被拖住</span><br></pre></td></tr></table></figure>
+
+<p>这通常不是 VM 泄漏。它只是引用还活着。问题在于，业务代码以为自己只保存了 20 字节，运行时却必须保留背后的整块 binary。</p>
+<h2 id="怎么检测这种情况"><a href="#怎么检测这种情况" class="headerlink" title="怎么检测这种情况"></a>怎么检测这种情况</h2><p>先看系统级趋势：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erlang:memory(binary).</span><br></pre></td></tr></table></figure>
+
+<p>如果这个值持续上涨，再去找进程。OTP 自带：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">process_info</span><span class="params">(Pid, binary)</span>.</span></span><br></pre></td></tr></table></figure>
+
+<p>它会返回该进程相关 binary 的信息。当前实现里包含 binary 标识、大小和引用计数。这个接口适合定位“哪个进程挂着大 binary”。</p>
+<p>如果线上已经装了 recon，更方便：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">recon:bin_leak(<span class="number">10</span>).</span><br><span class="line">recon:info(Pid, binary_memory).</span><br><span class="line">recon_alloc:memory(allocated_types).</span><br></pre></td></tr></table></figure>
+
+<p><code>recon:bin_leak/1</code> 会做一轮前后对比，帮你找最可疑的进程。<code>recon_alloc</code> 则能看分配器层面是不是 <code>binary_alloc</code> 在涨。</p>
+<p>定位到具体 binary 后，再比较它自身大小和引用的底层大小：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">byte_size</span><span class="params">(Bin)</span>.</span></span><br><span class="line"><span class="function"><span class="title">binary</span>:<span class="title">referenced_byte_size</span><span class="params">(Bin)</span>.</span></span><br></pre></td></tr></table></figure>
+
+<p><code>lib/stdlib/src/binary.erl</code> 的文档也给了类似建议：如果 <code>referenced_byte_size(Bin)</code> 明显大于 <code>byte_size(Bin)</code>，而这个小 binary 又要长期保存，可以考虑 <code>binary:copy(Bin)</code>。</p>
+<p>一个保守写法是：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">maybe_copy</span><span class="params">(Bin)</span> <span class="title">when</span> <span class="title">is_binary</span><span class="params">(Bin)</span> -&gt;</span></span><br><span class="line">    <span class="keyword">case</span> binary:referenced_byte_size(Bin) &gt; <span class="number">2</span> * byte_size(Bin) <span class="keyword">of</span></span><br><span class="line">        <span class="literal">true</span> -&gt; binary:copy(Bin);</span><br><span class="line">        <span class="literal">false</span> -&gt; Bin</span><br><span class="line">    <span class="keyword">end</span>.</span><br></pre></td></tr></table></figure>
+
+<p>不要到处无脑复制。binary 共享本来是性能优化，只有在“小切片长期拖住大 binary”已经成为实际问题时，复制才是合理选择。</p>
+<h2 id="读源码的顺序"><a href="#读源码的顺序" class="headerlink" title="读源码的顺序"></a>读源码的顺序</h2><p>如果你想继续读 Erlang&#x2F;OTP 27 的 GC 源码，可以按这个顺序来：</p>
+<ol>
+<li><code>erts/emulator/beam/erl_process.h</code>：先看进程的堆、老年代和 off-heap 字段。</li>
+<li><code>erts/emulator/beam/erl_gc.h</code>：看 GC 触发宏。</li>
+<li><code>erts/emulator/beam/erl_gc.c</code>：读 <code>garbage_collect()</code>、<code>minor_collection()</code>、<code>major_collection()</code>。</li>
+<li><code>erts/emulator/beam/erl_proc_sig_queue.h</code>：理解消息怎样进入进程。</li>
+<li><code>erts/emulator/beam/erl_binary.h</code> 和 <code>erl_gc.c</code> 的 <code>sweep_off_heap()</code>：看 refc binary 的生命周期。</li>
+</ol>
+<p>这样读，比从 <code>erl_gc.c</code> 第一行硬啃到最后有效得多。</p>
+<h2 id="最后总结"><a href="#最后总结" class="headerlink" title="最后总结"></a>最后总结</h2><p>Erlang&#x2F;OTP 27 的 GC 可以概括成一句话：每个进程管理自己的堆，用 minor GC 快速清理短命对象，用 major GC 偶尔整理老年代，再通过 off-heap 和引用计数处理大 binary。</p>
+<p>这套设计很符合 Erlang 的并发模型。进程轻，消息多，短命数据多，大 binary 又常常需要跨进程共享。GC 的很多细节，都是围绕这些现实权衡展开的。</p>
+<p>真正排查内存问题时，也别只问“GC 有没有工作”。更有用的问题是：哪个进程持有了什么？消息队列是不是堆积？有没有一个很小的 sub-binary，悄悄拖住了一整块大 binary？</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/BEAM/" rel="tag"># BEAM</a>
+              <a href="/tags/Erlang-OTP/" rel="tag"># Erlang/OTP</a>
+              <a href="/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="tag"># 垃圾回收</a>
+              <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag"># 内存管理</a>
+              <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" rel="tag"># 二进制</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%84%E6%B5%8B%E4%B8%80%E6%AC%A1%20Tool%20%E8%B0%83%E7%94%A8%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE/" rel="prev" title="如何评测一次 Tool 调用是否正确">
+                  <i class="fa fa-angle-left"></i> 如何评测一次 Tool 调用是否正确
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/%E5%A6%82%E4%BD%95%E8%AF%81%E6%98%8E%E6%96%B0%E7%9A%84%20Prompt%20%E6%AF%94%E6%97%A7%E7%89%88%E6%9B%B4%E5%A5%BD/" rel="next" title="如何证明新的 Prompt 比旧版更好">
+                  如何证明新的 Prompt 比旧版更好 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

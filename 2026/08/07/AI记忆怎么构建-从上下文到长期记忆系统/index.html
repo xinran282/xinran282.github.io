@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="解释 AI 记忆系统的组成、写入与检索策略，以及处理冲突和遗忘的工程方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI 记忆怎么构建：从上下文到长期记忆系统">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/07/AI%E8%AE%B0%E5%BF%86%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA-%E4%BB%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="解释 AI 记忆系统的组成、写入与检索策略，以及处理冲突和遗忘的工程方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-07T08:57:00.000Z">
+<meta property="article:modified_time" content="2026-08-17T03:22:54.180Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="上下文">
+<meta property="article:tag" content="大语言模型">
+<meta property="article:tag" content="智能体">
+<meta property="article:tag" content="检索">
+<meta property="article:tag" content="长期记忆">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/07/AI%E8%AE%B0%E5%BF%86%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA-%E4%BB%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/07/AI%E8%AE%B0%E5%BF%86%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA-%E4%BB%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/","path":"2026/08/07/AI记忆怎么构建-从上下文到长期记忆系统/","title":"AI 记忆怎么构建：从上下文到长期记忆系统"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>AI 记忆怎么构建：从上下文到长期记忆系统 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AI-%E8%AE%B0%E5%BF%86%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA%EF%BC%9A%E4%BB%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">AI 记忆怎么构建：从上下文到长期记忆系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E5%88%86%E6%B8%85%E4%B8%89%E7%A7%8D%E2%80%9C%E8%AE%B0%E5%BF%86%E2%80%9D"><span class="nav-number">1.1.</span> <span class="nav-text">一、先分清三种“记忆”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%B7%A5%E4%BD%9C%E8%AE%B0%E5%BF%86%EF%BC%9A%E5%BD%93%E5%89%8D%E6%AD%A3%E5%9C%A8%E5%A4%84%E7%90%86%E7%9A%84%E4%BF%A1%E6%81%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. 工作记忆：当前正在处理的信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%83%85%E6%99%AF%E8%AE%B0%E5%BF%86%EF%BC%9A%E8%BF%87%E5%8E%BB%E5%8F%91%E7%94%9F%E8%BF%87%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. 情景记忆：过去发生过什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%AF%AD%E4%B9%89%E8%AE%B0%E5%BF%86%EF%BC%9A%E5%B7%B2%E7%BB%8F%E7%A1%AE%E8%AE%A4%E7%9A%84%E7%A8%B3%E5%AE%9A%E8%AE%A4%E8%AF%86"><span class="nav-number">1.1.3.</span> <span class="nav-text">3. 语义记忆：已经确认的稳定认识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%AE%B0%E5%BF%86%E4%B8%8D%E6%98%AF%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E8%80%8C%E6%98%AF%E4%B8%80%E6%9D%A1%E9%97%AD%E7%8E%AF"><span class="nav-number">1.2.</span> <span class="nav-text">二、记忆不是数据库，而是一条闭环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%AF%8F%E6%9D%A1%E8%AE%B0%E5%BF%86%E5%BA%94%E8%AF%A5%E4%BF%9D%E5%AD%98%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.</span> <span class="nav-text">三、每条记忆应该保存什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%80%8E%E6%A0%B7%E5%86%B3%E5%AE%9A%E2%80%9C%E8%AE%B0%E4%BB%80%E4%B9%88%E2%80%9D"><span class="nav-number">1.4.</span> <span class="nav-text">四、怎样决定“记什么”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%8E%E6%A0%B7%E5%9C%A8%E9%9C%80%E8%A6%81%E6%97%B6%E2%80%9C%E6%83%B3%E8%B5%B7%E6%9D%A5%E2%80%9D"><span class="nav-number">1.5.</span> <span class="nav-text">五、怎样在需要时“想起来”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E7%BC%A9%E5%B0%8F%E8%8C%83%E5%9B%B4"><span class="nav-number">1.5.1.</span> <span class="nav-text">第一步：缩小范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E6%B7%B7%E5%90%88%E5%8F%AC%E5%9B%9E"><span class="nav-number">1.5.2.</span> <span class="nav-text">第二步：混合召回</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E9%87%8D%E6%8E%92%E4%B8%8E%E9%99%90%E9%87%8F"><span class="nav-number">1.5.3.</span> <span class="nav-text">第三步：重排与限量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E5%86%B2%E7%AA%81%E3%80%81%E5%8F%98%E5%8C%96%E5%92%8C%E9%81%97%E5%BF%98"><span class="nav-number">1.6.</span> <span class="nav-text">六、如何处理冲突、变化和遗忘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E4%B8%80%E4%B8%AA%E5%8F%AF%E8%90%BD%E5%9C%B0%E7%9A%84%E6%9C%80%E5%B0%8F%E6%96%B9%E6%A1%88"><span class="nav-number">1.7.</span> <span class="nav-text">七、一个可落地的最小方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%B1%82"><span class="nav-number">1.7.1.</span> <span class="nav-text">存储层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%85%A5%E5%B1%82"><span class="nav-number">1.7.2.</span> <span class="nav-text">写入层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E5%B1%82"><span class="nav-number">1.7.3.</span> <span class="nav-text">读取层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%B4%E6%8A%A4%E5%B1%82"><span class="nav-number">1.7.4.</span> <span class="nav-text">维护层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E8%AF%84%E4%BC%B0%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F%E6%98%AF%E5%90%A6%E7%9C%9F%E7%9A%84%E6%9C%89%E6%95%88"><span class="nav-number">1.8.</span> <span class="nav-text">八、评估记忆系统是否真的有效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E6%9C%80%E5%AE%B9%E6%98%93%E8%B8%A9%E7%9A%84%E5%87%A0%E4%B8%AA%E5%9D%91"><span class="nav-number">1.9.</span> <span class="nav-text">九、最容易踩的几个坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">1.10.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/07/AI%E8%AE%B0%E5%BF%86%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA-%E4%BB%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="AI 记忆怎么构建：从上下文到长期记忆系统 | 欣然的备忘录">
+      <meta itemprop="description" content="解释 AI 记忆系统的组成、写入与检索策略，以及处理冲突和遗忘的工程方法。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI 记忆怎么构建：从上下文到长期记忆系统
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-08-07 16:57:00" itemprop="dateCreated datePublished" datetime="2026-08-07T16:57:00+08:00">2026-08-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-08-17 11:22:54" itemprop="dateModified" datetime="2026-08-17T11:22:54+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">解释 AI 记忆系统的组成、写入与检索策略，以及处理冲突和遗忘的工程方法。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="AI-记忆怎么构建：从上下文到长期记忆系统"><a href="#AI-记忆怎么构建：从上下文到长期记忆系统" class="headerlink" title="AI 记忆怎么构建：从上下文到长期记忆系统"></a>AI 记忆怎么构建：从上下文到长期记忆系统</h1><p>很多人把 AI 记忆理解成“把所有聊天记录都保存下来”。这只能算存档，离真正的记忆还很远。</p>
+<p>一个可用的 AI 记忆系统，至少要解决四件事：<strong>记什么、何时写入、何时想起、何时修改或忘掉</strong>。大模型负责理解和表达，外部系统负责保存、检索与治理。二者配合，AI 才会表现出连续性。</p>
+<h2 id="一、先分清三种“记忆”"><a href="#一、先分清三种“记忆”" class="headerlink" title="一、先分清三种“记忆”"></a>一、先分清三种“记忆”</h2><h3 id="1-工作记忆：当前正在处理的信息"><a href="#1-工作记忆：当前正在处理的信息" class="headerlink" title="1. 工作记忆：当前正在处理的信息"></a>1. 工作记忆：当前正在处理的信息</h3><p>工作记忆就是本次请求送进模型上下文窗口的内容，包括当前问题、最近几轮对话、系统指令、工具返回结果，以及刚检索出的相关资料。</p>
+<p>它速度快、影响直接，但容量有限。上下文结束后，这些内容通常不会自动保留。因此，工作记忆适合支撑眼前的推理，不适合承担长期存储。</p>
+<h3 id="2-情景记忆：过去发生过什么"><a href="#2-情景记忆：过去发生过什么" class="headerlink" title="2. 情景记忆：过去发生过什么"></a>2. 情景记忆：过去发生过什么</h3><p>情景记忆保存具体事件，例如：</p>
+<ul>
+<li>用户上周决定采用 PostgreSQL；</li>
+<li>某次部署因为环境变量缺失而失败；</li>
+<li>团队在评审中否决了方案 A，选择了方案 B。</li>
+</ul>
+<p>这类记忆通常带有时间、参与者、对象、来源和结果。它回答的是“之前发生了什么”。</p>
+<h3 id="3-语义记忆：已经确认的稳定认识"><a href="#3-语义记忆：已经确认的稳定认识" class="headerlink" title="3. 语义记忆：已经确认的稳定认识"></a>3. 语义记忆：已经确认的稳定认识</h3><p>语义记忆是从多次交互中提炼出的事实、偏好和规则，例如：</p>
+<ul>
+<li>用户习惯使用中文交流；</li>
+<li>项目只能使用 Node.js，不能依赖 Python；</li>
+<li>输出文章时，需要同时生成 Markdown 和 HTML。</li>
+</ul>
+<p>它回答的是“现在应当把什么视为已知条件”。与情景记忆相比，语义记忆更简洁，也更适合反复调用。</p>
+<p>实际系统还可以加入程序性记忆，也就是“某类任务应该怎样做”。工作流、技能说明、操作规范都属于这一类。</p>
+<h2 id="二、记忆不是数据库，而是一条闭环"><a href="#二、记忆不是数据库，而是一条闭环" class="headerlink" title="二、记忆不是数据库，而是一条闭环"></a>二、记忆不是数据库，而是一条闭环</h2><p>仅仅选择向量数据库、关系数据库或知识图谱，并不能构成记忆。完整闭环通常包含六个环节：</p>
+<ol>
+<li><strong>观察</strong>：接收对话、文件、工具结果和用户反馈。</li>
+<li><strong>判断</strong>：识别其中是否存在值得长期保存的信息。</li>
+<li><strong>写入</strong>：将原始信息压缩成结构化记忆，并保留来源。</li>
+<li><strong>检索</strong>：根据当前任务找回少量相关内容。</li>
+<li><strong>使用</strong>：把检索结果放入上下文，参与回答或行动。</li>
+<li><strong>更新</strong>：根据新证据修正、合并、降权或删除旧记忆。</li>
+</ol>
+<p>最难的往往不是存储，而是判断。什么都记，会产生噪声和冲突；什么都不记，系统每次都像第一次见面。</p>
+<h2 id="三、每条记忆应该保存什么"><a href="#三、每条记忆应该保存什么" class="headerlink" title="三、每条记忆应该保存什么"></a>三、每条记忆应该保存什么</h2><p>建议不要只保存一段自然语言。最小的数据结构可以包括：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mem_123&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;preference&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;subject&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;用户偏好中文回答&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;source&quot;</span><span class="punctuation">:</span> <span class="string">&quot;conversation_456#message_18&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;created_at&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2026-08-07T10:00:00+08:00&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;updated_at&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2026-08-07T10:00:00+08:00&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;confidence&quot;</span><span class="punctuation">:</span> <span class="number">0.95</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;importance&quot;</span><span class="punctuation">:</span> <span class="number">0.8</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;expires_at&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">null</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;status&quot;</span><span class="punctuation">:</span> <span class="string">&quot;active&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中有几个字段不能省：</p>
+<ul>
+<li><strong>来源</strong>让系统能追溯记忆是怎么来的；</li>
+<li><strong>置信度</strong>表示它是明确事实、合理推断，还是尚待确认；</li>
+<li><strong>时间</strong>帮助系统处理新旧冲突；</li>
+<li><strong>状态或有效期</strong>支持失效、撤回与遗忘。</li>
+</ul>
+<p>如果记忆涉及项目实体，还可以增加 <code>project_id</code>、<code>entity_id</code> 和权限范围，防止不同用户、不同项目之间串数据。</p>
+<h2 id="四、怎样决定“记什么”"><a href="#四、怎样决定“记什么”" class="headerlink" title="四、怎样决定“记什么”"></a>四、怎样决定“记什么”</h2><p>写入策略可以先从几条明确规则开始，而不是一上来就让模型自由判断。</p>
+<p>适合长期保存的信息通常具备以下特征：</p>
+<ul>
+<li>未来还会影响回答或行动；</li>
+<li>用户明确要求记住；</li>
+<li>在多次交互中反复出现；</li>
+<li>属于稳定偏好、约束、决策或任务状态；</li>
+<li>忘记后会造成明显的重复劳动或错误。</li>
+</ul>
+<p>临时闲聊、一次性细节、未经确认的猜测和敏感信息，不应默认进入长期记忆。</p>
+<p>写入前最好做一次标准化。例如，把“以后都用中文吧”和“我更喜欢中文回答”合并为同一条偏好，而不是保存两份近义文本。对于高风险信息，可以先生成候选记忆，得到用户确认后再生效。</p>
+<h2 id="五、怎样在需要时“想起来”"><a href="#五、怎样在需要时“想起来”" class="headerlink" title="五、怎样在需要时“想起来”"></a>五、怎样在需要时“想起来”</h2><p>检索不能只依赖向量相似度。语义相近不等于当前有用，一条记忆是否应该被召回，还与时间、对象、任务和重要程度有关。</p>
+<p>实用的检索流程可以分为三步：</p>
+<h3 id="第一步：缩小范围"><a href="#第一步：缩小范围" class="headerlink" title="第一步：缩小范围"></a>第一步：缩小范围</h3><p>先按用户、项目、记忆类型、权限和有效状态过滤。这样既能减少计算，也能避免跨边界泄露。</p>
+<h3 id="第二步：混合召回"><a href="#第二步：混合召回" class="headerlink" title="第二步：混合召回"></a>第二步：混合召回</h3><p>同时使用关键词检索和向量检索。关键词擅长查找文件名、错误码、专有名词；向量检索擅长发现意思相近但措辞不同的内容。</p>
+<h3 id="第三步：重排与限量"><a href="#第三步：重排与限量" class="headerlink" title="第三步：重排与限量"></a>第三步：重排与限量</h3><p>根据相关性、重要性、时效性、置信度和重复度重新排序，只向上下文注入最有用的几条。可以用一个简单的综合分数：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">总分 = 相关性 × 0.5 + 重要性 × 0.2 + 时效性 × 0.15 + 置信度 × 0.15</span><br></pre></td></tr></table></figure>
+
+<p>权重没有通用答案。客服系统更看重用户历史，代码助手更看重当前仓库和近期决策，个人助理则要兼顾偏好与日程。</p>
+<h2 id="六、如何处理冲突、变化和遗忘"><a href="#六、如何处理冲突、变化和遗忘" class="headerlink" title="六、如何处理冲突、变化和遗忘"></a>六、如何处理冲突、变化和遗忘</h2><p>记忆会过期，也会被后来信息推翻。例如，用户过去使用 Java，现在项目改成了 Go。正确做法不是简单覆盖旧记录，而是保留变化关系：新记忆成为当前有效事实，旧记忆被标记为已失效，并记录替代它的依据。</p>
+<p>可以采用四种更新动作：</p>
+<ul>
+<li><strong>合并</strong>：多条近义记忆合成一条；</li>
+<li><strong>修正</strong>：新证据替换旧结论，同时保留历史；</li>
+<li><strong>降权</strong>：长时间未使用或置信度较低的记忆减少召回机会；</li>
+<li><strong>删除</strong>：按用户要求、隐私政策或保存期限彻底清除。</li>
+</ul>
+<p>遗忘不是缺陷。没有遗忘机制的系统会逐渐被陈旧信息淹没，检索结果反而越来越差。</p>
+<h2 id="七、一个可落地的最小方案"><a href="#七、一个可落地的最小方案" class="headerlink" title="七、一个可落地的最小方案"></a>七、一个可落地的最小方案</h2><p>如果从零开始，不必先搭建复杂的知识图谱。一个小型系统用关系数据库加向量扩展就够了。</p>
+<h3 id="存储层"><a href="#存储层" class="headerlink" title="存储层"></a>存储层</h3><p>使用 PostgreSQL 保存结构化字段，并通过 <code>pgvector</code> 保存文本向量。原始对话与提炼后的记忆分表存放，避免把聊天记录直接当作长期记忆。</p>
+<h3 id="写入层"><a href="#写入层" class="headerlink" title="写入层"></a>写入层</h3><p>每轮对话结束后运行记忆提取器：</p>
+<ol>
+<li>找出候选事实、偏好、约束和决策；</li>
+<li>判断是否值得保存；</li>
+<li>与现有记忆比较，决定新增、合并还是更新；</li>
+<li>写入来源、置信度和有效状态。</li>
+</ol>
+<h3 id="读取层"><a href="#读取层" class="headerlink" title="读取层"></a>读取层</h3><p>收到新问题后，先识别当前任务涉及的用户、项目和实体，再进行过滤、混合检索和重排。最终只注入少量摘要，并清楚标注这是“历史记忆”，避免模型把它与本轮指令混淆。</p>
+<h3 id="维护层"><a href="#维护层" class="headerlink" title="维护层"></a>维护层</h3><p>定期清理过期内容、合并重复项，并检查长期没有被召回的记录。为用户提供查看、修改、导出和删除记忆的入口。</p>
+<h2 id="八、评估记忆系统是否真的有效"><a href="#八、评估记忆系统是否真的有效" class="headerlink" title="八、评估记忆系统是否真的有效"></a>八、评估记忆系统是否真的有效</h2><p>记忆系统不能只看“召回了多少条”。更有意义的指标包括：</p>
+<ul>
+<li><strong>命中率</strong>：需要的信息是否被找回；</li>
+<li><strong>精确率</strong>：找回的内容中有多少真正有用；</li>
+<li><strong>陈旧率</strong>：回答使用了多少已经失效的信息；</li>
+<li><strong>冲突率</strong>：同时召回互相矛盾记忆的频率；</li>
+<li><strong>任务收益</strong>：记忆是否减少追问、重复操作和事实错误；</li>
+<li><strong>隐私合规</strong>：用户能否知道系统记了什么，并控制这些内容。</li>
+</ul>
+<p>测试集应包含连续多轮任务、偏好变化、事实纠正、跨项目隔离和删除请求。否则系统在演示中看起来很聪明，进入真实使用后却容易误记和串记。</p>
+<h2 id="九、最容易踩的几个坑"><a href="#九、最容易踩的几个坑" class="headerlink" title="九、最容易踩的几个坑"></a>九、最容易踩的几个坑</h2><p>第一，把完整聊天记录不断塞回上下文。成本会持续增加，真正重要的信息反而被埋住。</p>
+<p>第二，把模型生成的总结当成绝对事实。总结可能遗漏限定条件，也可能把推测写成结论，所以必须保存来源和置信度。</p>
+<p>第三，只做向量搜索。它适合语义召回，却不擅长处理权限、时间、精确标识和事实冲突。</p>
+<p>第四，让记忆在后台悄悄积累。用户不知道系统保存了什么，也无法纠错，长期下来既影响信任，也带来隐私风险。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>AI 记忆的本质，是一套受控的信息管理机制。模型负责从交互中理解候选信息，并在获得相关记忆后完成推理；外部系统负责存储、检索、更新、权限和删除。</p>
+<p>开始构建时，可以先做好三件事：把原始记录与提炼记忆分开，为每条记忆保留来源和有效状态，只检索当前任务真正需要的少量内容。等这条闭环稳定后，再增加知识图谱、自动归纳和分层记忆。这样做出来的系统，才是会积累经验，而不是单纯囤积文本。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="tag"># 大语言模型</a>
+              <a href="/tags/%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 智能体</a>
+              <a href="/tags/%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86/" rel="tag"># 长期记忆</a>
+              <a href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87/" rel="tag"># 上下文</a>
+              <a href="/tags/%E6%A3%80%E7%B4%A2/" rel="tag"># 检索</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/07/AI%E5%B9%BB%E8%A7%89-%E6%A8%A1%E5%9E%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%B8%80%E6%9C%AC%E6%AD%A3%E7%BB%8F%E5%9C%B0%E8%AF%B4%E9%94%99%E8%AF%9D/" rel="prev" title="AI 幻觉：模型为什么会一本正经地说错话">
+                  <i class="fa fa-angle-left"></i> AI 幻觉：模型为什么会一本正经地说错话
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/10/Agent%E8%B7%91%E9%A3%9E%E4%BA%86-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95/" rel="next" title="Agent 跑飞了：如何定位和兜底">
+                  Agent 跑飞了：如何定位和兜底 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

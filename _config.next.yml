@@ -1,0 +1,54 @@
+scheme: Muse
+
+menu:
+  home: / || fa fa-home
+  tags: /tags/ || fa fa-tags
+  categories: /categories/ || fa fa-th
+  archives: /archives/ || fa fa-archive
+
+avatar:
+  url: /images/avatar.jpg
+  rounded: true
+  rotated: false
+
+social:
+
+social_icons:
+  enable: true
+  icons_only: false
+  transition: false
+
+footer:
+  since: 2022
+  icon:
+    name: fa fa-user
+    animated: false
+    color: "#808080"
+  copyright: true
+  powered: true
+
+codeblock:
+  theme:
+    light: default
+    dark: tomorrow-night-blue
+  copy_button:
+    enable: true
+    show_result: true
+
+back2top:
+  enable: true
+  sidebar: false
+  scrollpercent: false
+
+motion:
+  enable: true
+  async: false
+
+local_search:
+  enable: false
+
+favicon:
+  small: /images/favicon-16x16-next.png
+  medium: /images/favicon-32x32-next.png
+  apple_touch_icon: /images/apple-touch-icon-next.png
+  safari_pinned_tab: /images/logo.svg

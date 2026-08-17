@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="从止损、定位、预算、权限和复盘五个角度，整理智能体偏离任务后的排查与兜底方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 跑飞了：如何定位和兜底">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/17/Agent%E8%B7%91%E9%A3%9E%E4%BA%86-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="从止损、定位、预算、权限和复盘五个角度，整理智能体偏离任务后的排查与兜底方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-17T01:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-17T03:13:06.884Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="可靠性">
+<meta property="article:tag" content="故障排查">
+<meta property="article:tag" content="智能体">
+<meta property="article:tag" content="权限控制">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/17/Agent%E8%B7%91%E9%A3%9E%E4%BA%86-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/17/Agent%E8%B7%91%E9%A3%9E%E4%BA%86-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95/","path":"2026/08/17/Agent跑飞了-如何定位和兜底/","title":"Agent 跑飞了：如何定位和兜底"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Agent 跑飞了：如何定位和兜底 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-games"><a href="/game/" rel="section"><i class="fa fa-gamepad fa-fw"></i>games</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Agent-%E8%B7%91%E9%A3%9E%E4%BA%86%EF%BC%9A%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95"><span class="nav-number">1.</span> <span class="nav-text">Agent 跑飞了：如何定位和兜底</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E5%8F%AB-Agent-%E8%B7%91%E9%A3%9E"><span class="nav-number">1.1.</span> <span class="nav-text">一、什么叫 Agent 跑飞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%9B%AE%E6%A0%87%E6%BC%82%E7%A7%BB"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. 目标漂移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%BE%AA%E7%8E%AF%E8%B0%83%E7%94%A8"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. 循环调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%94%99%E8%AF%AF%E6%89%A9%E6%95%A3"><span class="nav-number">1.1.3.</span> <span class="nav-text">3. 错误扩散</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%9D%83%E9%99%90%E8%B6%8A%E7%95%8C"><span class="nav-number">1.1.4.</span> <span class="nav-text">4. 权限越界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%B5%84%E6%BA%90%E5%A4%B1%E6%8E%A7"><span class="nav-number">1.1.5.</span> <span class="nav-text">5. 资源失控</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BA%8B%E6%95%85%E5%8F%91%E7%94%9F%E6%97%B6%EF%BC%8C%E5%85%88%E6%AD%A2%E6%8D%9F"><span class="nav-number">1.2.</span> <span class="nav-text">二、事故发生时，先止损</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%9A%E4%BD%8D%E9%97%AE%E9%A2%98%EF%BC%8C%E4%B8%8D%E8%A6%81%E4%BB%8E%E6%9C%80%E5%90%8E%E4%B8%80%E6%9D%A1%E9%94%99%E8%AF%AF%E5%BC%80%E5%A7%8B"><span class="nav-number">1.3.</span> <span class="nav-text">三、定位问题，不要从最后一条错误开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%B2%BF%E7%9D%80%E6%89%A7%E8%A1%8C%E9%93%BE%E5%AF%BB%E6%89%BE%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%81%8F%E7%A6%BB%E7%82%B9"><span class="nav-number">1.4.</span> <span class="nav-text">四、沿着执行链寻找第一个偏离点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Agent-%E5%BD%93%E6%97%B6%E7%90%86%E8%A7%A3%E7%9A%84%E7%9B%AE%E6%A0%87%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.4.1.</span> <span class="nav-text">1. Agent 当时理解的目标是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%83%E4%BE%9D%E6%8D%AE%E4%BA%86%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF"><span class="nav-number">1.4.2.</span> <span class="nav-text">2. 它依据了哪些信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%B7%A5%E5%85%B7%E6%98%AF%E5%90%A6%E5%A6%82%E5%AE%9E%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C"><span class="nav-number">1.4.3.</span> <span class="nav-text">3. 工具是否如实返回结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%8A%B6%E6%80%81%E6%9C%89%E6%B2%A1%E6%9C%89%E8%A2%AB%E9%94%99%E8%AF%AF%E7%BB%A7%E6%89%BF"><span class="nav-number">1.4.4.</span> <span class="nav-text">4. 状态有没有被错误继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%98%AF%E5%90%A6%E5%87%BA%E7%8E%B0%E4%BA%86%E2%80%9C%E6%B2%A1%E6%9C%89%E8%BF%9B%E5%B1%95%E7%9A%84%E9%87%8D%E8%AF%95%E2%80%9D"><span class="nav-number">1.4.5.</span> <span class="nav-text">5. 是否出现了“没有进展的重试”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%93%AA%E4%B8%AA%E4%BF%9D%E6%8A%A4%E6%9D%A1%E4%BB%B6%E6%9C%AC%E5%BA%94%E9%98%BB%E6%AD%A2%E5%AE%83"><span class="nav-number">1.4.6.</span> <span class="nav-text">6. 哪个保护条件本应阻止它</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%94%A8%E5%9B%9B%E7%B1%BB%E9%A2%84%E7%AE%97%E9%99%90%E5%88%B6%E6%8D%9F%E5%A4%B1"><span class="nav-number">1.5.</span> <span class="nav-text">五、用四类预算限制损失</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E6%95%B0%E9%A2%84%E7%AE%97"><span class="nav-number">1.5.1.</span> <span class="nav-text">步数预算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E9%A2%84%E7%AE%97"><span class="nav-number">1.5.2.</span> <span class="nav-text">时间预算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E6%9C%AC%E9%A2%84%E7%AE%97"><span class="nav-number">1.5.3.</span> <span class="nav-text">成本预算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4%E9%A2%84%E7%AE%97"><span class="nav-number">1.5.4.</span> <span class="nav-text">影响范围预算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%8A%8A%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E6%94%BE%E5%9C%A8%E6%A8%A1%E5%9E%8B%E4%B9%8B%E5%A4%96"><span class="nav-number">1.6.</span> <span class="nav-text">六、把权限控制放在模型之外</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E8%AE%A9%E6%AF%8F%E4%B8%AA%E5%86%99%E6%93%8D%E4%BD%9C%E9%83%BD%E5%8F%AF%E6%81%A2%E5%A4%8D"><span class="nav-number">1.7.</span> <span class="nav-text">七、让每个写操作都可恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%BB%BA%E7%AB%8B%E2%80%9C%E6%9C%89%E8%BF%9B%E5%B1%95%E2%80%9D%E5%88%A4%E5%AE%9A"><span class="nav-number">1.8.</span> <span class="nav-text">八、建立“有进展”判定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E4%BD%95%E6%97%B6%E5%BF%85%E9%A1%BB%E4%BA%A4%E7%BB%99%E4%BA%BA"><span class="nav-number">1.9.</span> <span class="nav-text">九、何时必须交给人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E4%BA%8B%E6%95%85%E5%90%8E%E6%80%8E%E6%A0%B7%E5%A4%8D%E7%9B%98"><span class="nav-number">1.10.</span> <span class="nav-text">十、事故后怎样复盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E4%B8%80%E4%B8%AA%E6%9C%80%E5%B0%8F%E5%8F%AF%E7%94%A8%E7%9A%84%E9%98%B2%E8%B7%91%E9%A3%9E%E6%96%B9%E6%A1%88"><span class="nav-number">1.11.</span> <span class="nav-text">十一、一个最小可用的防跑飞方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">1.12.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/17/Agent%E8%B7%91%E9%A3%9E%E4%BA%86-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Agent 跑飞了：如何定位和兜底 | 欣然的备忘录">
+      <meta itemprop="description" content="从止损、定位、预算、权限和复盘五个角度，整理智能体偏离任务后的排查与兜底方法。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Agent 跑飞了：如何定位和兜底
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-17 09:00:00 / 修改时间：11:13:06" itemprop="dateCreated datePublished" datetime="2026-08-17T09:00:00+08:00">2026-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">从止损、定位、预算、权限和复盘五个角度，整理智能体偏离任务后的排查与兜底方法。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Agent-跑飞了：如何定位和兜底"><a href="#Agent-跑飞了：如何定位和兜底" class="headerlink" title="Agent 跑飞了：如何定位和兜底"></a>Agent 跑飞了：如何定位和兜底</h1><p>Agent 跑飞，通常不是模型突然“失控”，而是系统允许一个不够可靠的决策器，在反馈不足、边界模糊的情况下连续行动。</p>
+<p>它可能反复调用同一个工具，不断偏离原始任务，也可能修改了不该碰的文件、生成大量无用内容，甚至把一次小错误传播到后续几十个步骤。处理这类问题，不能只靠改提示词。真正有效的方法是：<strong>先限制损失，再保存现场，定位第一次偏离，最后把约束下沉到执行系统。</strong></p>
+<h2 id="一、什么叫-Agent-跑飞"><a href="#一、什么叫-Agent-跑飞" class="headerlink" title="一、什么叫 Agent 跑飞"></a>一、什么叫 Agent 跑飞</h2><p>“跑飞”不是一个精确的技术术语。工程上，它通常指 Agent 的行动已经不再稳定地服务于用户目标，却仍在继续消耗资源或改变外部状态。</p>
+<p>常见表现可以分成五类。</p>
+<h3 id="1-目标漂移"><a href="#1-目标漂移" class="headerlink" title="1. 目标漂移"></a>1. 目标漂移</h3><p>用户只要求修复一个接口，Agent 却开始重构整个模块；要求整理文档，它却自行改变产品设计。每一步单独看似乎有理由，连起来却偏离了任务。</p>
+<h3 id="2-循环调用"><a href="#2-循环调用" class="headerlink" title="2. 循环调用"></a>2. 循环调用</h3><p>Agent 反复搜索同一批文件、重试同一个失败命令，或者在“修改、测试、撤回、再修改”之间循环。它没有形成新信息，却持续消耗时间和 token。</p>
+<h3 id="3-错误扩散"><a href="#3-错误扩散" class="headerlink" title="3. 错误扩散"></a>3. 错误扩散</h3><p>一次错误判断被写进计划或记忆，后续步骤都把它当成事实。例如 Agent 误判数据库字段含义，随后同时修改接口、前端和测试，造成更大的返工面。</p>
+<h3 id="4-权限越界"><a href="#4-权限越界" class="headerlink" title="4. 权限越界"></a>4. 权限越界</h3><p>Agent 修改任务范围外的文件、访问不相关的数据、对外发送内容，或者执行删除、发布、付款等高风险操作。</p>
+<h3 id="5-资源失控"><a href="#5-资源失控" class="headerlink" title="5. 资源失控"></a>5. 资源失控</h3><p>任务没有明显进展，但模型调用次数、工具调用次数、运行时间和费用持续上升。系统最后可能完成了任务，也可能没有；无论哪种情况，执行过程都不可接受。</p>
+<h2 id="二、事故发生时，先止损"><a href="#二、事故发生时，先止损" class="headerlink" title="二、事故发生时，先止损"></a>二、事故发生时，先止损</h2><p>看到 Agent 行为异常后，第一件事不是继续追问它“为什么这么做”，而是阻止它继续改变环境。</p>
+<p>建议按以下顺序处理：</p>
+<ol>
+<li><strong>暂停新的模型和工具调用</strong>，保留当前运行状态。</li>
+<li><strong>撤销尚未执行的异步任务</strong>，包括队列任务、定时器和后台子 Agent。</li>
+<li><strong>冻结写权限</strong>，把系统切换到只读或审批模式。</li>
+<li><strong>隔离外部副作用</strong>，暂停发布、通知、转账、删除等动作。</li>
+<li><strong>保存现场</strong>，不要急着清理日志、临时文件和中间状态。</li>
+</ol>
+<p>如果工具调用无法中断，至少要在执行层设置超时和租约。租约到期后，Agent 即使仍想继续，也无法获得新的执行权限。</p>
+<p>止损时要区分“可逆”和“不可逆”操作。读取文件、搜索代码通常风险较低；提交代码、修改线上数据、向客户发消息则需要更严格的控制。对不可逆动作，系统不应等到发现跑飞后才拦截，而应提前要求人工确认。</p>
+<h2 id="三、定位问题，不要从最后一条错误开始"><a href="#三、定位问题，不要从最后一条错误开始" class="headerlink" title="三、定位问题，不要从最后一条错误开始"></a>三、定位问题，不要从最后一条错误开始</h2><p>Agent 最后表现出来的异常，往往只是前面某次偏离的结果。定位时应该寻找<strong>第一次失去依据的决策</strong>。</p>
+<p>一条完整执行轨迹至少需要记录：</p>
+<ul>
+<li>用户原始目标和系统指令；</li>
+<li>每轮模型输入、输出和使用的模型版本；</li>
+<li>Agent 当时的计划、状态和剩余预算；</li>
+<li>每次工具调用的参数、结果、耗时与错误；</li>
+<li>检索到的文档、记忆及其来源；</li>
+<li>文件、数据库和外部系统的变更摘要；</li>
+<li>审批、重试、超时和异常信息。</li>
+</ul>
+<p>只记录最终回答远远不够。没有中间轨迹，就很难判断是模型推理错误、上下文缺失、工具返回异常，还是编排器把旧状态重复送进了下一轮。</p>
+<h2 id="四、沿着执行链寻找第一个偏离点"><a href="#四、沿着执行链寻找第一个偏离点" class="headerlink" title="四、沿着执行链寻找第一个偏离点"></a>四、沿着执行链寻找第一个偏离点</h2><p>排查时，可以按六个问题向前追溯。</p>
+<h3 id="1-Agent-当时理解的目标是什么"><a href="#1-Agent-当时理解的目标是什么" class="headerlink" title="1. Agent 当时理解的目标是什么"></a>1. Agent 当时理解的目标是什么</h3><p>比较用户原始要求、系统目标和 Agent 自己生成的计划。如果计划已经扩大了任务范围，问题出在目标解析或规划阶段。</p>
+<p>目标最好写成可以检查的完成条件，例如“只修改 <code>auth</code> 模块，使三个指定测试通过”，而不是“优化登录体验”。后者给 Agent 留下了太大的解释空间。</p>
+<h3 id="2-它依据了哪些信息"><a href="#2-它依据了哪些信息" class="headerlink" title="2. 它依据了哪些信息"></a>2. 它依据了哪些信息</h3><p>检查上下文是否缺页、过期或互相矛盾。还要确认检索系统有没有返回貌似相关、实际属于另一个项目的资料。</p>
+<p>如果一条结论没有来源，或者来源无法支持结论，就应该把这里标记为候选偏离点。</p>
+<h3 id="3-工具是否如实返回结果"><a href="#3-工具是否如实返回结果" class="headerlink" title="3. 工具是否如实返回结果"></a>3. 工具是否如实返回结果</h3><p>工具层经常制造假象：命令退出码异常但文件其实已经生成，接口超时但服务端已经完成写入，日志被截断后看起来像执行成功。Agent 若只依据一句摘要继续行动，很容易重复执行或得出错误结论。</p>
+<p>工具返回应包含明确的状态、结构化结果和副作用标识。对写操作，还要返回幂等键、变更对象和可验证的最终状态。</p>
+<h3 id="4-状态有没有被错误继承"><a href="#4-状态有没有被错误继承" class="headerlink" title="4. 状态有没有被错误继承"></a>4. 状态有没有被错误继承</h3><p>多轮执行中，旧计划、失败步骤、缓存结果或历史记忆可能继续污染后续判断。检查状态机是否允许失败步骤被当作已完成，也要检查重试时是否重复使用了过期上下文。</p>
+<h3 id="5-是否出现了“没有进展的重试”"><a href="#5-是否出现了“没有进展的重试”" class="headerlink" title="5. 是否出现了“没有进展的重试”"></a>5. 是否出现了“没有进展的重试”</h3><p>连续两次行动使用相同参数、得到相同错误，又没有引入新证据，第三次重试通常不会带来变化。此时系统应该停止自动循环，转而换方案或请求人工介入。</p>
+<h3 id="6-哪个保护条件本应阻止它"><a href="#6-哪个保护条件本应阻止它" class="headerlink" title="6. 哪个保护条件本应阻止它"></a>6. 哪个保护条件本应阻止它</h3><p>如果 Agent 已经修改了任务范围外的文件，除了追究模型为什么这样做，还要追问：为什么执行层允许它这样做？定位的终点不是找到一句糟糕的模型输出，而是找到缺失或失效的控制措施。</p>
+<h2 id="五、用四类预算限制损失"><a href="#五、用四类预算限制损失" class="headerlink" title="五、用四类预算限制损失"></a>五、用四类预算限制损失</h2><p>最简单有效的兜底，是给一次任务设置明确预算。</p>
+<h3 id="步数预算"><a href="#步数预算" class="headerlink" title="步数预算"></a>步数预算</h3><p>限制模型决策轮数、工具调用总数和同类工具的连续调用次数。达到阈值后，Agent 必须总结进展并停止，不能自行追加预算。</p>
+<h3 id="时间预算"><a href="#时间预算" class="headerlink" title="时间预算"></a>时间预算</h3><p>为整个任务和单次工具调用分别设置超时。长任务可以使用租约续期：只有检测到有效进展时，系统才延长执行时间。</p>
+<h3 id="成本预算"><a href="#成本预算" class="headerlink" title="成本预算"></a>成本预算</h3><p>限制 token、模型费用、搜索请求和其他计费资源。预算应由编排器计算，不能依赖 Agent 自己估算。</p>
+<h3 id="影响范围预算"><a href="#影响范围预算" class="headerlink" title="影响范围预算"></a>影响范围预算</h3><p>限制可读取的数据域、可修改的文件数量、单次数据库变更行数和外部通知人数。例如任务只涉及一个模块，就把写入范围限定在该目录，而不是开放整个仓库。</p>
+<p>预算耗尽不等于任务失败。系统可以输出已完成步骤、未完成原因、现场状态和建议的下一步，让人工决定是否继续。</p>
+<h2 id="六、把权限控制放在模型之外"><a href="#六、把权限控制放在模型之外" class="headerlink" title="六、把权限控制放在模型之外"></a>六、把权限控制放在模型之外</h2><p>提示词中的“不要删除文件”只是一条软约束。真正的权限边界必须由工具和运行环境执行。</p>
+<p>可以把工具分成三个等级：</p>
+<ul>
+<li><strong>自动允许</strong>：只读查询、静态分析、无副作用计算；</li>
+<li><strong>受限允许</strong>：在沙箱内修改文件、运行测试、写入临时环境；</li>
+<li><strong>人工确认</strong>：删除数据、发布上线、发送消息、修改权限和产生费用的操作。</li>
+</ul>
+<p>每个工具还应校验具体参数。允许“修改文件”不代表可以修改任意路径；允许“执行 SQL”也不代表可以运行没有行数限制的 <code>DELETE</code>。</p>
+<p>对于高风险操作，可以采用“计划与执行分离”：Agent 只生成结构化操作计划，独立校验器检查范围、权限和前置条件，通过后才由执行器完成动作。</p>
+<h2 id="七、让每个写操作都可恢复"><a href="#七、让每个写操作都可恢复" class="headerlink" title="七、让每个写操作都可恢复"></a>七、让每个写操作都可恢复</h2><p>兜底不仅是阻止错误，也要让已经发生的错误能够恢复。</p>
+<p>代码修改应在独立分支或临时工作区中进行；数据库更新应使用事务、版本号或变更日志；外部请求应携带幂等键，防止超时重试造成重复扣款或重复通知。</p>
+<p>对于无法真正撤销的操作，例如邮件已经发送，系统应采用两阶段流程：先生成草稿和收件人列表，确认后再发送。所谓回滚，不能只写在设计文档里，必须通过演练确认它真的可用。</p>
+<h2 id="八、建立“有进展”判定"><a href="#八、建立“有进展”判定" class="headerlink" title="八、建立“有进展”判定"></a>八、建立“有进展”判定</h2><p>许多循环并非因为 Agent 不知道停止，而是系统没有定义什么叫进展。</p>
+<p>可以为任务设置可测量的进展信号：</p>
+<ul>
+<li>新发现了与目标相关的信息；</li>
+<li>某个未完成条件已经满足；</li>
+<li>测试失败数量减少；</li>
+<li>不确定性得到澄清；</li>
+<li>产生了可验证的环境变化。</li>
+</ul>
+<p>如果连续若干步没有任何进展，系统应触发熔断。熔断后的输出需要说明：尝试了什么、为什么没有推进、当前有哪些证据、恢复执行还缺什么。</p>
+<p>还要防止 Agent 用“改写计划”伪装进展。计划文本发生变化，不代表任务状态发生变化。</p>
+<h2 id="九、何时必须交给人"><a href="#九、何时必须交给人" class="headerlink" title="九、何时必须交给人"></a>九、何时必须交给人</h2><p>人工介入不应被视为失败。有些条件本来就不适合自动决策：</p>
+<ul>
+<li>用户目标存在两种代价明显不同的解释；</li>
+<li>关键事实互相矛盾，且无法从可靠来源验证；</li>
+<li>即将执行不可逆或高影响操作；</li>
+<li>自动重试已达到上限；</li>
+<li>任务需要扩大权限、预算或影响范围；</li>
+<li>监控检测到异常成本、越权倾向或持续无进展。</li>
+</ul>
+<p>交接信息要足够简洁。不要把几万行日志直接扔给审批人，而应提供原始目标、当前计划、已完成事项、待确认决策、风险和相关证据链接。</p>
+<h2 id="十、事故后怎样复盘"><a href="#十、事故后怎样复盘" class="headerlink" title="十、事故后怎样复盘"></a>十、事故后怎样复盘</h2><p>复盘不能停在“模型不够聪明”或“提示词写得不好”。这些结论无法直接转化为稳定的防护。</p>
+<p>一次有效复盘至少回答四个问题：</p>
+<ol>
+<li>第一个无依据或越界的动作是什么？</li>
+<li>当时有哪些信号能够提前发现它？</li>
+<li>哪个系统约束本应阻止它，却没有生效？</li>
+<li>如何用自动测试复现这次事故？</li>
+</ol>
+<p>修复措施也应分层。提示词可以澄清目标；检索层要改善来源和隔离；编排器要增加状态检查与预算；执行层要收紧权限并支持回滚。只修改其中一层，类似事故往往还会换一种形式出现。</p>
+<h2 id="十一、一个最小可用的防跑飞方案"><a href="#十一、一个最小可用的防跑飞方案" class="headerlink" title="十一、一个最小可用的防跑飞方案"></a>十一、一个最小可用的防跑飞方案</h2><p>如果系统还处于早期阶段，可以先实现以下组合：</p>
+<ol>
+<li>每个任务都有明确目标、允许范围和完成条件。</li>
+<li>保存模型、工具、检索和状态变化的完整执行轨迹。</li>
+<li>设置最大步数、总时长、费用和写入范围。</li>
+<li>连续两次相同失败后停止自动重试。</li>
+<li>所有高风险动作都要求人工确认。</li>
+<li>写操作使用沙箱、事务、幂等键或版本控制。</li>
+<li>结束时验证结果，而不是相信 Agent 自己宣布“已完成”。</li>
+</ol>
+<p>这套方案不复杂，却能挡住大部分常见事故。等系统积累了真实运行数据，再增加异常检测、自动重排、策略模型和更细的风险评分。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>Agent 跑飞很少由单个原因造成。模糊目标、错误上下文、不可靠工具、宽松权限和无限重试叠加在一起，才让一次普通误判演变成事故。</p>
+<p>定位时，寻找第一次失去依据的决策；兜底时，把限制放到模型无法绕过的执行层。一个值得信任的 Agent，不是从不犯错，而是错误能够被及时发现，损失有上限，过程可追溯，结果可恢复。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 智能体</a>
+              <a href="/tags/Agent/" rel="tag"># Agent</a>
+              <a href="/tags/%E5%8F%AF%E9%9D%A0%E6%80%A7/" rel="tag"># 可靠性</a>
+              <a href="/tags/%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/" rel="tag"># 故障排查</a>
+              <a href="/tags/%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/" rel="tag"># 权限控制</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/14/lua%E7%AC%94%E8%AE%B0/" rel="prev" title="Lua 笔记">
+                  <i class="fa fa-angle-left"></i> Lua 笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/17/AI%E8%AE%B0%E5%BF%86%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA-%E4%BB%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/" rel="next" title="AI 记忆怎么构建：从上下文到长期记忆系统">
+                  AI 记忆怎么构建：从上下文到长期记忆系统 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
