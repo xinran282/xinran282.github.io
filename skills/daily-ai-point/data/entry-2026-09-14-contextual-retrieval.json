@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-14",
+  "concept_id": "rag-contextual-retrieval",
+  "title": "上下文检索：为什么给 chunk 补充文档背景能提升 RAG",
+  "aliases": ["contextual retrieval", "contextual embeddings", "RAG"],
+  "category": "检索与知识",
+  "level": 3,
+  "kind": "current",
+  "status": "new",
+  "keywords": ["RAG", "检索", "分块", "上下文", "召回"],
+  "summary": "上下文检索在索引阶段为每个 chunk 生成其文档背景，并将背景与原文共同用于向量和 BM25 检索；它针对切分造成的片段孤立问题，可与 reranker 和查询改写组合。",
+  "sources": [
+    {
+      "title": "Introducing Contextual Retrieval",
+      "url": "https://www.anthropic.com/news/contextual-retrieval",
+      "published": "2024-09-19"
+    }
+  ]
+}

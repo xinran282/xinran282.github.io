@@ -1,0 +1,23 @@
+{
+  "date": "2026-09-07",
+  "concept_id": "continuous-batching-llm-serving",
+  "title": "连续批处理：大模型服务如何减少请求排队和 GPU 空转",
+  "aliases": ["continuous batching", "iteration-level scheduling", "迭代级调度"],
+  "category": "工程与产品",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["推理服务", "批处理", "调度", "吞吐", "延迟"],
+  "summary": "连续批处理把调度粒度缩小到 token 迭代，允许新请求动态加入、完成请求及时退出，从而提升 GPU 利用率并降低排队和尾延迟；它与 KV Cache 布局、解码算法是不同层次的优化。",
+  "sources": [
+    {
+      "title": "Orca: A Distributed Serving System for Transformer-Based Generative Models",
+      "url": "https://arxiv.org/abs/2306.00978",
+      "published": "2023-06-01"
+    },
+    {
+      "title": "vLLM 官方文档",
+      "url": "https://docs.vllm.ai/en/latest/"
+    }
+  ]
+}

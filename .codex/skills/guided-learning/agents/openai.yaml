@@ -1,0 +1,7 @@
+interface:
+  display_name: "Guided Learning Assistant"
+  short_description: "按目标、资料和证据逐步辅导学习，进行互动练习与独立检查"
+  default_prompt: "Use $guided-learning to help me study this topic: {主题}. Start by confirming my goal and background, one question at a time."
+
+policy:
+  allow_implicit_invocation: true

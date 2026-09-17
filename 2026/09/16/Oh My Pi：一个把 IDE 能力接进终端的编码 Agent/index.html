@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Oh My Pi（OMP） 可以先用一句话概括：它是在 Pi 的基础上继续扩展的开源编码 Agent，仍把终端交互放在中心，却试图把编辑器里的语言服务、调试器和协作入口一起带到 Agent 工作流里。 它不是一个新的大模型，也不靠替换模型取胜。OMP 解决的是另一层问题：模型怎样读项目、改文件、运行命令、理解代码符号，并在需要时把任务交给别的 Agent 或编辑器。项目 README 把这一层称为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oh My Pi：一个把 IDE 能力接进终端的编码 Agent">
+<meta property="og:url" content="https://xinran282.github.io/2026/09/16/Oh%20My%20Pi%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%8A%8A%20IDE%20%E8%83%BD%E5%8A%9B%E6%8E%A5%E8%BF%9B%E7%BB%88%E7%AB%AF%E7%9A%84%E7%BC%96%E7%A0%81%20Agent/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="Oh My Pi（OMP） 可以先用一句话概括：它是在 Pi 的基础上继续扩展的开源编码 Agent，仍把终端交互放在中心，却试图把编辑器里的语言服务、调试器和协作入口一起带到 Agent 工作流里。 它不是一个新的大模型，也不靠替换模型取胜。OMP 解决的是另一层问题：模型怎样读项目、改文件、运行命令、理解代码符号，并在需要时把任务交给别的 Agent 或编辑器。项目 README 把这一层称为">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-16T01:42:41.000Z">
+<meta property="article:modified_time" content="2026-09-16T01:43:11.898Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="ACP">
+<meta property="article:tag" content="Coding Agent">
+<meta property="article:tag" content="Oh My Pi">
+<meta property="article:tag" content="Pi">
+<meta property="article:tag" content="终端工具">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/09/16/Oh%20My%20Pi%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%8A%8A%20IDE%20%E8%83%BD%E5%8A%9B%E6%8E%A5%E8%BF%9B%E7%BB%88%E7%AB%AF%E7%9A%84%E7%BC%96%E7%A0%81%20Agent/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/09/16/Oh%20My%20Pi%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%8A%8A%20IDE%20%E8%83%BD%E5%8A%9B%E6%8E%A5%E8%BF%9B%E7%BB%88%E7%AB%AF%E7%9A%84%E7%BC%96%E7%A0%81%20Agent/","path":"2026/09/16/Oh My Pi：一个把 IDE 能力接进终端的编码 Agent/","title":"Oh My Pi：一个把 IDE 能力接进终端的编码 Agent"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Oh My Pi：一个把 IDE 能力接进终端的编码 Agent | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E5%92%8C-Pi-%E6%98%AF%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB"><span class="nav-number">1.</span> <span class="nav-text">它和 Pi 是什么关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OMP-%E6%83%B3%E8%A1%A5%E4%B8%8A%E7%9A%84%EF%BC%8C%E6%AD%A3%E6%98%AF%E7%BB%88%E7%AB%AF-Agent-%E5%AE%B9%E6%98%93%E7%BC%BA%E7%9A%84%E9%82%A3%E4%B8%80%E6%AE%B5"><span class="nav-number">2.</span> <span class="nav-text">OMP 想补上的，正是终端 Agent 容易缺的那一段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A9-Agent-%E4%BD%BF%E7%94%A8%E8%AF%AD%E8%A8%80%E6%9C%8D%E5%8A%A1%E5%92%8C%E8%B0%83%E8%AF%95%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">让 Agent 使用语言服务和调试器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90-Agent%E3%80%81%E5%AE%A1%E6%9F%A5%E5%92%8C%E4%BC%9A%E8%AF%9D%E4%B8%8D%E5%86%8D%E5%8F%AA%E6%98%AF%E5%A4%96%E5%9B%B4%E8%84%9A%E6%9C%AC"><span class="nav-number">2.2.</span> <span class="nav-text">子 Agent、审查和会话不再只是外围脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A2%E8%83%BD%E5%9C%A8%E7%BB%88%E7%AB%AF%E8%B7%91%EF%BC%8C%E4%B9%9F%E8%83%BD%E8%A2%AB%E5%88%AB%E7%9A%84%E5%AE%BF%E4%B8%BB%E9%A9%B1%E5%8A%A8"><span class="nav-number">2.3.</span> <span class="nav-text">既能在终端跑，也能被别的宿主驱动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E5%B7%B2%E6%9C%89%E9%85%8D%E7%BD%AE%E7%9A%84%E6%80%81%E5%BA%A6%EF%BC%9A%E5%B0%BD%E9%87%8F%E7%BB%A7%E6%89%BF%EF%BC%8C%E8%80%8C%E9%9D%9E%E5%BC%BA%E8%BF%AB%E8%BF%81%E7%A7%BB"><span class="nav-number">3.</span> <span class="nav-text">对已有配置的态度：尽量继承，而非强迫迁移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E6%9C%80%E5%B0%8F%E4%B8%8A%E6%89%8B"><span class="nav-number">4.</span> <span class="nav-text">安装与最小上手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%AA%E4%BA%9B%E4%BA%BA%E5%80%BC%E5%BE%97%E8%AF%95%EF%BC%8C%E5%93%AA%E4%BA%9B%E4%BA%BA%E5%8F%AF%E4%BB%A5%E5%85%88%E7%AD%89%E7%AD%89"><span class="nav-number">5.</span> <span class="nav-text">哪些人值得试，哪些人可以先等等</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">6.</span> <span class="nav-text">结语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">100</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/09/16/Oh%20My%20Pi%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%8A%8A%20IDE%20%E8%83%BD%E5%8A%9B%E6%8E%A5%E8%BF%9B%E7%BB%88%E7%AB%AF%E7%9A%84%E7%BC%96%E7%A0%81%20Agent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Oh My Pi：一个把 IDE 能力接进终端的编码 Agent | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Oh My Pi：一个把 IDE 能力接进终端的编码 Agent
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-16 09:42:41 / 修改时间：09:43:11" itemprop="dateCreated datePublished" datetime="2026-09-16T09:42:41+08:00">2026-09-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">AI 开发工具</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://github.com/can1357/oh-my-pi">Oh My Pi（OMP）</a> 可以先用一句话概括：它是在 Pi 的基础上继续扩展的开源编码 Agent，仍把终端交互放在中心，却试图把编辑器里的语言服务、调试器和协作入口一起带到 Agent 工作流里。</p>
+<p>它不是一个新的大模型，也不靠替换模型取胜。OMP 解决的是另一层问题：模型怎样读项目、改文件、运行命令、理解代码符号，并在需要时把任务交给别的 Agent 或编辑器。项目 README 把这一层称为 coding-first surface；更直白一点，就是给代码 Agent 准备一套比“聊天 + shell”更完整的运行环境。</p>
+<h2 id="它和-Pi-是什么关系"><a href="#它和-Pi-是什么关系" class="headerlink" title="它和 Pi 是什么关系"></a>它和 Pi 是什么关系</h2><p>OMP 是 <a target="_blank" rel="noopener" href="https://github.com/badlogic/pi-mono">Pi</a> 的 fork。Pi 本身强调可编程、可扩展的终端 Agent；OMP 保留了这些基础，同时加入了一批面向编码任务的内建能力，例如会话管理、子 Agent、斜杠命令、插件、模型路由和编辑器协议。</p>
+<p>这层关系很重要。它意味着 OMP 并非从零定义一套 Agent 交互，而是在已有的终端 Agent 体验上做工程化加法。对于已经习惯 Pi 的人，迁移成本会低一些；对于从 Claude Code、Codex 或 Cursor 过来的人，则更容易把它理解成一个偏“可组合”的终端编码环境。</p>
+<p>README 当前列出的技术构成也说明了这个取向：交互与 SDK 主要使用 TypeScript，性能敏感的底层能力则由 Rust 实现。项目声明其 Rust 核心约 8 万行，并提供多提供商模型接入、内建工具，以及 LSP 和 DAP 相关操作。这里的数量来自项目 README，适合作为能力范围的参考，不等同于第三方性能测评。</p>
+<h2 id="OMP-想补上的，正是终端-Agent-容易缺的那一段"><a href="#OMP-想补上的，正是终端-Agent-容易缺的那一段" class="headerlink" title="OMP 想补上的，正是终端 Agent 容易缺的那一段"></a>OMP 想补上的，正是终端 Agent 容易缺的那一段</h2><p>纯终端 Agent 通常已经能读写文件、跑命令和调用模型，但它未必能稳定拿到编辑器掌握的语义信息。OMP 的设计重点，是把这些信息和操作放进同一个 Agent 回路。</p>
+<h3 id="让-Agent-使用语言服务和调试器"><a href="#让-Agent-使用语言服务和调试器" class="headerlink" title="让 Agent 使用语言服务和调试器"></a>让 Agent 使用语言服务和调试器</h3><p>项目把 LSP 接到写入流程中。LSP 即 Language Server Protocol，编辑器依靠它提供跳转定义、查找引用、诊断和重命名等能力。对编码 Agent 来说，这意味着它可以少依赖字符串搜索，多利用符号和诊断来判断一次修改是否影响了别处。</p>
+<p>OMP 也声明支持驱动真实调试器，并提供 DAP 相关操作。DAP 是 Debug Adapter Protocol。调试器接入不保证 Agent 自动找到所有运行时问题，但它给了 Agent 一条更接近开发者日常排障方式的路径：设置断点、观察变量、沿调用过程定位问题，而不只是在日志里猜。</p>
+<h3 id="子-Agent、审查和会话不再只是外围脚本"><a href="#子-Agent、审查和会话不再只是外围脚本" class="headerlink" title="子 Agent、审查和会话不再只是外围脚本"></a>子 Agent、审查和会话不再只是外围脚本</h3><p>README 将子 Agent、第二模型审视每轮输出、代码审查、会话分支与恢复列为内建工作流的一部分。实际价值不在于“多 Agent”这个标签，而在于任务隔离：主 Agent 可以继续实现功能，同时让另一条会话检查风险、阅读文档或复现问题。</p>
+<p>这类工作流适合问题边界清楚的任务，例如让一个子 Agent 审查补丁、让另一个调查测试失败。它仍然需要人来决定结论是否可信，尤其是在涉及权限、生产环境和合并发布时。</p>
+<h3 id="既能在终端跑，也能被别的宿主驱动"><a href="#既能在终端跑，也能被别的宿主驱动" class="headerlink" title="既能在终端跑，也能被别的宿主驱动"></a>既能在终端跑，也能被别的宿主驱动</h3><p>OMP 给出四种入口：交互式终端、一次性命令、Node&#x2F;TypeScript SDK，以及基于标准输入输出的 RPC。后一种方式让非 Node 的宿主也可以通过 NDJSON 驱动 Agent。</p>
+<p>另一个值得关注的是 <code>omp acp</code>。它实现 <a target="_blank" rel="noopener" href="https://github.com/zed-industries/agent-client-protocol">Agent Client Protocol（ACP）</a>，让编辑器可以作为客户端与 Agent 通信。编辑器若声明了对应能力，文件读写与终端操作能通过协议路由，写入操作还可由 <code>session/request_permission</code> 控制。对 IDE 作者或团队内部工具而言，这比模拟终端界面更适合作为集成点。</p>
+<h2 id="对已有配置的态度：尽量继承，而非强迫迁移"><a href="#对已有配置的态度：尽量继承，而非强迫迁移" class="headerlink" title="对已有配置的态度：尽量继承，而非强迫迁移"></a>对已有配置的态度：尽量继承，而非强迫迁移</h2><p>第一次启动时，OMP 会尝试发现本机已存在的规则、技能和 MCP 服务器配置，范围包括 <code>.claude</code>、<code>.cursor</code>、<code>.windsurf</code>、<code>.gemini</code>、<code>.codex</code>、<code>.cline</code>、<code>.github/copilot</code> 与 <code>.vscode</code>。项目的目标是减少“换一个 Agent 就重建一遍工作环境”的摩擦。</p>
+<p>这项能力很方便，但也建议先检查继承到了什么。不同工具对规则优先级、命令权限和 MCP 配置的含义并不完全一致。把现成配置导入新工具之前，尤其要确认其中没有过宽的 shell 权限或不再需要的服务凭据。</p>
+<p>扩展方式也相当直接：插件是 TypeScript 模块，可使用与内建功能相同的工具 API、斜杠命令注册表和终端 UI 原语。插件既可以只放在本地，也能打包发布到 marketplace 或 npm。这个设计适合有固定开发流程的团队，把约定做成可检查的工具，而不是反复贴进提示词。</p>
+<h2 id="安装与最小上手"><a href="#安装与最小上手" class="headerlink" title="安装与最小上手"></a>安装与最小上手</h2><p>OMP 支持 macOS、Linux 和 Windows。README 提供了多种安装方式；如果机器上已经使用 Bun，推荐的全局安装命令是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bun install -g @oh-my-pi/pi-coding-agent</span><br></pre></td></tr></table></figure>
+
+<p>Windows PowerShell 也可使用项目安装脚本：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">irm</span> https://omp.sh/install.ps1 | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
+
+<p>macOS 和 Linux 用户可使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://omp.sh/install | sh</span><br></pre></td></tr></table></figure>
+
+<p>此外还有 Homebrew、Nix 和 <code>mise</code> 等安装入口。安装前应以 README 的最新要求为准；其中 Bun 路径要求 Bun 版本不低于 1.3.14。终端补全可以由 <code>omp completions</code> 为 bash、zsh 和 fish 生成。</p>
+<p>如果准备从源码参与开发，仓库给出的起步流程是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bun setup</span><br><span class="line">bun dev</span><br></pre></td></tr></table></figure>
+
+<p><code>bun setup</code> 会安装工作区依赖并构建本地 Rust&#x2F;N-API 扩展。修改 Rust crate 或 <code>packages/natives</code> 后，README 建议重新运行 <code>bun run build:native</code>。</p>
+<h2 id="哪些人值得试，哪些人可以先等等"><a href="#哪些人值得试，哪些人可以先等等" class="headerlink" title="哪些人值得试，哪些人可以先等等"></a>哪些人值得试，哪些人可以先等等</h2><p>如果你主要在终端中完成开发，又希望 Agent 能用 LSP、调试器、结构化编辑和可拆分的子任务，OMP 值得放进候选工具清单。它也适合需要把 Agent 嵌入自有编辑器、脚本或服务的开发者：SDK、RPC 和 ACP 覆盖了不同宿主的接入方式。</p>
+<p>但如果你的需求只是偶尔让模型生成一段代码，OMP 的配置面和功能深度可能反而显得重。它提供的模型选择、插件、会话和工具策略需要花时间建立习惯。对个人项目而言，先用一个简单的终端 Agent 跑通“读代码—修改—测试”的闭环，再判断是否需要更复杂的 harness，通常更稳妥。</p>
+<p>还有一点需要保留：README 中关于工具效果和基准的陈述主要来自项目自身。它们可以帮助理解作者优化的方向，例如减少失败编辑的重试和改善模型的工具调用格式，却不能替代在你的仓库、模型和权限配置上的实际验证。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>Oh My Pi 最有意思的地方，不是又做了一个聊天入口，而是认真对待了代码 Agent 的运行环境：模型需要语义信息，需要调试路径，需要可控的权限和可复用的配置，也需要与编辑器、脚本和团队流程相连。</p>
+<p>它选择的答案是保留终端的直接感，再把 IDE 与工程工具接进来。是否适合你，最终取决于你愿意把多少日常开发流程交给 Agent，以及你是否愿意为更强的可组合性承担相应的配置与验证成本。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/can1357/oh-my-pi">can1357&#x2F;oh-my-pi</a></li>
+<li><a target="_blank" rel="noopener" href="https://omp.sh/">OMP 文档站</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/zed-industries/agent-client-protocol">Agent Client Protocol</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Pi/" rel="tag"># Pi</a>
+              <a href="/tags/Oh-My-Pi/" rel="tag"># Oh My Pi</a>
+              <a href="/tags/Coding-Agent/" rel="tag"># Coding Agent</a>
+              <a href="/tags/%E7%BB%88%E7%AB%AF%E5%B7%A5%E5%85%B7/" rel="tag"># 终端工具</a>
+              <a href="/tags/ACP/" rel="tag"># ACP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/03/CodexHost%EF%BC%9A%E5%9C%A8%20Codex%20Desktop%20%E9%87%8C%E5%88%87%E6%8D%A2%E5%A4%9A%E7%A7%8D%20Agent%20Harness/" rel="prev" title="CodexHost：在 Codex Desktop 里切换多种 Agent Harness">
+                  <i class="fa fa-angle-left"></i> CodexHost：在 Codex Desktop 里切换多种 Agent Harness
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

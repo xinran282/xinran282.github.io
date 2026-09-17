@@ -1,0 +1,62 @@
+[
+  {
+    "concept_id": "structured-outputs-constrained-decoding",
+    "title": "结构化输出与约束解码：让模型可靠返回 JSON",
+    "aliases": ["Structured Outputs", "constrained decoding", "JSON Schema generation"],
+    "keywords": ["JSON Schema", "约束解码", "有限状态机", "函数调用", "可靠性"],
+    "category": "工程与产品",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Introducing Structured Outputs in the API", "url": "https://openai.com/index/introducing-structured-outputs-in-the-api/", "published": "2024-08-06"},
+      {"title": "Structured outputs guide", "url": "https://platform.openai.com/docs/guides/structured-outputs", "published": "2026-09-13"}
+    ],
+    "prerequisites": ["autoregressive-decoding", "json-schema"]
+  },
+  {
+    "concept_id": "kv-cache-transformer-inference",
+    "title": "KV Cache：Transformer 推理为何越生成越省算力",
+    "aliases": ["key-value cache", "attention KV cache"],
+    "keywords": ["注意力", "推理", "缓存", "显存", "上下文"],
+    "category": "推理与效率",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "Efficiently Scaling Transformer Inference", "url": "https://arxiv.org/abs/2309.06180", "published": "2023-09-12"},
+      {"title": "vLLM PagedAttention", "url": "https://docs.vllm.ai/en/latest/design/paged_attention.html", "published": "2026-09-13"}
+    ],
+    "prerequisites": ["self-attention", "autoregressive-decoding"]
+  },
+  {
+    "concept_id": "llm-prompt-injection-threat-model",
+    "title": "提示注入威胁模型：为什么 Agent 会被网页内容带偏",
+    "aliases": ["prompt injection", "indirect prompt injection", "LLM01"],
+    "keywords": ["Agent 安全", "不可信输入", "工具调用", "数据外泄", "权限"],
+    "category": "评估与可靠性",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "OWASP Top 10 for LLM Applications: Prompt Injection", "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/", "published": "2025-11-24"},
+      {"title": "Prompt Injection Attacks and Defenses in LLM-Integrated Applications", "url": "https://arxiv.org/abs/2310.12815", "published": "2023-10-19"}
+    ],
+    "prerequisites": ["react-reasoning-acting", "tool-calling"]
+  },
+  {
+    "concept_id": "weight-only-post-training-quantization",
+    "title": "权重量化：用低比特参数降低大模型推理成本",
+    "aliases": ["weight-only quantization", "GPTQ", "AWQ"],
+    "keywords": ["量化", "低比特", "显存", "校准数据", "精度"],
+    "category": "推理与效率",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.92,
+    "sources": [
+      {"title": "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers", "url": "https://arxiv.org/abs/2210.17323", "published": "2022-10-31"},
+      {"title": "AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration", "url": "https://arxiv.org/abs/2306.00978", "published": "2023-06-01"}
+    ],
+    "prerequisites": ["transformer", "matrix-multiplication"]
+  }
+]

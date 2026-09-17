@@ -1,0 +1,44 @@
+[
+  {
+    "concept_id": "model-context-protocol",
+    "title": "Model Context Protocol：Agent 如何用统一协议连接工具与数据",
+    "aliases": ["MCP", "Model Context Protocol", "模型上下文协议"],
+    "keywords": ["Agent", "工具调用", "资源", "JSON-RPC", "客户端服务器"],
+    "category": "Agent 与工具",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Model Context Protocol Specification", "url": "https://modelcontextprotocol.io/specification/2025-06-18", "published": "2025-06-18"}
+    ],
+    "prerequisites": ["api", "json-rpc"]
+  },
+  {
+    "concept_id": "retrieval-query-rewriting",
+    "title": "检索查询改写：为什么 RAG 不应直接拿用户原话去搜",
+    "aliases": ["query rewriting", "RAG 查询改写"],
+    "keywords": ["RAG", "检索", "查询", "改写", "召回"],
+    "category": "检索与知识",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "Query2doc: Query Expansion with Large Language Models", "url": "https://arxiv.org/abs/2303.07678", "published": "2023-03-14"}
+    ],
+    "prerequisites": ["information-retrieval"]
+  },
+  {
+    "concept_id": "llm-evaluation-rubrics",
+    "title": "基于评分量表的 LLM 评估：如何把“回答不错”变成可复查标准",
+    "aliases": ["LLM-as-a-judge", "rubric-based evaluation", "评分量表评估"],
+    "keywords": ["评估", "评分量表", "LLM judge", "偏差", "基准"],
+    "category": "评估与可靠性",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "MT-Bench and Chatbot Arena: Evaluating LLMs", "url": "https://arxiv.org/abs/2306.05685", "published": "2023-06-09"}
+    ],
+    "prerequisites": ["evaluation"]
+  }
+]

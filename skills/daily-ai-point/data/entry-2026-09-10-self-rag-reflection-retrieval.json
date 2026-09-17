@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-10",
+  "concept_id": "self-rag-reflection-retrieval",
+  "title": "Self-RAG：让模型自己判断何时检索、何时反思",
+  "aliases": ["Self-RAG", "self-reflective retrieval augmented generation", "反思式 RAG"],
+  "category": "检索与知识",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["RAG", "反思", "检索", "引用", "自适应"],
+  "summary": "Self-RAG 通过可学习的检索、相关性、证据支持度和有用性反思信号，让模型按问题需要决定是否检索，并在证据不足时继续检索或拒答。",
+  "sources": [
+    {
+      "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+      "url": "https://arxiv.org/abs/2310.11511",
+      "published": "2023-10-17"
+    }
+  ]
+}

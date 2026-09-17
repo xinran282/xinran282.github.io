@@ -1,0 +1,38 @@
+[
+  {
+    "concept_id": "react-reasoning-acting",
+    "title": "ReAct：让 Agent 在思考与行动之间循环",
+    "aliases": ["ReAct", "Reasoning and Acting", "推理与行动"],
+    "keywords": ["Agent", "工具调用", "推理", "行动", "轨迹"],
+    "category": "Agent 与工具",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [{"title":"ReAct: Synergizing Reasoning and Acting in Language Models","url":"https://arxiv.org/abs/2210.03629","published":"2022-10-07"}],
+    "prerequisites": ["tool-calling", "chain-of-thought"]
+  },
+  {
+    "concept_id": "toolformer-api-learning",
+    "title": "Toolformer：语言模型如何学会决定何时调用 API",
+    "aliases": ["Toolformer", "API-augmented language model", "工具增强语言模型"],
+    "keywords": ["工具调用", "API", "自监督", "语言模型", "标注"],
+    "category": "训练与对齐",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [{"title":"Toolformer: Language Models Can Teach Themselves to Use Tools","url":"https://arxiv.org/abs/2302.04761","published":"2023-02-09"}],
+    "prerequisites": ["language-modeling", "api"]
+  },
+  {
+    "concept_id": "graph-rag-community-retrieval",
+    "title": "GraphRAG：用实体关系图回答跨文档的全局问题",
+    "aliases": ["GraphRAG", "knowledge-graph RAG", "图检索增强生成"],
+    "keywords": ["RAG", "知识图谱", "社区", "实体关系", "全局摘要"],
+    "category": "检索与知识",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [{"title":"From Local to Global: A Graph RAG Approach to Query-Focused Summarization","url":"https://arxiv.org/abs/2404.16130","published":"2024-04-25"}],
+    "prerequisites": ["rag", "graph-algorithms"]
+  }
+]

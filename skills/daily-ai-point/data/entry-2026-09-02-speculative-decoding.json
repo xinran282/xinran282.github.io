@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-02",
+  "concept_id": "speculative-decoding",
+  "title": "推测解码：用小模型加速大模型生成",
+  "aliases": ["speculative decoding", "draft-and-verify"],
+  "category": "推理与效率",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["推理", "延迟", "草稿模型", "验证"],
+  "summary": "让草稿模型先提出多个 token，再由目标模型并行验证，并通过 residual distribution 校正拒绝样本，从而在保持目标模型输出分布的同时减少串行解码开销。",
+  "sources": [
+    {
+      "title": "Fast Inference from Transformers via Speculative Decoding",
+      "url": "https://arxiv.org/abs/2211.17192",
+      "published": "2022-11-30"
+    }
+  ]
+}

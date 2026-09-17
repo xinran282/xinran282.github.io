@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-11",
+  "concept_id": "react-reasoning-acting",
+  "title": "ReAct：让 Agent 在思考与行动之间循环",
+  "aliases": ["ReAct", "Reasoning and Acting", "推理与行动"],
+  "category": "Agent 与工具",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["Agent", "工具调用", "推理", "行动", "轨迹"],
+  "summary": "ReAct 将 Thought、Action、Observation 交替组织成轨迹，让 Agent 根据工具真实返回动态修正计划；执行器仍需独立负责权限、校验、停止和副作用控制。",
+  "sources": [
+    {
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "url": "https://arxiv.org/abs/2210.03629",
+      "published": "2022-10-07"
+    }
+  ]
+}

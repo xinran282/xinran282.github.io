@@ -1,0 +1,44 @@
+[
+  {
+    "concept_id": "react-reasoning-acting",
+    "title": "ReAct：让 Agent 在思考与行动之间循环",
+    "aliases": ["ReAct", "Reasoning and Acting", "推理与行动"],
+    "keywords": ["Agent", "工具调用", "推理", "行动", "轨迹"],
+    "category": "Agent 与工具",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "ReAct: Synergizing Reasoning and Acting in Language Models", "url": "https://arxiv.org/abs/2210.03629", "published": "2022-10-07"}
+    ],
+    "prerequisites": ["tool-calling", "chain-of-thought"]
+  },
+  {
+    "concept_id": "self-rag-reflection-retrieval",
+    "title": "Self-RAG：让模型自己判断何时检索、何时反思",
+    "aliases": ["Self-RAG", "self-reflective retrieval augmented generation", "反思式 RAG"],
+    "keywords": ["RAG", "反思", "检索", "引用", "自适应"],
+    "category": "检索与知识",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection", "url": "https://arxiv.org/abs/2310.11511", "published": "2023-10-17"}
+    ],
+    "prerequisites": ["rag", "reinforcement-learning"]
+  },
+  {
+    "concept_id": "toolformer-api-learning",
+    "title": "Toolformer：语言模型如何学会决定何时调用 API",
+    "aliases": ["Toolformer", "API-augmented language model", "工具增强语言模型"],
+    "keywords": ["工具调用", "API", "自监督", "语言模型", "标注"],
+    "category": "训练与对齐",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Toolformer: Language Models Can Teach Themselves to Use Tools", "url": "https://arxiv.org/abs/2302.04761", "published": "2023-02-09"}
+    ],
+    "prerequisites": ["language-modeling", "api"]
+  }
+]

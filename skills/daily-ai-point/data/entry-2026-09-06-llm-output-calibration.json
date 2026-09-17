@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-06",
+  "concept_id": "llm-output-calibration",
+  "title": "语言模型置信度校准：为什么高概率不等于高可信",
+  "aliases": ["LLM calibration", "selective prediction", "置信度校准"],
+  "category": "评估与可靠性",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["可靠性", "置信度", "校准", "拒答", "不确定性"],
+  "summary": "置信度校准要求模型给出的任务级把握与实际正确率匹配，使系统能按阈值选择自动处理、补检索、拒答或转人工；token 概率本身不是事实正确率。",
+  "sources": [
+    {
+      "title": "Language Models (Mostly) Know What They Know",
+      "url": "https://arxiv.org/abs/2207.05221",
+      "published": "2022-07-11"
+    }
+  ]
+}

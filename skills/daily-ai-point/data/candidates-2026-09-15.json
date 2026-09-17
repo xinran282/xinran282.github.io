@@ -1,0 +1,50 @@
+[
+  {
+    "concept_id": "constitutional-ai-rlaif",
+    "title": "Constitutional AI：用原则和 AI 反馈替代部分人工偏好标注",
+    "aliases": ["Constitutional AI", "CAI", "RLAIF", "AI feedback"],
+    "keywords": ["对齐", "原则", "AI 反馈", "自我批评", "RLHF"],
+    "category": "训练与对齐",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [{"title":"Constitutional AI: Harmlessness from AI Feedback","url":"https://arxiv.org/abs/2212.08073","published":"2022-12-15"},{"title":"Claude's Constitution","url":"https://www.anthropic.com/news/claudes-constitution","published":"2023-05-09"}],
+    "prerequisites": ["rlhf"]
+  },
+  {
+    "concept_id": "toolformer-self-supervised-tool-use",
+    "title": "Toolformer：语言模型如何学会决定何时调用工具",
+    "aliases": ["Toolformer", "self-supervised tool use", "API calling"],
+    "keywords": ["工具调用", "自监督", "API", "Agent", "筛选"],
+    "category": "Agent 与工具",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [{"title":"Toolformer: Language Models Can Teach Themselves to Use Tools","url":"https://arxiv.org/abs/2302.04761","published":"2023-02-09"}],
+    "prerequisites": ["react-reasoning-acting"]
+  },
+  {
+    "concept_id": "rotary-position-embedding-rope",
+    "title": "RoPE 旋转位置编码：让注意力感知相对距离",
+    "aliases": ["RoPE", "rotary positional embedding", "旋转位置编码"],
+    "keywords": ["位置编码", "注意力", "相对位置", "外推", "Transformer"],
+    "category": "基础原理",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [{"title":"RoFormer: Enhanced Transformer with Rotary Position Embedding","url":"https://arxiv.org/abs/2104.09864","published":"2021-04-20"}],
+    "prerequisites": ["self-attention"]
+  },
+  {
+    "concept_id": "speculative-decoding-draft-verify",
+    "title": "推测解码：用小模型为大模型加速生成",
+    "aliases": ["speculative decoding", "draft-and-verify"],
+    "keywords": ["推理", "解码", "草稿模型", "并行验证", "延迟"],
+    "category": "推理与效率",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [{"title":"Accelerating Large Language Model Decoding with Speculative Sampling","url":"https://arxiv.org/abs/2302.01318","published":"2023-02-02"}],
+    "prerequisites": ["autoregressive-decoding"]
+  }
+]

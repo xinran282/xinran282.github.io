@@ -1,0 +1,45 @@
+[
+  {
+    "concept_id": "continuous-batching-llm-serving",
+    "title": "连续批处理：大模型服务如何减少请求排队和 GPU 空转",
+    "aliases": ["continuous batching", "iteration-level scheduling", "迭代级调度"],
+    "keywords": ["推理服务", "批处理", "调度", "吞吐", "延迟"],
+    "category": "工程与产品",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Orca: A Distributed Serving System for Transformer-Based Generative Models", "url": "https://arxiv.org/abs/2306.00978", "published": "2023-06-01"},
+      {"title": "vLLM 文档：迭代级调度", "url": "https://docs.vllm.ai/en/latest/"}
+    ],
+    "prerequisites": ["autoregressive-decoding", "gpu-serving"]
+  },
+  {
+    "concept_id": "pagedattention-llm-serving",
+    "title": "PagedAttention：把 KV Cache 像虚拟内存一样管理",
+    "aliases": ["PagedAttention", "KV cache paging", "分页注意力"],
+    "keywords": ["KV Cache", "显存", "分页", "推理服务", "碎片"],
+    "category": "推理与效率",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Efficient Memory Management for Large Language Model Serving with PagedAttention", "url": "https://arxiv.org/abs/2309.06180", "published": "2023-09-12"}
+    ],
+    "prerequisites": ["kv-cache", "virtual-memory"]
+  },
+  {
+    "concept_id": "constrained-decoding-json-schema",
+    "title": "约束解码：如何让 LLM 稳定输出符合 JSON Schema 的结果",
+    "aliases": ["constrained decoding", "structured output", "JSON Schema decoding"],
+    "keywords": ["结构化输出", "JSON Schema", "解码", "有限状态机", "API"],
+    "category": "工程与产品",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "Guided Generation of Large Language Models", "url": "https://arxiv.org/abs/2307.09702", "published": "2023-07-18"}
+    ],
+    "prerequisites": ["autoregressive-decoding", "json-schema"]
+  }
+]

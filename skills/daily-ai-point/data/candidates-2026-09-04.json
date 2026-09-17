@@ -1,0 +1,44 @@
+[
+  {
+    "concept_id": "retrieval-query-rewriting",
+    "title": "检索查询改写：为什么 RAG 不应直接拿用户原话去搜",
+    "aliases": ["query rewriting", "RAG 查询改写", "query expansion"],
+    "keywords": ["RAG", "检索", "查询改写", "查询扩展", "召回"],
+    "category": "检索与知识",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Query2doc: Query Expansion with Large Language Models", "url": "https://arxiv.org/abs/2303.07678", "published": "2023-03-14"}
+    ],
+    "prerequisites": ["information-retrieval", "rag"]
+  },
+  {
+    "concept_id": "classifier-free-guidance",
+    "title": "无分类器引导：扩散模型如何在遵从提示词与画面多样性之间取舍",
+    "aliases": ["classifier-free guidance", "CFG", "无分类器指导"],
+    "keywords": ["扩散模型", "引导", "条件生成", "采样", "图像"],
+    "category": "多模态",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Classifier-Free Diffusion Guidance", "url": "https://arxiv.org/abs/2207.12598", "published": "2022-07-25"}
+    ],
+    "prerequisites": ["diffusion-models"]
+  },
+  {
+    "concept_id": "prompt-injection-threat-model",
+    "title": "提示注入威胁模型：为什么工具型 Agent 需要把指令和数据分开处理",
+    "aliases": ["prompt injection", "indirect prompt injection", "提示词注入"],
+    "keywords": ["安全", "Agent", "不可信数据", "工具调用", "权限"],
+    "category": "评估与可靠性",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "Prompt Injection Attacks and Defenses in LLM-Integrated Applications", "url": "https://arxiv.org/abs/2306.05499", "published": "2023-06-09"}
+    ],
+    "prerequisites": ["llm-agents"]
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "concept_id": "rotary-position-embedding",
+    "title": "旋转位置编码（RoPE）：Transformer 如何感知词元相对位置",
+    "aliases": ["RoPE", "rotary positional embedding", "旋转位置嵌入"],
+    "keywords": ["Transformer", "位置编码", "注意力", "相对位置", "长上下文"],
+    "category": "基础原理",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "RoFormer: Enhanced Transformer with Rotary Position Embedding", "url": "https://arxiv.org/abs/2104.09864", "published": "2021-04-20"}
+    ],
+    "prerequisites": ["transformer", "attention", "linear-algebra"]
+  },
+  {
+    "concept_id": "mixture-of-experts-sparse-routing",
+    "title": "稀疏混合专家路由：为什么模型容量可以增长得比计算量更快",
+    "aliases": ["Mixture of Experts", "MoE", "稀疏专家模型"],
+    "keywords": ["专家", "路由", "稀疏激活", "负载均衡", "token"],
+    "category": "基础原理",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity", "url": "https://arxiv.org/abs/2101.03961", "published": "2021-01-08"}
+    ],
+    "prerequisites": ["transformer", "softmax"]
+  },
+  {
+    "concept_id": "attention-kv-cache",
+    "title": "KV Cache：自回归生成为什么能避免重复计算",
+    "aliases": ["key-value cache", "KV 缓存", "注意力缓存"],
+    "keywords": ["Transformer", "注意力", "推理", "缓存", "显存"],
+    "category": "推理与效率",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "Efficiently Scaling Transformer Inference", "url": "https://arxiv.org/abs/2211.05102", "published": "2022-10-10"}
+    ],
+    "prerequisites": ["attention", "autoregressive-decoding"]
+  }
+]

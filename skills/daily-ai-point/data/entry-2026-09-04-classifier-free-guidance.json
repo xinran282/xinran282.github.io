@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-04",
+  "concept_id": "classifier-free-guidance",
+  "title": "无分类器引导：扩散模型如何在遵从提示词与画面多样性之间取舍",
+  "aliases": ["classifier-free guidance", "CFG", "无分类器指导"],
+  "category": "多模态",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["扩散模型", "引导", "条件生成", "采样", "图像"],
+  "summary": "CFG 通过同一条件扩散模型的有条件和无条件预测之差，在采样期按 guidance scale 放大提示词方向，以提示词遵从度换取部分多样性和推理成本。",
+  "sources": [
+    {
+      "title": "Classifier-Free Diffusion Guidance",
+      "url": "https://arxiv.org/abs/2207.12598",
+      "published": "2022-07-25"
+    }
+  ]
+}

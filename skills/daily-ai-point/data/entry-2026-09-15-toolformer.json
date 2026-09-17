@@ -1,0 +1,15 @@
+{
+  "date": "2026-09-15",
+  "concept_id": "toolformer-self-supervised-tool-use",
+  "title": "Toolformer：语言模型如何学会决定何时调用工具",
+  "aliases": ["Toolformer", "self-supervised tool use", "API calling"],
+  "category": "Agent 与工具",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["工具调用", "自监督", "API", "Agent", "筛选"],
+  "summary": "Toolformer 让模型生成并执行候选 API 调用，再依据调用结果对后续 token 损失的改善筛选样本，最后用筛选数据微调，从而学习调用时机与参数格式。",
+  "sources": [
+    {"title":"Toolformer: Language Models Can Teach Themselves to Use Tools","url":"https://arxiv.org/abs/2302.04761","published":"2023-02-09"}
+  ]
+}

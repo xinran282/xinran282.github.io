@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-09",
+  "concept_id": "mixture-of-experts-sparse-routing",
+  "title": "稀疏混合专家路由：为什么模型容量可以增长得比计算量更快",
+  "aliases": ["Mixture of Experts", "MoE", "稀疏专家模型"],
+  "category": "基础原理",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["专家", "路由", "稀疏激活", "负载均衡", "token"],
+  "summary": "MoE 用路由器为每个 token 选择少数专家网络，使总参数容量扩大而激活计算相对受控；实际收益受负载均衡、容量溢出和跨设备通信影响。",
+  "sources": [
+    {
+      "title": "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity",
+      "url": "https://arxiv.org/abs/2101.03961",
+      "published": "2021-01-08"
+    }
+  ]
+}

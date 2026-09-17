@@ -1,0 +1,24 @@
+{
+  "date": "2026-09-13",
+  "concept_id": "weight-only-post-training-quantization",
+  "title": "权重量化：用低比特参数降低大模型推理成本",
+  "aliases": ["weight-only quantization", "GPTQ", "AWQ"],
+  "category": "推理与效率",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["量化", "低比特", "显存", "校准数据", "精度"],
+  "summary": "权重量化在训练后用低比特整数近似 FP16 权重，并通过分组缩放与校准补偿误差；GPTQ 和 AWQ 分别代表二阶误差补偿、激活感知保护两类方法。",
+  "sources": [
+    {
+      "title": "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers",
+      "url": "https://arxiv.org/abs/2210.17323",
+      "published": "2022-10-31"
+    },
+    {
+      "title": "AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration",
+      "url": "https://arxiv.org/abs/2306.00978",
+      "published": "2023-06-01"
+    }
+  ]
+}

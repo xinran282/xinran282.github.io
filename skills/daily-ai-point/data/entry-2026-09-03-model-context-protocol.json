@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-03",
+  "concept_id": "model-context-protocol",
+  "title": "Model Context Protocol：Agent 如何用统一协议连接工具与数据",
+  "aliases": ["MCP", "Model Context Protocol", "模型上下文协议"],
+  "category": "Agent 与工具",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["Agent", "工具调用", "资源", "JSON-RPC", "客户端服务器"],
+  "summary": "MCP 通过 Host、Client、Server 分层和 JSON-RPC 能力协商，统一工具、资源与提示模板的发现和调用，同时要求 Host 实施用户授权与数据隔离。",
+  "sources": [
+    {
+      "title": "Model Context Protocol Specification",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18",
+      "published": "2025-06-18"
+    }
+  ]
+}

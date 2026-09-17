@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="介绍 LangChain 的定位、核心组件、RAG 和 Agent 用法，以及它与模型 SDK、LangGraph 和 Harness 的关系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LangChain 介绍：从模型调用到 Agent 应用">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/18/LangChain%E4%BB%8B%E7%BB%8D-%E4%BB%8E%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%E5%88%B0Agent%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="介绍 LangChain 的定位、核心组件、RAG 和 Agent 用法，以及它与模型 SDK、LangGraph 和 Harness 的关系。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-18T03:45:51.000Z">
+<meta property="article:modified_time" content="2026-08-18T03:47:08.272Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="Harness">
+<meta property="article:tag" content="LangChain">
+<meta property="article:tag" content="RAG">
+<meta property="article:tag" content="大语言模型">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/18/LangChain%E4%BB%8B%E7%BB%8D-%E4%BB%8E%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%E5%88%B0Agent%E5%BA%94%E7%94%A8/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/18/LangChain%E4%BB%8B%E7%BB%8D-%E4%BB%8E%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%E5%88%B0Agent%E5%BA%94%E7%94%A8/","path":"2026/08/18/LangChain介绍-从模型调用到Agent应用/","title":"LangChain 介绍：从模型调用到 Agent 应用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LangChain 介绍：从模型调用到 Agent 应用 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LangChain-%E4%BB%8B%E7%BB%8D%EF%BC%9A%E4%BB%8E%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%E5%88%B0-Agent-%E5%BA%94%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">LangChain 介绍：从模型调用到 Agent 应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">LangChain 到底是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">它解决什么问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.1.</span> <span class="nav-text">统一模型调用方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E7%BB%87-Prompt-%E5%92%8C%E6%B6%88%E6%81%AF"><span class="nav-number">1.2.2.</span> <span class="nav-text">组织 Prompt 和消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E5%A4%96%E9%83%A8%E6%95%B0%E6%8D%AE"><span class="nav-number">1.2.3.</span> <span class="nav-text">连接外部数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E5%B7%A5%E5%85%B7"><span class="nav-number">1.2.4.</span> <span class="nav-text">连接工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E6%8E%92%E5%A4%9A%E6%AD%A5%E9%AA%A4%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.5.</span> <span class="nav-text">编排多步骤流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.3.</span> <span class="nav-text">LangChain 的核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Model"><span class="nav-number">1.3.1.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prompt-%E5%92%8C-Message"><span class="nav-number">1.3.2.</span> <span class="nav-text">Prompt 和 Message</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Output-Parser"><span class="nav-number">1.3.3.</span> <span class="nav-text">Output Parser</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Runnable-%E5%92%8C-Chain"><span class="nav-number">1.3.4.</span> <span class="nav-text">Runnable 和 Chain</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Retriever"><span class="nav-number">1.3.5.</span> <span class="nav-text">Retriever</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tool"><span class="nav-number">1.3.6.</span> <span class="nav-text">Tool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Agent"><span class="nav-number">1.3.7.</span> <span class="nav-text">Agent</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8-LangChain-%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E9%93%BE"><span class="nav-number">1.4.</span> <span class="nav-text">用 LangChain 构建一个简单链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-%E5%A6%82%E4%BD%95%E7%94%A8%E4%BA%8E-RAG"><span class="nav-number">1.5.</span> <span class="nav-text">LangChain 如何用于 RAG</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E7%BA%BF%E9%98%B6%E6%AE%B5"><span class="nav-number">1.5.1.</span> <span class="nav-text">离线阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E7%BA%BF%E9%98%B6%E6%AE%B5"><span class="nav-number">1.5.2.</span> <span class="nav-text">在线阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-%E5%92%8C-Agent"><span class="nav-number">1.6.</span> <span class="nav-text">LangChain 和 Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-%E5%92%8C-LangGraph-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.7.</span> <span class="nav-text">LangChain 和 LangGraph 的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangChain-%E5%92%8C-Harness-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.8.</span> <span class="nav-text">LangChain 和 Harness 的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-LangChain-%E6%97%B6%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BB%80%E4%B9%88"><span class="nav-number">1.9.</span> <span class="nav-text">使用 LangChain 时要注意什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E5%B1%82%E4%BC%9A%E5%B8%A6%E6%9D%A5%E9%A2%9D%E5%A4%96%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">1.9.1.</span> <span class="nav-text">抽象层会带来额外复杂度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E5%8F%98%E5%8C%96%E9%9C%80%E8%A6%81%E9%94%81%E5%AE%9A"><span class="nav-number">1.9.2.</span> <span class="nav-text">版本变化需要锁定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81%E6%8A%8A%E5%AE%89%E5%85%A8%E4%BA%A4%E7%BB%99-Prompt"><span class="nav-number">1.9.3.</span> <span class="nav-text">不要把安全交给 Prompt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BD%95%E6%AF%8F%E4%B8%80%E6%AD%A5%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.9.4.</span> <span class="nav-text">记录每一步行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E6%88%90%E6%9C%AC%E5%92%8C%E5%BB%B6%E8%BF%9F"><span class="nav-number">1.9.5.</span> <span class="nav-text">评估成本和延迟</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E9%80%82%E5%90%88%E4%BD%BF%E7%94%A8-LangChain"><span class="nav-number">1.10.</span> <span class="nav-text">什么时候适合使用 LangChain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">1.11.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">100</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/18/LangChain%E4%BB%8B%E7%BB%8D-%E4%BB%8E%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%E5%88%B0Agent%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LangChain 介绍：从模型调用到 Agent 应用 | 欣然的备忘录">
+      <meta itemprop="description" content="介绍 LangChain 的定位、核心组件、RAG 和 Agent 用法，以及它与模型 SDK、LangGraph 和 Harness 的关系。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LangChain 介绍：从模型调用到 Agent 应用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-18 11:45:51 / 修改时间：11:47:08" itemprop="dateCreated datePublished" datetime="2026-08-18T11:45:51+08:00">2026-08-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">介绍 LangChain 的定位、核心组件、RAG 和 Agent 用法，以及它与模型 SDK、LangGraph 和 Harness 的关系。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="LangChain-介绍：从模型调用到-Agent-应用"><a href="#LangChain-介绍：从模型调用到-Agent-应用" class="headerlink" title="LangChain 介绍：从模型调用到 Agent 应用"></a>LangChain 介绍：从模型调用到 Agent 应用</h1><p>调用一次大语言模型并不难。真正复杂的是把模型接入文档、数据库、搜索、代码执行器和业务 API，再让它在多步骤任务中保持上下文、处理错误并验证结果。</p>
+<p>LangChain 就是为这类应用提供的一套开发框架。它不是 GPT 或 Claude 这样的模型，也不是一个开箱即用的个人助手。更准确地说，LangChain 提供了连接模型、数据、工具和流程的组件，帮助开发者构建聊天应用、RAG 系统和 Agent。</p>
+<h2 id="LangChain-到底是什么"><a href="#LangChain-到底是什么" class="headerlink" title="LangChain 到底是什么"></a>LangChain 到底是什么</h2><p>可以把 LangChain 放在三层结构里理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">模型层：GPT、Claude、Gemini、本地模型</span><br><span class="line">应用层：LangChain、LangGraph、其他 Agent 框架</span><br><span class="line">运行层：工具执行器、权限、状态、监控、部署环境</span><br></pre></td></tr></table></figure>
+
+<p>模型负责理解和生成内容。LangChain 负责把模型和应用能力连接起来。运行层则负责让整个系统在真实环境中可控地运行。</p>
+<p>因此，LangChain 更像一个 LLM 应用开发工具箱，而不是一个具体业务应用。</p>
+<h2 id="它解决什么问题"><a href="#它解决什么问题" class="headerlink" title="它解决什么问题"></a>它解决什么问题</h2><h3 id="统一模型调用方式"><a href="#统一模型调用方式" class="headerlink" title="统一模型调用方式"></a>统一模型调用方式</h3><p>不同模型供应商的接口、消息格式和工具调用参数并不完全相同。LangChain 为常见模型提供统一的调用抽象，让应用代码不必把所有逻辑都绑定在某一家模型服务上。</p>
+<p>这不意味着切换模型完全没有成本。模型的上下文长度、工具调用能力、结构化输出和价格仍然不同，抽象层只能减少接口差异，不能消除能力差异。</p>
+<h3 id="组织-Prompt-和消息"><a href="#组织-Prompt-和消息" class="headerlink" title="组织 Prompt 和消息"></a>组织 Prompt 和消息</h3><p>Prompt 模板、系统指令、用户输入、历史消息和检索内容经常需要组合。把这些内容散落在字符串拼接里，后续很难维护和测试。</p>
+<p>LangChain 提供消息和 Prompt 模板相关组件，让输入结构更清楚，也更容易把模板作为独立配置进行测试。</p>
+<h3 id="连接外部数据"><a href="#连接外部数据" class="headerlink" title="连接外部数据"></a>连接外部数据</h3><p>模型本身不知道企业内部文档、最新订单或当前代码。LangChain 可以把文档加载、切分、Embedding、向量检索和模型调用组织成一条 RAG 流程。</p>
+<h3 id="连接工具"><a href="#连接工具" class="headerlink" title="连接工具"></a>连接工具</h3><p>搜索、数据库、文件系统、代码执行器和业务 API 都可以包装成工具，让 Agent 根据任务选择调用。工具的执行仍然需要由应用侧负责权限校验和副作用控制。</p>
+<h3 id="编排多步骤流程"><a href="#编排多步骤流程" class="headerlink" title="编排多步骤流程"></a>编排多步骤流程</h3><p>一个请求可能要经历检索、判断、调用接口、整理结果和验证。LangChain 的链式组合和 Agent 组件可以帮助开发者表达这些步骤。</p>
+<h2 id="LangChain-的核心概念"><a href="#LangChain-的核心概念" class="headerlink" title="LangChain 的核心概念"></a>LangChain 的核心概念</h2><h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><p>Model 是对聊天模型或文本模型的调用封装。应用通过它发送消息，得到模型返回的文本、结构化结果或工具调用请求。</p>
+<p>模型只负责提出结果或行动建议。它不会因为被 LangChain 包装，就自动获得访问数据库和执行命令的权限。</p>
+<h3 id="Prompt-和-Message"><a href="#Prompt-和-Message" class="headerlink" title="Prompt 和 Message"></a>Prompt 和 Message</h3><p>Prompt 用于组织输入模板，Message 则表示系统消息、用户消息、模型消息和工具结果。对于多轮对话和 Agent 循环，明确区分这些消息很重要。</p>
+<p>一个常见的输入结构是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">System：你是什么角色，有哪些限制</span><br><span class="line">User：用户当前的问题</span><br><span class="line">Assistant：模型提出的工具调用或回答</span><br><span class="line">Tool：工具真实返回的结果</span><br><span class="line">Assistant：根据结果继续处理</span><br></pre></td></tr></table></figure>
+
+<h3 id="Output-Parser"><a href="#Output-Parser" class="headerlink" title="Output Parser"></a>Output Parser</h3><p>模型输出通常是文本，但应用可能需要 JSON、列表、分类结果或固定字段。Output Parser 可以帮助应用把输出转换成预期结构，并在格式不正确时触发修复或报错。</p>
+<p>解析器不能替代业务校验。JSON 格式正确，不代表字段的值合法，也不代表模型完成了用户要求。</p>
+<h3 id="Runnable-和-Chain"><a href="#Runnable-和-Chain" class="headerlink" title="Runnable 和 Chain"></a>Runnable 和 Chain</h3><p>LangChain 的组合思路是把多个处理步骤连接起来。例如，先渲染 Prompt，再调用模型，最后解析输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chain = prompt | model | output_parser</span><br><span class="line">result = chain.invoke(&#123;<span class="string">&quot;question&quot;</span>: <span class="string">&quot;什么是 RAG？&quot;</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这种写法表达了数据流：上一个组件的输出进入下一个组件。简单流程用 Chain 比 Agent 更容易理解，也更容易测试。</p>
+<h3 id="Retriever"><a href="#Retriever" class="headerlink" title="Retriever"></a>Retriever</h3><p>Retriever 负责根据问题找到相关内容。它可以连接向量数据库、关键词搜索、数据库或自定义检索服务。</p>
+<p>Retriever 只负责“找什么”，不负责最终答案是否正确。RAG 系统还需要检查召回内容的权限、来源、时间和覆盖范围。</p>
+<h3 id="Tool"><a href="#Tool" class="headerlink" title="Tool"></a>Tool</h3><p>Tool 是 Agent 可以调用的外部能力。一个工具通常包含名称、描述、输入参数、返回结构和执行函数。</p>
+<p>工具描述会影响模型选择。<code>get_order_status</code> 比 <code>query_data</code> 更明确；参数描述写清楚类型和范围，也比只写“订单编号”更容易减少错误调用。</p>
+<h3 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h3><p>Agent 会根据任务和中间结果决定下一步是否使用工具。一个典型循环是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">用户问题</span><br><span class="line">  -&gt; 模型判断是否需要工具</span><br><span class="line">  -&gt; 生成工具调用</span><br><span class="line">  -&gt; LangChain 调用执行器</span><br><span class="line">  -&gt; 工具返回结果</span><br><span class="line">  -&gt; 模型继续判断</span><br><span class="line">  -&gt; 最终回答</span><br></pre></td></tr></table></figure>
+
+<p>这就是 ReAct、Tool Calling 等 Agent 工作流常见的实现基础。Agent 的灵活性更高，但调用次数、成本和失败路径也更难预测。</p>
+<h2 id="用-LangChain-构建一个简单链"><a href="#用-LangChain-构建一个简单链" class="headerlink" title="用 LangChain 构建一个简单链"></a>用 LangChain 构建一个简单链</h2><p>下面是一个概念性的 Python 示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> langchain_core.prompts <span class="keyword">import</span> ChatPromptTemplate</span><br><span class="line"></span><br><span class="line">prompt = ChatPromptTemplate.from_messages([</span><br><span class="line">    (<span class="string">&quot;system&quot;</span>, <span class="string">&quot;你是一个简洁、准确的技术助手。&quot;</span>),</span><br><span class="line">    (<span class="string">&quot;human&quot;</span>, <span class="string">&quot;请解释：&#123;question&#125;&quot;</span>),</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">chain = prompt | model</span><br><span class="line">response = chain.invoke(&#123;<span class="string">&quot;question&quot;</span>: <span class="string">&quot;什么是向量数据库？&quot;</span>&#125;)</span><br><span class="line"><span class="built_in">print</span>(response.content)</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>model</code> 需要由具体的模型集成包提供。LangChain 负责 Prompt 和模型之间的组合，模型服务商仍然负责实际推理。</p>
+<h2 id="LangChain-如何用于-RAG"><a href="#LangChain-如何用于-RAG" class="headerlink" title="LangChain 如何用于 RAG"></a>LangChain 如何用于 RAG</h2><p>一个典型的 RAG 流程可以拆成两部分。</p>
+<h3 id="离线阶段"><a href="#离线阶段" class="headerlink" title="离线阶段"></a>离线阶段</h3><ol>
+<li>加载 PDF、Markdown、网页或数据库内容。</li>
+<li>把长文档切成适合检索的片段。</li>
+<li>为片段生成 Embedding。</li>
+<li>将向量和原文元数据保存到向量数据库。</li>
+</ol>
+<h3 id="在线阶段"><a href="#在线阶段" class="headerlink" title="在线阶段"></a>在线阶段</h3><ol>
+<li>接收用户问题。</li>
+<li>检索相关文档片段。</li>
+<li>把片段、来源和问题放入 Prompt。</li>
+<li>调用模型生成回答。</li>
+<li>返回答案和引用，或在证据不足时说明无法确认。</li>
+</ol>
+<p>LangChain 可以串起这些组件，但检索质量仍然取决于切分策略、Embedding、召回参数、权限过滤和文档更新机制。用了 LangChain，不代表 RAG 自动变准。</p>
+<h2 id="LangChain-和-Agent"><a href="#LangChain-和-Agent" class="headerlink" title="LangChain 和 Agent"></a>LangChain 和 Agent</h2><p>如果流程是固定的，例如“提取文本 -&gt; 调用模型 -&gt; 解析 JSON”，使用 Chain 往往足够。</p>
+<p>如果下一步取决于模型对当前结果的判断，例如“先查订单，发现异常再查物流，最后决定是否转人工”，就可以考虑 Agent。</p>
+<p>Agent 适合处理：</p>
+<ul>
+<li>需要多个工具协同的任务。</li>
+<li>执行路径不能完全预先写死的任务。</li>
+<li>需要根据工具结果动态调整的任务。</li>
+</ul>
+<p>Agent 不适合替代所有流程。固定流程用状态机或普通函数通常更便宜、更容易测试；把简单的字符串转换也交给 Agent，只会增加不必要的不确定性。</p>
+<h2 id="LangChain-和-LangGraph-的关系"><a href="#LangChain-和-LangGraph-的关系" class="headerlink" title="LangChain 和 LangGraph 的关系"></a>LangChain 和 LangGraph 的关系</h2><p>LangChain 更像组件和应用开发框架，适合组织模型、Prompt、Retriever、Tool 和简单 Agent。</p>
+<p>LangGraph 更关注有状态的 Agent 工作流，例如节点、边、循环、分支、检查点、暂停和恢复。当任务需要明确控制执行图，或者需要长时间运行和人工介入时，LangGraph 更合适。</p>
+<p>二者可以一起使用：LangChain 提供模型和工具组件，LangGraph 负责把它们编排成有状态的执行流程。</p>
+<h2 id="LangChain-和-Harness-的关系"><a href="#LangChain-和-Harness-的关系" class="headerlink" title="LangChain 和 Harness 的关系"></a>LangChain 和 Harness 的关系</h2><p>LangChain 可以帮助构建 Harness，但它本身不等于完整 Harness。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">模型</span><br><span class="line">  + LangChain：组织 Prompt、模型、工具和数据</span><br><span class="line">  + LangGraph：组织状态、分支和循环</span><br><span class="line">  + 执行器：真正运行工具</span><br><span class="line">  + 权限系统：限制可以访问什么</span><br><span class="line">  + 监控与评测：记录和验证行为</span><br><span class="line">  = 一个完整的 Agent Harness</span><br></pre></td></tr></table></figure>
+
+<p>LangChain 解决“如何把模型应用搭出来”。Harness 还要解决“如何让这个应用在受控环境中长期运行”。</p>
+<h2 id="使用-LangChain-时要注意什么"><a href="#使用-LangChain-时要注意什么" class="headerlink" title="使用 LangChain 时要注意什么"></a>使用 LangChain 时要注意什么</h2><h3 id="抽象层会带来额外复杂度"><a href="#抽象层会带来额外复杂度" class="headerlink" title="抽象层会带来额外复杂度"></a>抽象层会带来额外复杂度</h3><p>简单调用模型时，直接使用官方 SDK 可能更容易理解。引入 LangChain 后，需要理解它的消息、Runnable、工具和回调抽象。项目规模还没有达到需要这些能力时，框架反而可能增加排查成本。</p>
+<h3 id="版本变化需要锁定"><a href="#版本变化需要锁定" class="headerlink" title="版本变化需要锁定"></a>版本变化需要锁定</h3><p>LLM 生态变化很快。模型集成、Agent API 和包结构可能调整，项目应锁定依赖版本，保留最小可运行示例，并为关键流程写回归测试。</p>
+<h3 id="不要把安全交给-Prompt"><a href="#不要把安全交给-Prompt" class="headerlink" title="不要把安全交给 Prompt"></a>不要把安全交给 Prompt</h3><p>Prompt 可以告诉模型“不要访问敏感数据”，但它不能代替服务端权限。文件路径、数据库字段、网络地址和写操作都需要在工具执行层再次校验。</p>
+<h3 id="记录每一步行为"><a href="#记录每一步行为" class="headerlink" title="记录每一步行为"></a>记录每一步行为</h3><p>Agent 出错时，只看最终答案很难定位原因。至少应记录模型请求、工具名称、参数摘要、返回状态、耗时、重试次数和最终结果，并对敏感内容做脱敏。</p>
+<h3 id="评估成本和延迟"><a href="#评估成本和延迟" class="headerlink" title="评估成本和延迟"></a>评估成本和延迟</h3><p>Agent 可能多次调用模型和工具。评测时除了质量，还要记录 Token、延迟、工具次数、失败率和人工接管比例。一次回答更好，不代表整个系统更适合生产。</p>
+<h2 id="什么时候适合使用-LangChain"><a href="#什么时候适合使用-LangChain" class="headerlink" title="什么时候适合使用 LangChain"></a>什么时候适合使用 LangChain</h2><p>LangChain 比较适合：</p>
+<ul>
+<li>需要同时连接模型、工具和外部数据。</li>
+<li>需要搭建 RAG 或 Agent 原型。</li>
+<li>需要统一多个模型供应商的调用方式。</li>
+<li>需要对 Prompt、工具和执行链进行组合和追踪。</li>
+<li>需要把实验代码逐步发展成完整应用。</li>
+</ul>
+<p>以下情况可以先不用：</p>
+<ul>
+<li>只有一次简单模型调用。</li>
+<li>应用只需要少量固定 Prompt。</li>
+<li>团队还没有确定是否需要 Agent 或 RAG。</li>
+<li>引入框架的抽象成本高于它带来的收益。</li>
+</ul>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>LangChain 是构建 LLM 应用的框架和组件库。它把模型、Prompt、检索器、工具和 Agent 流程连接起来，但不会自动替你解决权限、状态、监控和业务正确性。</p>
+<p>理解它的最好方式，不是把它看成一个“会做事的个人助手”，而是看成一套搭建助手的开发工具。模型负责理解和生成，LangChain 负责组织应用逻辑，执行器和 Harness 负责让整个系统在真实环境中可控地工作。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="tag"># 大语言模型</a>
+              <a href="/tags/Agent/" rel="tag"># Agent</a>
+              <a href="/tags/LangChain/" rel="tag"># LangChain</a>
+              <a href="/tags/RAG/" rel="tag"># RAG</a>
+              <a href="/tags/Harness/" rel="tag"># Harness</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/17/Agent%20%E5%B7%A5%E5%85%B7%E5%88%86%E7%B1%BB%E6%8C%87%E5%8D%97-%E4%BB%8E%E4%BF%A1%E6%81%AF%E8%8E%B7%E5%8F%96%E5%88%B0%E8%A1%8C%E5%8A%A8%E6%89%A7%E8%A1%8C/" rel="prev" title="Agent 工具分类指南：从信息获取到行动执行">
+                  <i class="fa fa-angle-left"></i> Agent 工具分类指南：从信息获取到行动执行
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/21/Electron%20%E5%81%9A%E6%A1%8C%E9%9D%A2%E8%BD%AF%E4%BB%B6%EF%BC%9A%E4%BC%98%E7%BC%BA%E7%82%B9%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/" rel="next" title="Electron 做桌面软件：优缺点、适用场景与替代方案">
+                  Electron 做桌面软件：优缺点、适用场景与替代方案 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

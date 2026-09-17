@@ -137,18 +137,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">100</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -174,7 +174,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/17/%E5%A4%A7%E5%9E%8B%E4%BB%A3%E7%A0%81%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%8F%96%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF%E8%80%8C%E4%B8%8D%E6%92%91%E7%88%86%E4%B8%8A%E4%B8%8B%E6%96%87/">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/09/16/Oh%20My%20Pi%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%8A%8A%20IDE%20%E8%83%BD%E5%8A%9B%E6%8E%A5%E8%BF%9B%E7%BB%88%E7%AB%AF%E7%9A%84%E7%BC%96%E7%A0%81%20Agent/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -192,7 +192,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/17/%E5%A4%A7%E5%9E%8B%E4%BB%A3%E7%A0%81%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%8F%96%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF%E8%80%8C%E4%B8%8D%E6%92%91%E7%88%86%E4%B8%8A%E4%B8%8B%E6%96%87/" class="post-title-link" itemprop="url">大型代码项目中，如何快速获取相关信息而不撑爆上下文</a>
+          <a href="/2026/09/16/Oh%20My%20Pi%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%8A%8A%20IDE%20%E8%83%BD%E5%8A%9B%E6%8E%A5%E8%BF%9B%E7%BB%88%E7%AB%AF%E7%9A%84%E7%BC%96%E7%A0%81%20Agent/" class="post-title-link" itemprop="url">Oh My Pi：一个把 IDE 能力接进终端的编码 Agent</a>
         </h2>
 
         <div class="post-meta-container">
@@ -204,7 +204,358 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-08-17 16:47:00 / 修改时间：11:23:06" itemprop="dateCreated datePublished" datetime="2026-08-17T16:47:00+08:00">2026-08-17</time>
+      <time title="创建时间：2026-09-16 09:42:41 / 修改时间：09:43:11" itemprop="dateCreated datePublished" datetime="2026-09-16T09:42:41+08:00">2026-09-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">AI 开发工具</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><a target="_blank" rel="noopener" href="https://github.com/can1357/oh-my-pi">Oh My Pi（OMP）</a> 可以先用一句话概括：它是在 Pi 的基础上继续扩展的开源编码 Agent，仍把终端交互放在中心，却试图把编辑器里的语言服务、调试器和协作入口一起带到 Agent 工作流里。</p>
+<p>它不是一个新的大模型，也不靠替换模型取胜。OMP 解决的是另一层问题：模型怎样读项目、改文件、运行命令、理解代码符号，并在需要时把任务交给别的 Agent 或编辑器。项目 README 把这一层称为 coding-first surface；更直白一点，就是给代码 Agent 准备一套比“聊天 + shell”更完整的运行环境。</p>
+<h2 id="它和-Pi-是什么关系"><a href="#它和-Pi-是什么关系" class="headerlink" title="它和 Pi 是什么关系"></a>它和 Pi 是什么关系</h2><p>OMP 是 <a target="_blank" rel="noopener" href="https://github.com/badlogic/pi-mono">Pi</a> 的 fork。Pi 本身强调可编程、可扩展的终端 Agent；OMP 保留了这些基础，同时加入了一批面向编码任务的内建能力，例如会话管理、子 Agent、斜杠命令、插件、模型路由和编辑器协议。</p>
+<p>这层关系很重要。它意味着 OMP 并非从零定义一套 Agent 交互，而是在已有的终端 Agent 体验上做工程化加法。对于已经习惯 Pi 的人，迁移成本会低一些；对于从 Claude Code、Codex 或 Cursor 过来的人，则更容易把它理解成一个偏“可组合”的终端编码环境。</p>
+<p>README 当前列出的技术构成也说明了这个取向：交互与 SDK 主要使用 TypeScript，性能敏感的底层能力则由 Rust 实现。项目声明其 Rust 核心约 8 万行，并提供多提供商模型接入、内建工具，以及 LSP 和 DAP 相关操作。这里的数量来自项目 README，适合作为能力范围的参考，不等同于第三方性能测评。</p>
+<h2 id="OMP-想补上的，正是终端-Agent-容易缺的那一段"><a href="#OMP-想补上的，正是终端-Agent-容易缺的那一段" class="headerlink" title="OMP 想补上的，正是终端 Agent 容易缺的那一段"></a>OMP 想补上的，正是终端 Agent 容易缺的那一段</h2><p>纯终端 Agent 通常已经能读写文件、跑命令和调用模型，但它未必能稳定拿到编辑器掌握的语义信息。OMP 的设计重点，是把这些信息和操作放进同一个 Agent 回路。</p>
+<h3 id="让-Agent-使用语言服务和调试器"><a href="#让-Agent-使用语言服务和调试器" class="headerlink" title="让 Agent 使用语言服务和调试器"></a>让 Agent 使用语言服务和调试器</h3><p>项目把 LSP 接到写入流程中。LSP 即 Language Server Protocol，编辑器依靠它提供跳转定义、查找引用、诊断和重命名等能力。对编码 Agent 来说，这意味着它可以少依赖字符串搜索，多利用符号和诊断来判断一次修改是否影响了别处。</p>
+<p>OMP 也声明支持驱动真实调试器，并提供 DAP 相关操作。DAP 是 Debug Adapter Protocol。调试器接入不保证 Agent 自动找到所有运行时问题，但它给了 Agent 一条更接近开发者日常排障方式的路径：设置断点、观察变量、沿调用过程定位问题，而不只是在日志里猜。</p>
+<h3 id="子-Agent、审查和会话不再只是外围脚本"><a href="#子-Agent、审查和会话不再只是外围脚本" class="headerlink" title="子 Agent、审查和会话不再只是外围脚本"></a>子 Agent、审查和会话不再只是外围脚本</h3><p>README 将子 Agent、第二模型审视每轮输出、代码审查、会话分支与恢复列为内建工作流的一部分。实际价值不在于“多 Agent”这个标签，而在于任务隔离：主 Agent 可以继续实现功能，同时让另一条会话检查风险、阅读文档或复现问题。</p>
+<p>这类工作流适合问题边界清楚的任务，例如让一个子 Agent 审查补丁、让另一个调查测试失败。它仍然需要人来决定结论是否可信，尤其是在涉及权限、生产环境和合并发布时。</p>
+<h3 id="既能在终端跑，也能被别的宿主驱动"><a href="#既能在终端跑，也能被别的宿主驱动" class="headerlink" title="既能在终端跑，也能被别的宿主驱动"></a>既能在终端跑，也能被别的宿主驱动</h3><p>OMP 给出四种入口：交互式终端、一次性命令、Node&#x2F;TypeScript SDK，以及基于标准输入输出的 RPC。后一种方式让非 Node 的宿主也可以通过 NDJSON 驱动 Agent。</p>
+<p>另一个值得关注的是 <code>omp acp</code>。它实现 <a target="_blank" rel="noopener" href="https://github.com/zed-industries/agent-client-protocol">Agent Client Protocol（ACP）</a>，让编辑器可以作为客户端与 Agent 通信。编辑器若声明了对应能力，文件读写与终端操作能通过协议路由，写入操作还可由 <code>session/request_permission</code> 控制。对 IDE 作者或团队内部工具而言，这比模拟终端界面更适合作为集成点。</p>
+<h2 id="对已有配置的态度：尽量继承，而非强迫迁移"><a href="#对已有配置的态度：尽量继承，而非强迫迁移" class="headerlink" title="对已有配置的态度：尽量继承，而非强迫迁移"></a>对已有配置的态度：尽量继承，而非强迫迁移</h2><p>第一次启动时，OMP 会尝试发现本机已存在的规则、技能和 MCP 服务器配置，范围包括 <code>.claude</code>、<code>.cursor</code>、<code>.windsurf</code>、<code>.gemini</code>、<code>.codex</code>、<code>.cline</code>、<code>.github/copilot</code> 与 <code>.vscode</code>。项目的目标是减少“换一个 Agent 就重建一遍工作环境”的摩擦。</p>
+<p>这项能力很方便，但也建议先检查继承到了什么。不同工具对规则优先级、命令权限和 MCP 配置的含义并不完全一致。把现成配置导入新工具之前，尤其要确认其中没有过宽的 shell 权限或不再需要的服务凭据。</p>
+<p>扩展方式也相当直接：插件是 TypeScript 模块，可使用与内建功能相同的工具 API、斜杠命令注册表和终端 UI 原语。插件既可以只放在本地，也能打包发布到 marketplace 或 npm。这个设计适合有固定开发流程的团队，把约定做成可检查的工具，而不是反复贴进提示词。</p>
+<h2 id="安装与最小上手"><a href="#安装与最小上手" class="headerlink" title="安装与最小上手"></a>安装与最小上手</h2><p>OMP 支持 macOS、Linux 和 Windows。README 提供了多种安装方式；如果机器上已经使用 Bun，推荐的全局安装命令是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bun install -g @oh-my-pi/pi-coding-agent</span><br></pre></td></tr></table></figure>
+
+<p>Windows PowerShell 也可使用项目安装脚本：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">irm</span> https://omp.sh/install.ps1 | <span class="built_in">iex</span></span><br></pre></td></tr></table></figure>
+
+<p>macOS 和 Linux 用户可使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://omp.sh/install | sh</span><br></pre></td></tr></table></figure>
+
+<p>此外还有 Homebrew、Nix 和 <code>mise</code> 等安装入口。安装前应以 README 的最新要求为准；其中 Bun 路径要求 Bun 版本不低于 1.3.14。终端补全可以由 <code>omp completions</code> 为 bash、zsh 和 fish 生成。</p>
+<p>如果准备从源码参与开发，仓库给出的起步流程是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bun setup</span><br><span class="line">bun dev</span><br></pre></td></tr></table></figure>
+
+<p><code>bun setup</code> 会安装工作区依赖并构建本地 Rust&#x2F;N-API 扩展。修改 Rust crate 或 <code>packages/natives</code> 后，README 建议重新运行 <code>bun run build:native</code>。</p>
+<h2 id="哪些人值得试，哪些人可以先等等"><a href="#哪些人值得试，哪些人可以先等等" class="headerlink" title="哪些人值得试，哪些人可以先等等"></a>哪些人值得试，哪些人可以先等等</h2><p>如果你主要在终端中完成开发，又希望 Agent 能用 LSP、调试器、结构化编辑和可拆分的子任务，OMP 值得放进候选工具清单。它也适合需要把 Agent 嵌入自有编辑器、脚本或服务的开发者：SDK、RPC 和 ACP 覆盖了不同宿主的接入方式。</p>
+<p>但如果你的需求只是偶尔让模型生成一段代码，OMP 的配置面和功能深度可能反而显得重。它提供的模型选择、插件、会话和工具策略需要花时间建立习惯。对个人项目而言，先用一个简单的终端 Agent 跑通“读代码—修改—测试”的闭环，再判断是否需要更复杂的 harness，通常更稳妥。</p>
+<p>还有一点需要保留：README 中关于工具效果和基准的陈述主要来自项目自身。它们可以帮助理解作者优化的方向，例如减少失败编辑的重试和改善模型的工具调用格式，却不能替代在你的仓库、模型和权限配置上的实际验证。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>Oh My Pi 最有意思的地方，不是又做了一个聊天入口，而是认真对待了代码 Agent 的运行环境：模型需要语义信息，需要调试路径，需要可控的权限和可复用的配置，也需要与编辑器、脚本和团队流程相连。</p>
+<p>它选择的答案是保留终端的直接感，再把 IDE 与工程工具接进来。是否适合你，最终取决于你愿意把多少日常开发流程交给 Agent，以及你是否愿意为更强的可组合性承担相应的配置与验证成本。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/can1357/oh-my-pi">can1357&#x2F;oh-my-pi</a></li>
+<li><a target="_blank" rel="noopener" href="https://omp.sh/">OMP 文档站</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/zed-industries/agent-client-protocol">Agent Client Protocol</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/09/03/CodexHost%EF%BC%9A%E5%9C%A8%20Codex%20Desktop%20%E9%87%8C%E5%88%87%E6%8D%A2%E5%A4%9A%E7%A7%8D%20Agent%20Harness/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/03/CodexHost%EF%BC%9A%E5%9C%A8%20Codex%20Desktop%20%E9%87%8C%E5%88%87%E6%8D%A2%E5%A4%9A%E7%A7%8D%20Agent%20Harness/" class="post-title-link" itemprop="url">CodexHost：在 Codex Desktop 里切换多种 Agent Harness</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-03 19:47:44 / 修改时间：19:50:54" itemprop="dateCreated datePublished" datetime="2026-09-03T19:47:44+08:00">2026-09-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">AI 开发工具</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" itemprop="url" rel="index"><span itemprop="name">开源项目</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><a target="_blank" rel="noopener" href="https://github.com/BytePioneer-AI/codex-host">BytePioneer-AI&#x2F;codex-host</a> 做的事情很直接：把 Pi、Claude Code、OpenCode、Oh My Pi、Grok Build、DeepSeek Harness 等 Agent Harness 接进 Codex Desktop，让它们在同一个桌面窗口里运行。</p>
+<p>它不是另一个聊天壳，也不是把所有模型包装成 OpenAI 兼容接口。项目的取舍是保留 Codex Desktop 的工作区、Thread、流式输出、工具状态、Diff、审批和提问界面，再把真正执行任务的 Harness 交给用户选择的原生程序。</p>
+<h2 id="先理解两个词"><a href="#先理解两个词" class="headerlink" title="先理解两个词"></a>先理解两个词</h2><p><strong>Agent</strong> 是执行任务的程序，例如 Claude Code 或 Pi。<strong>Harness</strong> 可以理解为 Agent 的运行框架：它负责读取项目、调用工具、修改文件、运行命令，并维护自己的会话状态。</p>
+<p>CodexHost 把“显示界面”和“执行任务”拆开。Codex Desktop 负责统一呈现；被选中的 Harness 仍在自己的协议和权限模式下工作。这也是项目强调原生体验的原因：已有的工具审批、Diff 和登录状态，不必重新在一个第三方聊天框里模拟。</p>
+<h2 id="它是怎样接进去的"><a href="#它是怎样接进去的" class="headerlink" title="它是怎样接进去的"></a>它是怎样接进去的</h2><p>从仓库文档和代码结构看，CodexHost 大致分为四个部分：</p>
+<ul>
+<li><strong>Desktop 集成</strong>：通过 CDP &#x2F; Electron Inspector 在官方 Codex Desktop 界面中增加 Agent 选择和会话入口，不重做整个聊天界面。</li>
+<li><strong>协议适配</strong>：用 CLI Shim 与官方 app-server 对接，让 Codex 的请求可以透明转发到目标 Harness。</li>
+<li><strong>Harness 适配器</strong>：不同 Agent 按各自原生接口接入，例如 Pi 的 RPC、Claude Code 的 SDK&#x2F;CLI；输出再映射回 Desktop 的流式文本、工具、Diff 和审批组件。</li>
+<li><strong>会话编排</strong>：被委派的任务会创建独立 Native Session，并保存委派关系。发起方可以在 Codex Desktop 的会话列表里查看进度或继续对话。</li>
+</ul>
+<p>仓库还使用了 <a target="_blank" rel="noopener" href="https://agentclientprotocol.com/">Agent Client Protocol（ACP）</a> 作为部分客户端接入思路，但项目并没有只依赖 ACP；README 明确提到，过度依赖通用协议可能会削弱某些 Harness 的原生能力，因此适配器会保留各自的接口。</p>
+<h2 id="快速安装"><a href="#快速安装" class="headerlink" title="快速安装"></a>快速安装</h2><p>项目 README 给出的 npm 安装方式是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @codexhost/cli</span><br><span class="line">codexhost</span><br></pre></td></tr></table></figure>
+
+<p>仓库声明支持 macOS、Windows 和 x64&#x2F;ARM64 Linux。Linux 文档对系统和 ChatGPT App 安装包有额外限制，使用前应按仓库的 <a target="_blank" rel="noopener" href="https://github.com/BytePioneer-AI/codex-host/blob/main/docs/linux.zh-CN.md">Linux 说明</a>核对架构、glibc 和安装来源。</p>
+<p>如果要从源码开发，可以按仓库要求准备官方 Codex Desktop、Node.js 22.19+ 或 24.x，以及 Rust：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/BytePioneer-AI/codex-host</span><br><span class="line"><span class="built_in">cd</span> codex-host</span><br><span class="line">npm ci</span><br><span class="line">npm start</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>npm start</code> 是开发启动方式；日常使用更适合安装 CLI 或下载仓库 Releases 中的安装包。macOS 首次打开若遇到系统隔离提示，README 也提供了对应的排查命令。</p>
+<h2 id="适合怎样的工作流"><a href="#适合怎样的工作流" class="headerlink" title="适合怎样的工作流"></a>适合怎样的工作流</h2><p>最有意思的用法是让一个 Agent 委派另一个 Agent：例如让当前 Agent 请 Claude Code 做一次独立代码审查，再让 Pi 调查某个偶发测试失败。CodexHost 会为目标 Harness 创建独立会话，结果回到 Codex Desktop 的会话列表中，便于并行观察。</p>
+<p>这类协作适合有清晰输入和输出的任务，比如审查、定位测试失败、实现一个局部功能或整理文档。它并不会自动替你解决责任问题：合并补丁、发布版本和生产变更仍应经过团队自己的评审和流水线。</p>
+<h2 id="远程-Harness：SSH-与-Remote-Control"><a href="#远程-Harness：SSH-与-Remote-Control" class="headerlink" title="远程 Harness：SSH 与 Remote Control"></a>远程 Harness：SSH 与 Remote Control</h2><p>CodexHost 不只支持本机 Agent。仓库提供两种远程路径，但状态并不相同。</p>
+<h3 id="SSH-远程工作区"><a href="#SSH-远程工作区" class="headerlink" title="SSH 远程工作区"></a>SSH 远程工作区</h3><p>macOS、Linux 客户端可以通过 Codex Desktop 的原生 SSH 工作区，使用另一台 macOS 或 Linux 开发机上已安装、已登录的 Harness。远程机需要安装相同版本的 codexhost，并执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @codexhost/cli</span><br><span class="line">codexhost remote install</span><br><span class="line">codexhost remote start</span><br><span class="line">codexhost remote status</span><br></pre></td></tr></table></figure>
+
+<p>凭据留在远程开发机，提示词、流式输出、工具状态、审批和 Diff 通过已有 SSH 通道投影回来。仓库文档特别强调，远程 Host 不会把 Claude 的登录材料复制到客户端，也不会把普通 Shell 中的远程所有权配置扩散出去。</p>
+<h3 id="Windows-Remote-Control"><a href="#Windows-Remote-Control" class="headerlink" title="Windows Remote Control"></a>Windows Remote Control</h3><p>Remote Control 集成目前仍标为实验能力。被控端是 Windows，控制端需要按官方 Remote Control 完成配对；Harness 账号和项目文件留在 Windows 上。CodexHost 通过官方允许的 <code>process/spawn</code> 等 app-server 方法启动固定桥接命令，不新增 TCP 监听端口，也不替代官方 relay。</p>
+<p>遇到配对失败、账号授权错误或原生 Codex 任务本身无法运行时，应先按 OpenAI Remote Control 的文档排查，再检查 CodexHost 的桥接状态。</p>
+<h2 id="使用前要留意的边界"><a href="#使用前要留意的边界" class="headerlink" title="使用前要留意的边界"></a>使用前要留意的边界</h2><p>第一，项目依赖官方 Codex Desktop 的界面和协议。Desktop、Harness 或 codexhost 版本不匹配时，集成可能表现为 Agent 不出现、桥接超时或会话无法恢复；远程两端应尽量保持同版本。</p>
+<p>第二，权限仍由所选 Harness 的原生模式约束。CodexHost 统一了入口，不会替你取消 Claude Code、Pi 等工具自身的确认机制。把高权限账号交给自动化任务前，应该先确认工作区、网络和凭据范围。</p>
+<p>第三，部分能力仍在演进。README 对 Antigravity 和 Windows Remote Control 都标注了实验或完善中的状态，不能把功能矩阵当作所有版本都不变的承诺。</p>
+<h2 id="值不值得试"><a href="#值不值得试" class="headerlink" title="值不值得试"></a>值不值得试</h2><p>如果你已经在 Codex Desktop、Claude Code 和 Pi 之间来回切换，CodexHost 的价值很明确：少开几个窗口，同时保留不同 Harness 的原生能力。它尤其适合需要并行委派、比较不同 Agent 输出，或者希望在远程开发机上复用登录环境的人。</p>
+<p>如果你只使用官方 Codex，或者更看重极简安装，额外引入一个集成层未必划算。建议先从低风险仓库和只读审查任务开始，确认版本兼容、权限边界和会话恢复都符合预期，再扩大到代码修改和远程执行。</p>
+<p>项目采用 MIT License，源码、安装包和各平台说明都在 <a target="_blank" rel="noopener" href="https://github.com/BytePioneer-AI/codex-host">GitHub 仓库</a>。具体命令和支持矩阵会随项目更新，安装前最好以仓库 README 和对应平台文档为准。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/28/DeerFlow%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E6%8A%8A%E5%A4%8D%E6%9D%82%E4%BB%BB%E5%8A%A1%E4%BA%A4%E7%BB%99%E5%8F%AF%E7%BC%96%E6%8E%92%E7%9A%84%E6%99%BA%E8%83%BD%E4%BD%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/28/DeerFlow%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E6%8A%8A%E5%A4%8D%E6%9D%82%E4%BB%BB%E5%8A%A1%E4%BA%A4%E7%BB%99%E5%8F%AF%E7%BC%96%E6%8E%92%E7%9A%84%E6%99%BA%E8%83%BD%E4%BD%93/" class="post-title-link" itemprop="url">DeerFlow 介绍：把复杂任务交给可编排的智能体</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-28 15:38:42 / 修改时间：15:39:31" itemprop="dateCreated datePublished" datetime="2026-08-28T15:38:42+08:00">2026-08-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/Agent-%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Agent 工程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>DeerFlow 是一个开源的智能体运行框架。它的重点不是把聊天窗口做得更像人，而是把一个目标拆成计划、检索、代码执行、文件处理和结果交付等环节，再交给模型、工具和子智能体协同完成。</p>
+<p>如果把大语言模型看成负责判断的“大脑”，DeerFlow 更像一套工作台：它负责准备上下文、调度工具、保存中间产物，并在需要时让多个智能体接力。这个定位决定了它更适合深度研究、代码任务和长流程内容生产，而不是只追求一次对话的即时回答。</p>
+<h2 id="DeerFlow-解决什么问题"><a href="#DeerFlow-解决什么问题" class="headerlink" title="DeerFlow 解决什么问题"></a>DeerFlow 解决什么问题</h2><p>简单问答通常只需要一次模型调用。复杂任务却会不断遇到相同的工程问题：资料要从哪里来，哪些操作可以自动执行，长任务如何保留上下文，子任务完成后怎样汇总，最终结果如何让人检查。</p>
+<p>DeerFlow 把这些问题放到同一个运行环境里处理。以“写一份行业研究”为例，流程可以是：先明确研究问题，再搜索和阅读资料，随后让不同子智能体分别整理市场、技术和竞品信息，最后由主智能体合并结论并附上可追溯的来源。具体步骤取决于配置和接入的模型，框架本身不替使用者保证结论正确。</p>
+<h2 id="核心组成"><a href="#核心组成" class="headerlink" title="核心组成"></a>核心组成</h2><h3 id="主智能体与子智能体"><a href="#主智能体与子智能体" class="headerlink" title="主智能体与子智能体"></a>主智能体与子智能体</h3><p>主智能体负责理解目标、制定计划和汇总结果。子智能体则接手边界清晰的工作，例如检索资料、分析代码或整理文档。拆分之后，每个子任务拥有更小的上下文，主流程也更容易重试和调整。</p>
+<p>多智能体并不等于“人越多越快”。如果任务边界没有写清楚，子智能体可能重复劳动，或者把未经核实的中间结论直接传给主流程。实际使用时，应明确输入、输出、权限和完成条件。</p>
+<h3 id="工具、MCP-与-Skills"><a href="#工具、MCP-与-Skills" class="headerlink" title="工具、MCP 与 Skills"></a>工具、MCP 与 Skills</h3><p>DeerFlow 可以通过工具访问文件、网页、命令行和其他服务，也可以接入 MCP（Model Context Protocol）服务器。工具描述“能做什么”，MCP 约定“如何把能力提供给模型”，而 Skills 更接近一份可复用的工作流程说明。</p>
+<p>这几层概念最好分开理解：一个网页搜索工具可以被多个流程复用；一个“调研报告”Skill 则可以规定先搜索、再去重、再核查来源，最后输出报告。这样做比把所有规则堆在一段提示词里更容易维护。</p>
+<h3 id="沙箱与长任务"><a href="#沙箱与长任务" class="headerlink" title="沙箱与长任务"></a>沙箱与长任务</h3><p>需要运行代码、处理文件或安装依赖时，隔离环境很重要。沙箱可以限制工作目录、网络和可执行操作，降低误删文件或泄露凭据的风险。长任务则需要保存中间文件、日志和状态，便于暂停后继续，而不是每次从头开始。</p>
+<p>这些能力带来便利，也带来成本：沙箱需要额外的资源配置，长任务需要设计超时、重试和清理策略。部署前应先确认运行环境是否满足项目当前版本的要求。</p>
+<h2 id="一次任务大致怎样运行"><a href="#一次任务大致怎样运行" class="headerlink" title="一次任务大致怎样运行"></a>一次任务大致怎样运行</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">用户目标</span><br><span class="line">   ↓</span><br><span class="line">主智能体规划</span><br><span class="line">   ↓</span><br><span class="line">调用工具 / 分派子智能体</span><br><span class="line">   ↓</span><br><span class="line">读取结果、文件和日志</span><br><span class="line">   ↓</span><br><span class="line">核查与重试</span><br><span class="line">   ↓</span><br><span class="line">交付报告、代码或其他产物</span><br></pre></td></tr></table></figure>
+
+<p>其中最容易被忽略的是“核查与重试”。工具调用成功，只能说明命令执行完成；它不代表网页内容可信、代码没有缺陷，或报告已经满足要求。把测试、来源检查和人工确认放进流程，才能让自动化结果更可靠。</p>
+<h2 id="适合哪些场景"><a href="#适合哪些场景" class="headerlink" title="适合哪些场景"></a>适合哪些场景</h2><ul>
+<li>深度研究：围绕一个问题持续搜索、阅读、比较和汇总资料。</li>
+<li>代码任务：读取仓库、运行测试、修改文件，再提交带验证信息的结果。</li>
+<li>文档生产：把多种输入整理成报告、方案或结构化知识。</li>
+<li>内部自动化：连接企业 API、文件系统和知识库，处理有明确边界的重复工作。</li>
+</ul>
+<p>如果需求只是“问一个事实”或“改一行配置”，直接调用模型或脚本通常更简单。DeerFlow 的价值在于流程较长、需要工具协同，并且希望保留中间过程的任务。</p>
+<h2 id="使用前要注意什么"><a href="#使用前要注意什么" class="headerlink" title="使用前要注意什么"></a>使用前要注意什么</h2><p>第一，模型能力不是框架能力。DeerFlow 可以调度模型和工具，却无法自动消除幻觉；重要结论仍应保留来源并进行人工抽查。</p>
+<p>第二，权限要从小开始。文件写入、命令执行、联网和外部 API 都应设置明确范围；涉及删除、发布或付费操作时，最好加入人工审批。</p>
+<p>第三，成本需要量化。多轮推理、多个子智能体和长上下文会增加模型调用次数与运行时间。可以先用一个小任务测量 token、延迟和失败率，再决定是否扩大并发。</p>
+<p>第四，版本变化要留痕。DeerFlow 的目录结构、配置项和推荐模型会随版本更新，部署时应以对应版本的 README 和示例配置为准，不要直接套用旧文章中的命令。</p>
+<h2 id="如何开始了解"><a href="#如何开始了解" class="headerlink" title="如何开始了解"></a>如何开始了解</h2><p>最稳妥的路径是先阅读官方仓库的 README，确认当前版本的依赖、启动方式和模型配置，再运行一个只读的小任务。等检索、日志和结果交付都能正常工作后，再逐步开放代码执行、文件写入和外部服务访问。</p>
+<ul>
+<li>官方仓库：<a target="_blank" rel="noopener" href="https://github.com/bytedance/deer-flow">bytedance&#x2F;deer-flow</a></li>
+<li>项目文档与示例：以仓库中的当前版本说明为准</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>DeerFlow 的看点不在于“让一个模型变得无所不能”，而在于把复杂任务拆成可调度、可观察、可复用的步骤。它适合拿来搭建研究助手、代码代理和内部自动化流程；是否值得引入，取决于任务长度、工具数量、权限要求和可接受的运行成本。</p>
+<p>把它当作一套工程基础设施来评估，会比把它当作一个新的聊天应用更准确。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/27/AI%E5%8E%9F%E7%94%9F%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%9A%E4%BB%8E%E4%BB%A3%E7%A0%81%E6%8F%90%E9%80%9F%E5%88%B0%E6%B5%81%E7%A8%8B%E9%87%8D%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/27/AI%E5%8E%9F%E7%94%9F%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%9A%E4%BB%8E%E4%BB%A3%E7%A0%81%E6%8F%90%E9%80%9F%E5%88%B0%E6%B5%81%E7%A8%8B%E9%87%8D%E6%9E%84/" class="post-title-link" itemprop="url">AI 原生软件开发生命周期：从代码提速到流程重构</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-27 12:10:00 / 修改时间：13:49:26" itemprop="dateCreated datePublished" datetime="2026-08-27T12:10:00+08:00">2026-08-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -214,6 +565,10 @@
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">软件工程</span></a>
         </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
     </span>
 
   
@@ -226,10 +581,289 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>用逐层收窄的信息漏斗，在大型代码仓库中定位变更边界、追踪调用链，并控制 AI 与开发者的上下文规模。</p>
+          <blockquote>
+<p>本文是对 Anthropic《<a target="_blank" rel="noopener" href="https://claude.com/blog/the-ai-native-sdlc-playbook">The AI-Native SDLC playbook</a>》的中文分享与提炼。原文页面标注发布日期为 2026 年 8 月 21 日、更新日期为 8 月 26 日。文中关于 Claude 产品和 Anthropic 团队实践的描述属于厂商自述，不等同于独立评测或普遍适用的工程结论。</p>
+</blockquote>
+<h2 id="代码变快之后，真正慢的是什么？"><a href="#代码变快之后，真正慢的是什么？" class="headerlink" title="代码变快之后，真正慢的是什么？"></a>代码变快之后，真正慢的是什么？</h2><p>过去一年，代理式 AI 让“写代码”这件事明显提速。问题是，围绕代码的流程没有一起变快：需求还在等会议，设计还在等评审，安全检查还在排队，发布还要等下一个窗口。</p>
+<p>这就是原文开篇想指出的反差：**当构建阶段从开发周期里塌缩出去，瓶颈就会转移到它的左边和右边。**计划、评审与测试、部署，仍然按人的速度运行。于是，团队可能得到更多代码，却没有得到更多可靠的软件。</p>
+<p>原文没有提供跨组织的独立基准，不能据此断言“用了 Claude 就一定更快”。更准确的理解是：如果代理确实把代码产出推高，原来的人工闸门就可能变成新的排队点；SDLC 需要和实现阶段一样，重新设计。</p>
+<h2 id="AI-原生-SDLC：不是自动化一段流程，而是把流程变成回路"><a href="#AI-原生-SDLC：不是自动化一段流程，而是把流程变成回路" class="headerlink" title="AI 原生 SDLC：不是自动化一段流程，而是把流程变成回路"></a>AI 原生 SDLC：不是自动化一段流程，而是把流程变成回路</h2><p>传统 SDLC 像一条接力赛：计划交给设计，设计交给构建，构建交给测试，测试交给发布，最后由运维看着线上。每一棒都有文档、工单和签字，但交接往往是手工的，信息也会在交接中变形。</p>
+<p>Anthropic 所说的 AI 原生 SDLC，更像一个持续运行的回路：AI 嵌入每个阶段，阶段之间自动交接；旧流程要求的控制目标继续保留，但控制方式改成版本化文件、自动检查、钩子和分层授权。原文也把它称为 agentic SDLC 或 AI SDLC，名称不同，指的是同一类变化。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">flowchart LR</span><br><span class="line">  P[计划\nintent.md] --&gt; D[设计\n约束与上下文]</span><br><span class="line">  D --&gt; B[构建\n代理协作]</span><br><span class="line">  B --&gt; T[测试\n持续评估]</span><br><span class="line">  T --&gt; R[部署\n审查与回滚]</span><br><span class="line">  R --&gt; M[维护\n监控与扫描]</span><br><span class="line">  M -. 反馈回流 .-&gt; P</span><br></pre></td></tr></table></figure>
+
+<p>最容易被忽略的是“承诺产物”。每个阶段结束时，都要把一个下阶段可读取的东西提交到版本控制：计划阶段可能是 <code>intent.md</code>，设计阶段是 <code>spec.md</code>，构建阶段是 <code>plan.md</code>、代码和测试，测试阶段是评估结果，部署阶段是 PR 及其审查记录，维护阶段则是事故记录或 lessons 文件。下一个阶段从这些提交开始，而不是从一段没有上下文的聊天开始。</p>
+<p>这样一来，提交历史本身就成了审计轨迹：谁提出了什么，代理生成了什么，哪些检查通过了，谁批准了高风险动作。人的责任没有消失，只是人的注意力从“把每一行都看一遍”，转向目标、例外和需要判断的地方。</p>
+<h2 id="六个阶段，变化到底在哪里？"><a href="#六个阶段，变化到底在哪里？" class="headerlink" title="六个阶段，变化到底在哪里？"></a>六个阶段，变化到底在哪里？</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>传统做法</th>
+<th>AI 原生做法（原文描述的方向）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>计划</td>
+<td>需求由会议、工作坊和签字逐层整理</td>
+<td>从真实来源提炼痛点，写入人可读、机器可执行的 <code>intent.md</code></td>
+</tr>
+<tr>
+<td>设计</td>
+<td>分析师写规格，设计师再解释规格</td>
+<td>与代理在一次工作会话中压缩需求和设计，规范以 skills 维护并进入 Git</td>
+</tr>
+<tr>
+<td>构建</td>
+<td>代码、测试手写，文档常常事后补</td>
+<td>AI 生成代码和测试，团队知识写入版本化的 <code>CLAUDE.md</code> 与 skills</td>
+</tr>
+<tr>
+<td>测试</td>
+<td>在阶段边界设置 QA 闸门</td>
+<td>把持续评估（evals）织进实现过程，而不是最后才验收</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>人工逐行审查，治理依赖周期性评审</td>
+<td>代理分层审查；关键或受监管代码保留人工审查，hooks 作为批准闸门</td>
+</tr>
+<tr>
+<td>维护</td>
+<td>人盯着生产环境等问题出现</td>
+<td>代理监控线上部署，越过控制带后诊断，并写回新的 <code>intent.md</code></td>
+</tr>
+</tbody></table>
+<p>这不是要求所有组织立刻跳到右侧。原文把两列当作光谱的两端，多数团队会处于中间位置。重要的是右侧贯穿始终的那条线：<strong>每一阶段都留下可提交、可读取、可追踪的产物。</strong></p>
+<h2 id="Plan：先写意图，再让代理行动"><a href="#Plan：先写意图，再让代理行动" class="headerlink" title="Plan：先写意图，再让代理行动"></a>Plan：先写意图，再让代理行动</h2><p>原文反复使用 <code>intent.md</code>，不是为了增加一个文档格式，而是为了让“为什么做这件事”进入后续自动化。一个可用的意图文件至少要说明问题或异常、证据、预期结果、受影响系统和仍未解决的问题。</p>
+<p>它既能承载产品需求，也能承载监控异常和较大的安全发现。产品负责人和代理读的是同一份文件，后续的设计、实现和分诊不必重新猜测背景。</p>
+<p>这里的人类工作不是替 AI 写得更详细，而是确认范围、约束和验收条件。意图不清楚时，自动化只会把模糊更快地放大。</p>
+<h2 id="Design：把组织知识变成代理能读的约束"><a href="#Design：把组织知识变成代理能读的约束" class="headerlink" title="Design：把组织知识变成代理能读的约束"></a>Design：把组织知识变成代理能读的约束</h2><p>传统设计阶段常见的问题，是规范停留在某个人的经验里，或者写完就过期。AI 原生做法是把架构决策、接口契约、非功能要求和编码规范，放进代理能检索的项目上下文，并通过 Git 管理变更。</p>
+<p>原文提到用 skills 编码标准，用 <code>CLAUDE.md</code> 保存团队知识。它们的意义不在于“给模型更多提示词”，而在于把隐性的组织规则变成可复用、可审查的资产。涉及数据、权限和合规的决定，仍由负责团队确认；代理只能在给定约束里提出方案。</p>
+<h2 id="Build：从“生成代码”转向“生成可验证的变更”"><a href="#Build：从“生成代码”转向“生成可验证的变更”" class="headerlink" title="Build：从“生成代码”转向“生成可验证的变更”"></a>Build：从“生成代码”转向“生成可验证的变更”</h2><p>Claude Code 在原文中扮演的不是自动提交机器人，而是能够读上下文、修改代码、生成测试、解释 diff、发起 PR 的协作者。真正的分界线在于：能写出来，不等于能合并。</p>
+<p>构建阶段应该尽量让代理处理可拆分、可验证的工作；主干是否接受这次变更，则交给自动检查、分支保护和人工评审。代码越敏感，人的审查越应该靠近风险，而不是平均地把时间花在每一行上。</p>
+<h2 id="Test：把质量从最后一道门，移到整个过程里"><a href="#Test：把质量从最后一道门，移到整个过程里" class="headerlink" title="Test：把质量从最后一道门，移到整个过程里"></a>Test：把质量从最后一道门，移到整个过程里</h2><p>如果测试只在构建完成后才开始，代理越快，最后的排队越长。原文建议把持续评估（evals）织进实现过程，持续验证功能行为、回归风险和安全边界。</p>
+<p>这并不意味着减少测试，而是改变测试的时机和对象：除了检查代码行，还要检查代理是否遵守项目规范、是否覆盖关键行为、是否在边界条件下给出可接受的结果。一次事故修复后补充对应评估用例，才能把一次性的经验变成下一次仍会运行的保护措施。</p>
+<h2 id="Deploy：把治理做成代理行动时的约束"><a href="#Deploy：把治理做成代理行动时的约束" class="headerlink" title="Deploy：把治理做成代理行动时的约束"></a>Deploy：把治理做成代理行动时的约束</h2><p>原文给出的方向是“分层代理审查”。低风险动作可以自动检查或只读诊断；涉及关键系统、受监管代码或生产变更时，保留人工批准。hooks、分支保护和预先批准的 runbook，负责把权限写成机器能执行的规则。</p>
+<p>部署自动化不等于放弃审批。更现实的例子是：当异常超过既定控制带，代理可以打开一个 PR，或者调用已经批准的回滚流水线，但不能自己批准自己的修复。调用、诊断、批准和结果都进入带时间戳的记录。</p>
+<h2 id="Maintain：让线上反馈重新进入计划"><a href="#Maintain：让线上反馈重新进入计划" class="headerlink" title="Maintain：让线上反馈重新进入计划"></a>Maintain：让线上反馈重新进入计划</h2><p>维护阶段是这套方法最有意思的地方。监控、事故和安全扫描不再是 SDLC 之外的“运维杂事”，而是能重新触发计划的输入。</p>
+<h3 id="持续监控循环"><a href="#持续监控循环" class="headerlink" title="持续监控循环"></a>持续监控循环</h3><p>原文用 <code>bands.yaml</code> 展示分层响应：先由确定性的规则判断指标是否偏离基线，再决定 Claude 可以做什么。示例中，1σ 只记录，2σ 允许只读诊断，3σ 才能提出 PR 或调用预批准 runbook。这个阈值是示例，不应直接当成通用最佳实践。</p>
+<p>关键原则是：检测保持确定性，模型只在规则触发后被调用；响应等级写入版本控制；权限系统阻止代理直接获得生产写权限。异常处理完成后，诊断和证据可以整理成新的 <code>intent.md</code>，重新回到计划阶段。</p>
+<h3 id="定期安全扫描"><a href="#定期安全扫描" class="headerlink" title="定期安全扫描"></a>定期安全扫描</h3><p>一次安全扫描只代表某个时间点，而且代码和模型都会变化。原文建议按项目设定扫描计划，给每条发现附上验证结果和置信度，驳回时留下原因。</p>
+<p>范围明确的问题可以生成补丁并走 PR；跨服务的架构弱点则写成 <code>intent.md</code>，从计划阶段开始。模型驱动的扫描补充 CI 中的静态分析和依赖检查，而不是替代它们。</p>
+<h3 id="事故频道也是工作流的一部分"><a href="#事故频道也是工作流的一部分" class="headerlink" title="事故频道也是工作流的一部分"></a>事故频道也是工作流的一部分</h3><p>原文还描述了 Claude Tag 在 Slack 中参与值班的场景：事故消息出现在频道里，Claude 以自己的身份读取上下文、验证指标是否恢复、协助提出修复，并把复盘写入版本控制的 lessons 文件。</p>
+<p>这里真正重要的不是“让机器人待在 Slack”，而是让请求、诊断、人的授权和修复结果留在同一个可回看的地方。小而明确的修复走 PR，较大的问题重新写成 <code>intent.md</code>。频道因此成为反馈链的一部分，而不是一个临时的黑盒。</p>
+<h2 id="治理的底线：人不退出，人的位置改变"><a href="#治理的底线：人不退出，人的位置改变" class="headerlink" title="治理的底线：人不退出，人的位置改变"></a>治理的底线：人不退出，人的位置改变</h2><p>AI 原生 SDLC 不是“让代理自己上线”，而是把人的判断放到更值得投入的地方：定义目标，确认边界，批准高风险动作，处理例外，复核结果。</p>
+<p>一套可执行的边界至少包括：</p>
+<ul>
+<li>代理默认只读，生产动作通过受限工具完成。</li>
+<li>阈值、工具白名单、skills、hooks 和 runbook 全部版本化。</li>
+<li>代理提出的变更不能由自己批准，必须经过 PR 和分支保护。</li>
+<li>调用、诊断、驳回、批准和发布都有审计记录。</li>
+<li>用交付周期、缺陷率、回滚率、安全发现处理时间和评审积压衡量结果，而不是只看生成了多少代码。</li>
+</ul>
+<h2 id="一个稳妥的落地顺序"><a href="#一个稳妥的落地顺序" class="headerlink" title="一个稳妥的落地顺序"></a>一个稳妥的落地顺序</h2><p>先统一 <code>intent.md</code> 模板，把测试、监控和安全发现接入现有工单或 PR；再为代理设置只读权限和工具白名单；接着开放“提出变更”的能力；最后才考虑触发预批准 runbook。每扩大一层权限，就补上日志、评估和回滚方案。</p>
+<p>这条顺序的好处是，团队可以先验证反馈链是否真的工作，再决定是否让代理承担更高风险的动作。没有审计和回退能力时，增加模型权限只是在放大未知风险。</p>
+<h2 id="原文精髓，可以压缩成三句话"><a href="#原文精髓，可以压缩成三句话" class="headerlink" title="原文精髓，可以压缩成三句话"></a>原文精髓，可以压缩成三句话</h2><p>第一，代码不再是唯一瓶颈，流程周围的人工速度会暴露出来。第二，AI 原生 SDLC 是一个由承诺产物连接起来的闭环，不是六个孤立的自动化工具。第三，人的判断不会被删除，而是从重复搬运转向目标、例外和责任。</p>
+<p>Anthropic 这篇 playbook 的价值，不在于给出一张所有团队都能照抄的架构图，而在于提醒我们：当构建阶段变快，真正需要重做的是围绕代码的系统。先把反馈链跑通，再逐层扩大代理权限，可能比单纯追求更快的代码生成更接近“AI 原生”。</p>
+<h2 id="参考与证据边界"><a href="#参考与证据边界" class="headerlink" title="参考与证据边界"></a>参考与证据边界</h2><ul>
+<li>原文：<a target="_blank" rel="noopener" href="https://claude.com/blog/the-ai-native-sdlc-playbook">The AI-Native SDLC playbook</a></li>
+<li>原文中的产品和服务：Claude Code、Claude Security、Claude Tag，以及相关 CI&#x2F;CD、hooks、skills 和 MCP 资源。</li>
+<li>本文中的“原文描述”指 Anthropic 对自身实践和产品的公开叙述；“工程建议”是基于这些内容做的归纳，需要结合具体组织的风险、合规和系统约束验证。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/27/AI%E5%8E%9F%E7%94%9F%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%9A%E4%BB%8E%E4%BB%A3%E7%A0%81%E6%8F%90%E9%80%9F%E5%88%B0%E6%B5%81%E7%A8%8B%E9%87%8D%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/27/AI%E5%8E%9F%E7%94%9F%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%9A%E4%BB%8E%E4%BB%A3%E7%A0%81%E6%8F%90%E9%80%9F%E5%88%B0%E6%B5%81%E7%A8%8B%E9%87%8D%E6%9E%84/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-27 09:35:33 / 修改时间：13:52:15" itemprop="dateCreated datePublished" datetime="2026-08-27T09:35:33+08:00">2026-08-27</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <!doctype html>
+<html style="      ">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 原生软件开发生命周期：从代码提速到流程重构</title>
+  <meta name="description" content="过去一年，代理式 AI 让“写代码”这件事明显提速。问题是，围绕代码的流程没有一起变快：需求还在等会议，设计还在等评审，安全检查还在排队，发布还要等下一个窗口。">
+  <link rel="stylesheet" href="../../wx/ai-native-sdlc-theme.css?v=4">
+  
+  
+</head>
+<body style="padding: 24px; background: #ffffff; max-width: 860px; margin: 0 auto; text-align: left; font-family: -apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif; font-size: 17px; line-height: 2;">
+  <div id="output">
+  <div class="sdlc-hero"><div class="sdlc-kicker">AI-NATIVE SDLC · FIELD GUIDE</div><h1>AI 原生软件开发生命周期</h1><p>从代码提速到流程重构：当构建不再是瓶颈，团队真正需要升级的是计划、验证、发布与反馈系统。</p><div class="sdlc-meta"><span class="sdlc-chip">Anthropic playbook 解读</span><span class="sdlc-chip">6 个阶段</span><span class="sdlc-chip">闭环工作流</span></div></div>
+  <div class="sdlc-insights"><div class="sdlc-insight"><b>01 · 变化</b><span>代理式 AI 压缩构建时间，瓶颈向左右两侧迁移。</span></div><div class="sdlc-insight"><b>02 · 核心</b><span>每个阶段都留下下阶段可读取的承诺产物。</span></div><div class="sdlc-insight"><b>03 · 原则</b><span>先改反馈链，再按风险逐层扩大代理权限。</span></div></div>
+  <nav class="sdlc-toc" aria-label="文章导航"><a href="#bottleneck">瓶颈转移</a><a href="#loop">闭环 SDLC</a><a href="#six-stages">六个阶段</a><a href="#governance">治理底线</a><a href="#roadmap">落地顺序</a></nav>
+<section class="container" style="text-align: left; font-family: -apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif; font-size: 17px; line-height: 2; letter-spacing: 0px; font-weight: 400; background-color: rgba(250, 249, 245, 1); border: 1px solid rgba(255, 255, 255, 0.01); border-radius: 25px; padding: 12px 12px;">
+      <blockquote class="md-blockquote" style="margin-right: 0; margin-bottom: 0; margin-left: 0; font-style: normal; padding: 15px 0; margin: 12px 0; border-left: 7px solid #E4B1A0; border-radius: 10px; color: #3f3f3f; background-color: rgba(255, 255, 255, 0.6); margin-top: 0 !important;">
+        <p class="md-blockquote-p" style="line-height: 2; font-weight: 400; word-break: break-all; display: block; font-size: 1em; letter-spacing: 0.1em; color: #3f3f3f; margin: 0;">字数 3142，阅读大约需 16 分钟</p>
+      </blockquote>
+    <blockquote class="blockquote" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; font-style: normal; padding: 15px 0; margin: 12px 0; border-left: 7px solid #E4B1A0; border-radius: 10px; color: #3f3f3f; background-color: rgba(255, 255, 255, 0.6);"><p class="p" style="line-height: 2; font-weight: 400; word-break: break-all; display: block; font-size: 1em; letter-spacing: 0.1em; color: #3f3f3f; margin: 0;">本文是对 Anthropic《<a target="_blank" rel="noopener" href="https://claude.com/blog/the-ai-native-sdlc-playbook" title="The AI-Native SDLC playbook" style="color: #2A9D8F; text-decoration: none;">The AI-Native SDLC playbook</a>》的中文分享与提炼。原文页面标注发布日期为 2026 年 8 月 21 日、更新日期为 8 月 26 日。文中关于 Claude 产品和 Anthropic 团队实践的描述属于厂商自述，不等同于独立评测或普遍适用的工程结论。</p></blockquote><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">代码变快之后，真正慢的是什么？</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">过去一年，代理式 AI 让“写代码”这件事明显提速。问题是，围绕代码的流程没有一起变快：需求还在等会议，设计还在等评审，安全检查还在排队，发布还要等下一个窗口。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">这就是原文开篇想指出的反差：<strong style="color: #2A9D8F; font-weight: bold; font-size: inherit;">当构建阶段从开发周期里塌缩出去，瓶颈就会转移到它的左边和右边。</strong>计划、评审与测试、部署，仍然按人的速度运行。于是，团队可能得到更多代码，却没有得到更多可靠的软件。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">原文没有提供跨组织的独立基准，不能据此断言“用了 Claude 就一定更快”。更准确的理解是：如果代理确实把代码产出推高，原来的人工闸门就可能变成新的排队点；SDLC 需要和实现阶段一样，重新设计。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">AI 原生 SDLC：不是自动化一段流程，而是把流程变成回路</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">传统 SDLC 像一条接力赛：计划交给设计，设计交给构建，构建交给测试，测试交给发布，最后由运维看着线上。每一棒都有文档、工单和签字，但交接往往是手工的，信息也会在交接中变形。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">Anthropic 所说的 AI 原生 SDLC，更像一个持续运行的回路：AI 嵌入每个阶段，阶段之间自动交接；旧流程要求的控制目标继续保留，但控制方式改成版本化文件、自动检查、钩子和分层授权。原文也把它称为 agentic SDLC 或 AI SDLC，名称不同，指的是同一类变化。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;"><img src="imgs/.mermaid-cache/mermaid-a0376e763ec0.png" data-local-path="C:\Users\gz0571\Desktop\private\git\xinran282.github.io\source\_posts\imgs\.mermaid-cache\mermaid-a0376e763ec0.png" alt="Mermaid diagram" style="display: block; width: 100%; margin: 1.5em auto;"></p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">最容易被忽略的是“承诺产物”。每个阶段结束时，都要把一个下阶段可读取的东西提交到版本控制：计划阶段可能是 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">intent.md</code>，设计阶段是 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">spec.md</code>，构建阶段是 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">plan.md</code>、代码和测试，测试阶段是评估结果，部署阶段是 PR 及其审查记录，维护阶段则是事故记录或 lessons 文件。下一个阶段从这些提交开始，而不是从一段没有上下文的聊天开始。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">这样一来，提交历史本身就成了审计轨迹：谁提出了什么，代理生成了什么，哪些检查通过了，谁批准了高风险动作。人的责任没有消失，只是人的注意力从“把每一行都看一遍”，转向目标、例外和需要判断的地方。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">六个阶段，变化到底在哪里？</h2>
+        <section style="text-align: left; font-family: -apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif; font-size: 17px; line-height: 2; letter-spacing: 0px; font-weight: 400; background-color: rgba(250, 249, 245, 1); border: 1px solid rgba(255, 255, 255, 0.01); border-radius: 25px; padding: 12px 12px; max-width: 100%; overflow: auto;">
+          <table class="preview-table" style="color: #3f3f3f; margin-top: 0 !important;">
+            <thead style="font-weight: bold; color: #3f3f3f;"><th class="th" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all; background: color-mix(in srgb, #2A9D8F 10%, transparent);">阶段</th><th class="th" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all; background: color-mix(in srgb, #2A9D8F 10%, transparent);">传统做法</th><th class="th" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all; background: color-mix(in srgb, #2A9D8F 10%, transparent);">AI 原生做法（原文描述的方向）</th></thead>
+            <tbody><tr class="tr"><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">计划</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">需求由会议、工作坊和签字逐层整理</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">从真实来源提炼痛点，写入人可读、机器可执行的 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">intent.md</code></td></tr><tr class="tr"><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">设计</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">分析师写规格，设计师再解释规格</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">与代理在一次工作会话中压缩需求和设计，规范以 skills 维护并进入 Git</td></tr><tr class="tr"><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">构建</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">代码、测试手写，文档常常事后补</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">AI 生成代码和测试，团队知识写入版本化的 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">CLAUDE.md</code> 与 skills</td></tr><tr class="tr"><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">测试</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">在阶段边界设置 QA 闸门</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">把持续评估（evals）织进实现过程，而不是最后才验收</td></tr><tr class="tr"><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">部署</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">人工逐行审查，治理依赖周期性评审</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">代理分层审查；关键或受监管代码保留人工审查，hooks 作为批准闸门</td></tr><tr class="tr"><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">维护</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">人盯着生产环境等问题出现</td><td class="td" style="border: 1px solid #dfdfdf; padding: 0.25em 0.5em; color: #3f3f3f; word-break: keep-all;">代理监控线上部署，越过控制带后诊断，并写回新的 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">intent.md</code></td></tr></tbody>
+          </table>
+        </section>
+      <p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">这不是要求所有组织立刻跳到右侧。原文把两列当作光谱的两端，多数团队会处于中间位置。重要的是右侧贯穿始终的那条线：<strong style="color: #2A9D8F; font-weight: bold; font-size: inherit;">每一阶段都留下可提交、可读取、可追踪的产物。</strong></p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">Plan：先写意图，再让代理行动</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">原文反复使用 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">intent.md</code>，不是为了增加一个文档格式，而是为了让“为什么做这件事”进入后续自动化。一个可用的意图文件至少要说明问题或异常、证据、预期结果、受影响系统和仍未解决的问题。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">它既能承载产品需求，也能承载监控异常和较大的安全发现。产品负责人和代理读的是同一份文件，后续的设计、实现和分诊不必重新猜测背景。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">这里的人类工作不是替 AI 写得更详细，而是确认范围、约束和验收条件。意图不清楚时，自动化只会把模糊更快地放大。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">Design：把组织知识变成代理能读的约束</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">传统设计阶段常见的问题，是规范停留在某个人的经验里，或者写完就过期。AI 原生做法是把架构决策、接口契约、非功能要求和编码规范，放进代理能检索的项目上下文，并通过 Git 管理变更。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">原文提到用 skills 编码标准，用 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">CLAUDE.md</code> 保存团队知识。它们的意义不在于“给模型更多提示词”，而在于把隐性的组织规则变成可复用、可审查的资产。涉及数据、权限和合规的决定，仍由负责团队确认；代理只能在给定约束里提出方案。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">Build：从“生成代码”转向“生成可验证的变更”</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">Claude Code 在原文中扮演的不是自动提交机器人，而是能够读上下文、修改代码、生成测试、解释 diff、发起 PR 的协作者。真正的分界线在于：能写出来，不等于能合并。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">构建阶段应该尽量让代理处理可拆分、可验证的工作；主干是否接受这次变更，则交给自动检查、分支保护和人工评审。代码越敏感，人的审查越应该靠近风险，而不是平均地把时间花在每一行上。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">Test：把质量从最后一道门，移到整个过程里</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">如果测试只在构建完成后才开始，代理越快，最后的排队越长。原文建议把持续评估（evals）织进实现过程，持续验证功能行为、回归风险和安全边界。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">这并不意味着减少测试，而是改变测试的时机和对象：除了检查代码行，还要检查代理是否遵守项目规范、是否覆盖关键行为、是否在边界条件下给出可接受的结果。一次事故修复后补充对应评估用例，才能把一次性的经验变成下一次仍会运行的保护措施。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">Deploy：把治理做成代理行动时的约束</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">原文给出的方向是“分层代理审查”。低风险动作可以自动检查或只读诊断；涉及关键系统、受监管代码或生产变更时，保留人工批准。hooks、分支保护和预先批准的 runbook，负责把权限写成机器能执行的规则。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">部署自动化不等于放弃审批。更现实的例子是：当异常超过既定控制带，代理可以打开一个 PR，或者调用已经批准的回滚流水线，但不能自己批准自己的修复。调用、诊断、批准和结果都进入带时间戳的记录。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">Maintain：让线上反馈重新进入计划</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">维护阶段是这套方法最有意思的地方。监控、事故和安全扫描不再是 SDLC 之外的“运维杂事”，而是能重新触发计划的输入。</p><h3 class="h3" data-heading="true" style="padding-left: 10px; border-left: 4px solid #2A9D8F; border-radius: 2px; margin: 0 8px 10px; color: #3f3f3f; font-size: 20px; font-weight: bold; line-height: 1.2;">持续监控循环</h3><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">原文用 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">bands.yaml</code> 展示分层响应：先由确定性的规则判断指标是否偏离基线，再决定 Claude 可以做什么。示例中，1σ 只记录，2σ 允许只读诊断，3σ 才能提出 PR 或调用预批准 runbook。这个阈值是示例，不应直接当成通用最佳实践。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">关键原则是：检测保持确定性，模型只在规则触发后被调用；响应等级写入版本控制；权限系统阻止代理直接获得生产写权限。异常处理完成后，诊断和证据可以整理成新的 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">intent.md</code>，重新回到计划阶段。</p><h3 class="h3" data-heading="true" style="padding-left: 10px; border-left: 4px solid #2A9D8F; border-radius: 2px; margin: 0 8px 10px; color: #3f3f3f; font-size: 20px; font-weight: bold; line-height: 1.2;">定期安全扫描</h3><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">一次安全扫描只代表某个时间点，而且代码和模型都会变化。原文建议按项目设定扫描计划，给每条发现附上验证结果和置信度，驳回时留下原因。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">范围明确的问题可以生成补丁并走 PR；跨服务的架构弱点则写成 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">intent.md</code>，从计划阶段开始。模型驱动的扫描补充 CI 中的静态分析和依赖检查，而不是替代它们。</p><h3 class="h3" data-heading="true" style="padding-left: 10px; border-left: 4px solid #2A9D8F; border-radius: 2px; margin: 0 8px 10px; color: #3f3f3f; font-size: 20px; font-weight: bold; line-height: 1.2;">事故频道也是工作流的一部分</h3><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">原文还描述了 Claude Tag 在 Slack 中参与值班的场景：事故消息出现在频道里，Claude 以自己的身份读取上下文、验证指标是否恢复、协助提出修复，并把复盘写入版本控制的 lessons 文件。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">这里真正重要的不是“让机器人待在 Slack”，而是让请求、诊断、人的授权和修复结果留在同一个可回看的地方。小而明确的修复走 PR，较大的问题重新写成 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">intent.md</code>。频道因此成为反馈链的一部分，而不是一个临时的黑盒。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">治理的底线：人不退出，人的位置改变</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">AI 原生 SDLC 不是“让代理自己上线”，而是把人的判断放到更值得投入的地方：定义目标，确认边界，批准高风险动作，处理例外，复核结果。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">一套可执行的边界至少包括：</p><ul class="ul" style="list-style: circle; padding-left: 1em; margin-left: 0; color: #3f3f3f; line-height: 2;"><li class="listitem" style="display: block; margin: 0.2em 8px; color: #3f3f3f;">• 代理默认只读，生产动作通过受限工具完成。</li><li class="listitem" style="display: block; margin: 0.2em 8px; color: #3f3f3f;">• 阈值、工具白名单、skills、hooks 和 runbook 全部版本化。</li><li class="listitem" style="display: block; margin: 0.2em 8px; color: #3f3f3f;">• 代理提出的变更不能由自己批准，必须经过 PR 和分支保护。</li><li class="listitem" style="display: block; margin: 0.2em 8px; color: #3f3f3f;">• 调用、诊断、驳回、批准和发布都有审计记录。</li><li class="listitem" style="display: block; margin: 0.2em 8px; color: #3f3f3f;">• 用交付周期、缺陷率、回滚率、安全发现处理时间和评审积压衡量结果，而不是只看生成了多少代码。</li></ul><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">一个稳妥的落地顺序</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">先统一 <code class="codespan" style="font-size: 90%; color: #d14; background: rgba(27, 31, 35, 0.05); padding: 3px 5px; border-radius: 4px;">intent.md</code> 模板，把测试、监控和安全发现接入现有工单或 PR；再为代理设置只读权限和工具白名单；接着开放“提出变更”的能力；最后才考虑触发预批准 runbook。每扩大一层权限，就补上日志、评估和回滚方案。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">这条顺序的好处是，团队可以先验证反馈链是否真的工作，再决定是否让代理承担更高风险的动作。没有审计和回退能力时，增加模型权限只是在放大未知风险。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">原文精髓，可以压缩成三句话</h2><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">第一，代码不再是唯一瓶颈，流程周围的人工速度会暴露出来。第二，AI 原生 SDLC 是一个由承诺产物连接起来的闭环，不是六个孤立的自动化工具。第三，人的判断不会被删除，而是从重复搬运转向目标、例外和责任。</p><p class="p" style="margin: 20px 0; letter-spacing: 0.1em; color: #3f3f3f; line-height: 2; letter-spacing: 0px; font-size: 15px; font-weight: 400; word-break: break-all;">Anthropic 这篇 playbook 的价值，不在于给出一张所有团队都能照抄的架构图，而在于提醒我们：当构建阶段变快，真正需要重做的是围绕代码的系统。先把反馈链跑通，再逐层扩大代理权限，可能比单纯追求更快的代码生成更接近“AI 原生”。</p><h2 class="h2" data-heading="true" style="display: block; padding: 0.2em 0; padding-bottom: 0; margin: 0 auto 20px; width: 100%; color: #2A9D8F; font-size: 20px; font-weight: bold; letter-spacing: 0.578px; line-height: 1.7; border-bottom: 2px solid #E4B1A0; text-align: left;">参考与证据边界</h2><ul class="ul" style="list-style: circle; padding-left: 1em; margin-left: 0; color: #3f3f3f; line-height: 2;"><li class="listitem" style="display: block; margin: 0.2em 8px; color: #3f3f3f;">• 原文：<a target="_blank" rel="noopener" href="https://claude.com/blog/the-ai-native-sdlc-playbook" title="The AI-Native SDLC playbook" style="color: #2A9D8F; text-decoration: none;">The AI-Native SDLC playbook</a></li><li class="listitem" style="display: block; margin: 0.2em 8px; color: #3f3f3f;">• 原文中的产品和服务：Claude Code、Claude Security、Claude Tag，以及相关 CI/CD、hooks、skills 和 MCP 资源。</li><li class="listitem" style="display: block; margin: 0.2em 8px; color: #3f3f3f;">• 本文中的“原文描述”指 Anthropic 对自身实践和产品的公开叙述；“工程建议”是基于这些内容做的归纳，需要结合具体组织的风险、合规和系统约束验证。</li></ul>
+    
+  
+    
+  
+    
+  </section>
+  </div>
+</body>
+<script>
+(() => { const ids = {'代码变快之后，真正慢的是什么？':'bottleneck','AI 原生 SDLC：不是自动化一段流程，而是把流程变成回路':'loop','六个阶段，变化到底在哪里？':'six-stages','治理的底线：人不退出，人的位置改变':'governance','一个稳妥的落地顺序':'roadmap'}; document.querySelectorAll('h2').forEach(h => { if (ids[h.textContent.trim()]) h.id = ids[h.textContent.trim()]; }); })();
+</script>
+</html>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/26/Orca%20%E4%BB%8B%E7%BB%8D-%E9%9D%A2%E5%90%91%E5%A4%9A%20Agent%20%E5%B9%B6%E8%A1%8C%E5%BC%80%E5%8F%91%E7%9A%84%E5%BC%80%E6%BA%90%20IDE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/26/Orca%20%E4%BB%8B%E7%BB%8D-%E9%9D%A2%E5%90%91%E5%A4%9A%20Agent%20%E5%B9%B6%E8%A1%8C%E5%BC%80%E5%8F%91%E7%9A%84%E5%BC%80%E6%BA%90%20IDE/" class="post-title-link" itemprop="url">Orca 介绍：面向多 Agent 并行开发的开源 IDE</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-26 11:48:02 / 修改时间：11:49:12" itemprop="dateCreated datePublished" datetime="2026-08-26T11:48:02+08:00">2026-08-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">开发工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>介绍 Stably AI 开源的 Orca IDE：它如何编排 Codex、Claude Code、Pi 等终端 Agent，如何利用并行 Git worktree、远程 SSH、Design Mode 和移动伴侣支持多 Agent 开发。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/08/17/%E5%A4%A7%E5%9E%8B%E4%BB%A3%E7%A0%81%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%8F%96%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF%E8%80%8C%E4%B8%8D%E6%92%91%E7%88%86%E4%B8%8A%E4%B8%8B%E6%96%87/">
+              <a class="btn" href="/2026/08/26/Orca%20%E4%BB%8B%E7%BB%8D-%E9%9D%A2%E5%90%91%E5%A4%9A%20Agent%20%E5%B9%B6%E8%A1%8C%E5%BC%80%E5%8F%91%E7%9A%84%E5%BC%80%E6%BA%90%20IDE/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -260,7 +894,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%84%E6%B5%8B%E4%B8%80%E6%AC%A1%20Tool%20%E8%B0%83%E7%94%A8%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE/">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/24/Pi%20%E4%B8%8E%20Apache%20Maka%20%E6%80%8E%E4%B9%88%E9%80%89-%E7%BB%88%E7%AB%AF%20Agent%20%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%9A%84%E6%AF%94%E8%BE%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -278,7 +912,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%84%E6%B5%8B%E4%B8%80%E6%AC%A1%20Tool%20%E8%B0%83%E7%94%A8%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE/" class="post-title-link" itemprop="url">如何评测一次 Tool 调用是否正确</a>
+          <a href="/2026/08/24/Pi%20%E4%B8%8E%20Apache%20Maka%20%E6%80%8E%E4%B9%88%E9%80%89-%E7%BB%88%E7%AB%AF%20Agent%20%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%9A%84%E6%AF%94%E8%BE%83/" class="post-title-link" itemprop="url">Pi 与 Apache Maka 怎么选：终端 Agent 与本地工作区的比较</a>
         </h2>
 
         <div class="post-meta-container">
@@ -288,15 +922,189 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2026-08-13 11:41:00" itemprop="dateCreated datePublished" datetime="2026-08-13T11:41:00+08:00">2026-08-13</time>
+      <time title="创建时间：2026-08-24 15:06:00 / 修改时间：20:39:40" itemprop="dateCreated datePublished" datetime="2026-08-24T15:06:00+08:00">2026-08-24</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
+        <i class="far fa-folder"></i>
       </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-17 11:23:08" itemprop="dateModified" datetime="2026-08-17T11:23:08+08:00">2026-08-17</time>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">开发工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>比较 pi.dev 的 Pi 与 Apache Maka：从产品定位、运行入口、扩展模型、权限与记录、平台状态和适用场景出发，给出选择建议。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/08/24/Pi%20%E4%B8%8E%20Apache%20Maka%20%E6%80%8E%E4%B9%88%E9%80%89-%E7%BB%88%E7%AB%AF%20Agent%20%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%9A%84%E6%AF%94%E8%BE%83/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/21/Electron%20%E5%81%9A%E6%A1%8C%E9%9D%A2%E8%BD%AF%E4%BB%B6%EF%BC%9A%E4%BC%98%E7%BC%BA%E7%82%B9%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/21/Electron%20%E5%81%9A%E6%A1%8C%E9%9D%A2%E8%BD%AF%E4%BB%B6%EF%BC%9A%E4%BC%98%E7%BC%BA%E7%82%B9%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/" class="post-title-link" itemprop="url">Electron 做桌面软件：优缺点、适用场景与替代方案</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-21 14:12:26 / 修改时间：14:15:37" itemprop="dateCreated datePublished" datetime="2026-08-21T14:12:26+08:00">2026-08-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">软件开发</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/%E6%A1%8C%E9%9D%A2%E5%BA%94%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">桌面应用</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>从架构、开发效率、性能、安装包、安全和原生能力出发，分析 Electron 的优缺点，并比较 Tauri、Wails、Flutter、Qt、.NET 与原生开发等替代方案。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/08/21/Electron%20%E5%81%9A%E6%A1%8C%E9%9D%A2%E8%BD%AF%E4%BB%B6%EF%BC%9A%E4%BC%98%E7%BC%BA%E7%82%B9%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/18/LangChain%E4%BB%8B%E7%BB%8D-%E4%BB%8E%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%E5%88%B0Agent%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/08/18/LangChain%E4%BB%8B%E7%BB%8D-%E4%BB%8E%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%E5%88%B0Agent%E5%BA%94%E7%94%A8/" class="post-title-link" itemprop="url">LangChain 介绍：从模型调用到 Agent 应用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-18 11:45:51 / 修改时间：11:47:08" itemprop="dateCreated datePublished" datetime="2026-08-18T11:45:51+08:00">2026-08-18</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -318,10 +1126,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>一套评估 Tool 调用是否真正正确的判断框架，覆盖意图、参数、时机、副作用、结果验证和失败处理。</p>
+          <p>介绍 LangChain 的定位、核心组件、RAG 和 Agent 用法，以及它与模型 SDK、LangGraph 和 Harness 的关系。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%84%E6%B5%8B%E4%B8%80%E6%AC%A1%20Tool%20%E8%B0%83%E7%94%A8%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE/">
+              <a class="btn" href="/2026/08/18/LangChain%E4%BB%8B%E7%BB%8D-%E4%BB%8E%E6%A8%A1%E5%9E%8B%E8%B0%83%E7%94%A8%E5%88%B0Agent%E5%BA%94%E7%94%A8/">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -352,7 +1160,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%81%E6%98%8E%E6%96%B0%E7%9A%84%20Prompt%20%E6%AF%94%E6%97%A7%E7%89%88%E6%9B%B4%E5%A5%BD/">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/17/Agent%20%E5%B7%A5%E5%85%B7%E5%88%86%E7%B1%BB%E6%8C%87%E5%8D%97-%E4%BB%8E%E4%BF%A1%E6%81%AF%E8%8E%B7%E5%8F%96%E5%88%B0%E8%A1%8C%E5%8A%A8%E6%89%A7%E8%A1%8C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -370,7 +1178,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%81%E6%98%8E%E6%96%B0%E7%9A%84%20Prompt%20%E6%AF%94%E6%97%A7%E7%89%88%E6%9B%B4%E5%A5%BD/" class="post-title-link" itemprop="url">如何证明新的 Prompt 比旧版更好</a>
+          <a href="/2026/08/17/Agent%20%E5%B7%A5%E5%85%B7%E5%88%86%E7%B1%BB%E6%8C%87%E5%8D%97-%E4%BB%8E%E4%BF%A1%E6%81%AF%E8%8E%B7%E5%8F%96%E5%88%B0%E8%A1%8C%E5%8A%A8%E6%89%A7%E8%A1%8C/" class="post-title-link" itemprop="url">Agent 工具分类指南：从信息获取到行动执行</a>
         </h2>
 
         <div class="post-meta-container">
@@ -380,15 +1188,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2026-08-13 10:50:00" itemprop="dateCreated datePublished" datetime="2026-08-13T10:50:00+08:00">2026-08-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-17 11:29:18" itemprop="dateModified" datetime="2026-08-17T11:29:18+08:00">2026-08-17</time>
+      <time title="创建时间：2026-08-17 16:52:01 / 修改时间：16:53:25" itemprop="dateCreated datePublished" datetime="2026-08-17T16:52:01+08:00">2026-08-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -398,97 +1200,9 @@
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
         </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>一套可操作的 Prompt 评估方法，重点回答怎样证明“新版本真的更好”，而不是只是感觉更顺。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/08/13/%E5%A6%82%E4%BD%95%E8%AF%81%E6%98%8E%E6%96%B0%E7%9A%84%20Prompt%20%E6%AF%94%E6%97%A7%E7%89%88%E6%9B%B4%E5%A5%BD/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/13/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Erlang-OTP%2027%20%E7%9A%84%20GC-%E8%BF%9B%E7%A8%8B-%E6%B6%88%E6%81%AF%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%BC%95%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="欣然">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/13/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Erlang-OTP%2027%20%E7%9A%84%20GC-%E8%BF%9B%E7%A8%8B-%E6%B6%88%E6%81%AF%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%BC%95%E7%94%A8/" class="post-title-link" itemprop="url">从源码看 Erlang/OTP 27 的 GC：进程、消息和二进制引用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-08-13 10:20:00" itemprop="dateCreated datePublished" datetime="2026-08-13T10:20:00+08:00">2026-08-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-17 11:28:58" itemprop="dateModified" datetime="2026-08-17T11:28:58+08:00">2026-08-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
+          ，
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Erlang/" itemprop="url" rel="index"><span itemprop="name">Erlang</span></a>
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/Agent-%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Agent 工程</span></a>
         </span>
     </span>
 
@@ -502,567 +1216,173 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>面向初学者的 Erlang/OTP 27 GC 介绍，从进程堆讲到消息队列、off-heap binary 和排查方法。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/08/13/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Erlang-OTP%2027%20%E7%9A%84%20GC-%E8%BF%9B%E7%A8%8B-%E6%B6%88%E6%81%AF%E5%92%8C%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%BC%95%E7%94%A8/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
+          <p>Agent 工具更适合分成五类：感知、执行、协作、用户沟通和事件触发。</p>
+<p>这套分类关注信息与控制在谁之间流动。外部信息进入 Agent，属于感知；Agent 改变外部状态，属于执行；Agent 与其他 Agent 配合，属于协作；Agent 与人交换信息和权限，属于用户沟通；时间或外部事件启动 Agent，属于事件触发。</p>
+<p>分类标准明确后，文件读取、Shell、浏览器、子 Agent、审批和定时任务都有了稳定的位置。测试、验证、安全治理仍然重要，但它们不是同一层级的工具类别：测试通常属于执行，权限与审计则覆盖所有类别。</p>
+<p>本文采用的是一种工程分类方法，不是统一的行业标准。平台可能使用不同名称，也可能把几类能力放进同一个接口。</p>
+<h2 id="先厘清：什么是-Agent-工具"><a href="#先厘清：什么是-Agent-工具" class="headerlink" title="先厘清：什么是 Agent 工具"></a>先厘清：什么是 Agent 工具</h2><p>工具是 Agent 可以调用的一项外部能力，通常有明确的参数、返回值和权限边界。例如，文件读取工具接收路径并返回内容；命令执行工具接收命令，返回输出和退出码；用户询问工具把一个待确认的问题交给人，收到回答后再继续。</p>
+<p>大语言模型负责理解上下文、推理和生成内容。它不会仅凭一段文字真的读取硬盘、提交代码或等待明天上午九点。工具把模型的判断接到运行环境中，工具结果再进入下一轮判断。</p>
+<p>一次完整的工具调用通常经历四步：</p>
+<ol>
+<li>Agent 选择工具并填写参数。</li>
+<li>运行环境检查参数、权限和审批要求。</li>
+<li>工具执行操作，返回结果或错误。</li>
+<li>Agent 根据结果继续、重试、改换方法，或结束任务。</li>
+</ol>
+<p>第四步经常被低估。文件写入成功，不等于内容正确；定时任务创建成功，也不等于它触发后一定能完成业务目标。</p>
+<h2 id="五类工具的总览"><a href="#五类工具的总览" class="headerlink" title="五类工具的总览"></a>五类工具的总览</h2><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>信息或控制方向</th>
+<th>常见工具</th>
+<th>解决的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>感知</td>
+<td>外部世界 → Agent</td>
+<td>文件读取、代码搜索、网页检索、数据库查询、图像识别</td>
+<td>现在是什么情况？</td>
+</tr>
+<tr>
+<td>执行</td>
+<td>Agent → 外部世界</td>
+<td>文件编辑、Shell、浏览器操作、API 写入、制品生成</td>
+<td>需要改变什么？</td>
+</tr>
+<tr>
+<td>协作</td>
+<td>Agent ↔ Agent 或工作单元</td>
+<td>子 Agent、任务委派、消息、等待、共享计划</td>
+<td>谁来做，怎样汇合？</td>
+</tr>
+<tr>
+<td>用户沟通</td>
+<td>Agent ↔ 用户</td>
+<td>澄清问题、进度更新、审批、结果交付、通知</td>
+<td>人需要知道或决定什么？</td>
+</tr>
+<tr>
+<td>事件触发</td>
+<td>时间或事件 → Agent</td>
+<td>定时任务、提醒、Webhook、监控、队列唤醒</td>
+<td>什么时候开始或继续？</td>
+</tr>
+</tbody></table>
+<p>同一底层能力可能出现在不同场景。浏览器读取页面时是感知，点击提交按钮时是执行；消息工具向子 Agent 发送任务时是协作，向用户报告进度时是用户沟通。分类看的是本次调用的作用，不是工具的产品名称。</p>
+<h2 id="一、感知工具"><a href="#一、感知工具" class="headerlink" title="一、感知工具"></a>一、感知工具</h2><p>感知工具让 Agent 获取环境状态。没有这一步，后面的推理只能依靠用户最初提供的文字，容易遗漏现场信息。</p>
+<p>常见的感知对象包括：</p>
+<ul>
+<li>工作区：文件、目录、代码符号、版本差异和终端输出。</li>
+<li>外部信息：网页、搜索结果、API、数据库和知识库。</li>
+<li>应用状态：浏览器页面、表单内容、当前登录账号和界面截图。</li>
+<li>多模态内容：图片、PDF、音频、视频以及扫描文档。</li>
+</ul>
+<p>感知不等于搜索。打开指定文件是感知，查询数据库是感知，读取正在运行的测试输出也是感知。它们都在回答同一个问题：Agent 下一步判断所需的事实是什么？</p>
+<p>这类工具通常只读，但并非没有风险。读取范围过宽可能泄露隐私或密钥；网页内容可能过期；搜索摘要可能缺少上下文。好的感知结果应保留来源、时间和查询范围。Agent 如果无法确认事实，就应把不确定性说清楚。</p>
+<h3 id="常见感知工具"><a href="#常见感知工具" class="headerlink" title="常见感知工具"></a>常见感知工具</h3><p>文件与代码工具会列出目录、读取内容、全文搜索或定位符号。网页与浏览器工具负责导航、读取 DOM、截取页面和获取可交互元素。连接器可以读取 GitHub 拉取请求、工单、消息线程或日历。图像和文档解析工具则把非纯文本内容转换为模型能处理的信息。</p>
+<p>专用接口通常比通用界面更稳。读取拉取请求时，结构化连接器能直接返回标题、状态和评论；浏览器抓取页面则可能受到布局和加载时序影响。</p>
+<h2 id="二、执行工具"><a href="#二、执行工具" class="headerlink" title="二、执行工具"></a>二、执行工具</h2><p>执行工具让 Agent 改变环境或产出结果。创建文件、修改代码、运行命令、点击网页按钮、发送 API 请求和生成文档都属于执行。</p>
+<p>执行可以再按影响范围理解：</p>
+<ul>
+<li>工作区执行：编辑文件、应用补丁、格式化代码、生成构建产物。</li>
+<li>计算执行：运行 Shell、解释器、测试、编译器和数据处理任务。</li>
+<li>界面执行：点击、输入、上传文件、提交表单。</li>
+<li>外部写入：创建议题、发送消息、更新数据库、部署服务。</li>
+<li>制品生成：创建图片、表格、幻灯片、Word 文档和 PDF。</li>
+</ul>
+<p>执行工具要有清楚的边界。局部补丁通常比整文件重写更容易审查；专用 API 比模拟点击更容易判断成功与失败。删除、发布、付款、合并代码和向他人发送消息会产生明显外部影响，执行前应确认目标与权限。</p>
+<h3 id="验证为什么不单独分类"><a href="#验证为什么不单独分类" class="headerlink" title="验证为什么不单独分类"></a>验证为什么不单独分类</h3><p>测试、静态检查、版本差异和页面渲染都用于验证，但从工具行为看，它们仍是执行：Agent 启动一个检查过程，再感知检查结果。</p>
+<p>把验证单独列为顶层工具类型，会混合“工具怎样与外部交互”和“这次调用想达到什么目的”两种标准。更准确的说法是，可靠的执行应带有验证闭环。</p>
+<p>例如，Agent 修改代码后运行针对性测试，再读取退出码和失败日志；生成 HTML 后检查文件大小、标题、编码和实际样式。补丁成功或文件存在，只能说明动作发生了，不能说明任务完成了。</p>
+<h2 id="三、协作工具"><a href="#三、协作工具" class="headerlink" title="三、协作工具"></a>三、协作工具</h2><p>协作工具处理 Agent 与其他 Agent、执行者或工作单元之间的关系。它们负责拆分任务、传递上下文、同步进度和合并结果。</p>
+<p>常见能力包括创建子 Agent、发送任务、补充指令、中断工作、等待结果和查询协作者状态。计划与共享状态也属于这一类，因为它们帮助多个工作单元理解当前进度和剩余工作。</p>
+<p>协作的难点不是启动更多 Agent，而是划清边界。一个有效的委派至少要说清四件事：输入是什么，允许修改哪些内容，交付物是什么，怎样算完成。边界模糊时，两个 Agent 可能同时改同一文件，也可能都以为对方会做最终验证。</p>
+<p>主 Agent 仍然需要收口。子 Agent 返回的结论只是新的输入，主 Agent 要检查冲突、验证改动，并向用户交付一个一致结果。</p>
+<h3 id="协作不等于用户沟通"><a href="#协作不等于用户沟通" class="headerlink" title="协作不等于用户沟通"></a>协作不等于用户沟通</h3><p>子 Agent 与用户扮演的角色不同。子 Agent 接受委派并返回工作结果；用户拥有任务意图、权限和最终取舍。把两者混成“消息工具”，会让 Agent 忽略一个重要事实：有些问题可以委派，有些决定只能由用户作出。</p>
+<h2 id="四、用户沟通工具"><a href="#四、用户沟通工具" class="headerlink" title="四、用户沟通工具"></a>四、用户沟通工具</h2><p>用户沟通工具建立 Agent 与人的双向通道。它不只是最终回答，还包括过程中的进度更新、澄清、审批和异常报告。</p>
+<p>常见形式有：</p>
+<ul>
+<li>进度更新：说明正在处理什么、已经确认什么，以及下一步是什么。</li>
+<li>澄清问题：缺少的信息会实质改变结果时，请用户作出选择。</li>
+<li>权限审批：下载依赖、访问受限资源或执行高风险操作前请求许可。</li>
+<li>最终交付：报告结果、验证情况、文件路径和仍然存在的限制。</li>
+<li>主动通知：长任务、监控或自动化达到某个状态后提醒用户。</li>
+</ul>
+<p>好的用户沟通应当改变任务状态。若 Agent 已经能从工作区找到答案，就不必把调查工作推回给用户；若某个选择会改变数据、费用或对外影响，Agent 也不应擅自替用户决定。</p>
+<p>进度消息还有一个实际作用：长时间运行的任务不会像黑箱。用户能及时发现方向偏差，但又不需要阅读每一条命令日志。</p>
+<h2 id="五、事件触发工具"><a href="#五、事件触发工具" class="headerlink" title="五、事件触发工具"></a>五、事件触发工具</h2><p>普通对话由用户消息启动。事件触发工具让 Agent 在没有新对话消息时开始或继续工作。</p>
+<p>触发源通常有四类：</p>
+<ul>
+<li>时间：在固定时刻、间隔或日程条件下启动。</li>
+<li>外部事件：Webhook、代码推送、工单变更、邮件到达或数据更新。</li>
+<li>状态变化：测试完成、部署失败、价格越界或监控指标异常。</li>
+<li>队列与任务：后台工作完成后唤醒原任务，继续下一步。</li>
+</ul>
+<p>提醒、定时自动化、监控器、队列消费者和线程唤醒都属于事件触发。它们决定“何时运行”，并不自动定义“运行什么”。触发器需要绑定清楚的目标、上下文和停止条件。</p>
+<p>事件触发还要处理重复与延迟。Webhook 可能重发，定时任务可能与上一次重叠，监控条件也可能持续为真。执行部分应尽量幂等，并记录最近一次处理状态。涉及对外写入时，重复发送比一次失败更麻烦。</p>
+<h2 id="安全与治理覆盖五类工具"><a href="#安全与治理覆盖五类工具" class="headerlink" title="安全与治理覆盖五类工具"></a>安全与治理覆盖五类工具</h2><p>权限、沙箱、审批、审计日志、密钥管理、超时和速率限制不适合与五类工具并列。它们是横切层，约束每一种调用。</p>
+<p>感知工具需要限制可读取的数据；执行工具需要控制写入范围；协作工具要避免上下文和权限无意扩散；用户沟通要防止把敏感信息写进消息；事件触发则要设置频率、停止条件和重复处理策略。</p>
+<p>可靠的边界由运行环境执行，不能只靠提示词要求 Agent “小心”。一个实用原则是默认只读，按任务授予最小写权限，把不可逆或影响他人的动作放到审批之后。</p>
+<h2 id="Tool、Skill、MCP-和插件处在哪一层"><a href="#Tool、Skill、MCP-和插件处在哪一层" class="headerlink" title="Tool、Skill、MCP 和插件处在哪一层"></a>Tool、Skill、MCP 和插件处在哪一层</h2><p>五类工具描述的是用途。Tool、Skill、MCP 和插件描述的是能力以什么形式提供，两组概念不要混用。</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>是否直接执行动作</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tool</td>
+<td>是</td>
+<td>一个可调用能力，带参数和返回值</td>
+</tr>
+<tr>
+<td>MCP 工具</td>
+<td>是</td>
+<td>通过 Model Context Protocol 暴露给 Agent 的工具</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>通常不是</td>
+<td>一套任务步骤、规范和参考资料，指导 Agent 组合工具</td>
+</tr>
+<tr>
+<td>Plugin</td>
+<td>不一定</td>
+<td>把 Skill、MCP 服务、应用或配置打包在一起</td>
+</tr>
+<tr>
+<td>子 Agent</td>
+<td>间接</td>
+<td>一个有独立上下文的执行者，可以使用获准的工具</td>
+</tr>
+</tbody></table>
+<p>同一个 MCP 服务可以同时提供感知工具和执行工具，例如读取议题与更新议题。一个 Skill 可以规定如何组合五类工具，例如先感知仓库状态，再执行修改，必要时请求用户审批，最后等待 CI 事件并继续处理。</p>
+<h2 id="一条完整任务如何穿过五类工具"><a href="#一条完整任务如何穿过五类工具" class="headerlink" title="一条完整任务如何穿过五类工具"></a>一条完整任务如何穿过五类工具</h2><p>以“CI 失败后修复代码并通知用户”为例：</p>
+<ol>
+<li>事件触发工具收到 CI 失败事件，唤醒 Agent。</li>
+<li>感知工具读取失败日志、相关代码和最近提交。</li>
+<li>协作工具把最小复现或影响分析交给子 Agent，主 Agent 汇总结果。</li>
+<li>执行工具修改代码并运行测试，再通过感知工具读取测试结果。</li>
+<li>如果需要推送分支或创建拉取请求，用户沟通工具先请求必要审批。</li>
+<li>执行工具完成获准的外部写入，用户沟通工具交付结果和验证信息。</li>
+</ol>
+<p>这五类不是固定的线性流水线。执行失败后会回到感知，协作过程中可能需要向用户澄清，事件触发也可能发生在任务中途。分类的价值在于说明每次交互的对象和责任。</p>
+<h2 id="设计工具集时检查什么"><a href="#设计工具集时检查什么" class="headerlink" title="设计工具集时检查什么"></a>设计工具集时检查什么</h2><p>设计 Agent 工具集时，可以逐类检查：</p>
+<ul>
+<li>感知：Agent 能否读取完成判断所需的最小信息？来源和时间是否可追踪？</li>
+<li>执行：写入范围是否明确？结果能否验证、失败能否恢复？</li>
+<li>协作：任务边界、上下文和汇合方式是否清楚？</li>
+<li>用户沟通：哪些信息要主动报告，哪些决定必须由用户确认？</li>
+<li>事件触发：触发条件、频率、上下文、停止条件和去重策略是否完整？</li>
+</ul>
+<p>工具说明本身也要具体。名称应表达动作，参数应有类型和限制，返回值要区分成功、部分成功与失败，副作用不能藏在描述之外。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>感知、执行、协作、用户沟通和事件触发，分别对应 Agent 与环境、其他 Agent、用户以及时间和外部事件的关系。这种分类保持了同一层级，也更接近 Agent 实际运行的方式。</p>
+<p>判断一个 Agent 系统是否完整，可以拿一条真实任务链逐段检查：它怎样知道发生了什么，怎样采取行动，怎样与其他执行者配合，什么时候让用户介入，又由什么事件启动下一轮工作。缺少的工具会很快暴露出来。</p>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/12/Langfuse%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E7%BB%99%20LLM%20%E5%BA%94%E7%94%A8%E8%A3%85%E4%B8%8A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E5%92%8C%E8%AF%84%E6%B5%8B%E9%97%AD%E7%8E%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="欣然">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/12/Langfuse%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E7%BB%99%20LLM%20%E5%BA%94%E7%94%A8%E8%A3%85%E4%B8%8A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E5%92%8C%E8%AF%84%E6%B5%8B%E9%97%AD%E7%8E%AF/" class="post-title-link" itemprop="url">Langfuse 介绍：给 LLM 应用装上可观测性和评测闭环</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-08-12 15:26:00" itemprop="dateCreated datePublished" datetime="2026-08-12T15:26:00+08:00">2026-08-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-17 11:22:59" itemprop="dateModified" datetime="2026-08-17T11:22:59+08:00">2026-08-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>介绍 Langfuse 的定位、核心能力、接入方式、部署选择和适用场景。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/08/12/Langfuse%20%E4%BB%8B%E7%BB%8D%EF%BC%9A%E7%BB%99%20LLM%20%E5%BA%94%E7%94%A8%E8%A3%85%E4%B8%8A%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E5%92%8C%E8%AF%84%E6%B5%8B%E9%97%AD%E7%8E%AF/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/12/Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA%20AI%20%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="欣然">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/12/Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA%20AI%20%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF/" class="post-title-link" itemprop="url">Multica：把多个 AI 编码智能体放进同一块任务看板</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-08-12 15:04:00" itemprop="dateCreated datePublished" datetime="2026-08-12T15:04:00+08:00">2026-08-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-17 11:23:02" itemprop="dateModified" datetime="2026-08-17T11:23:02+08:00">2026-08-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/AI-%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">AI 工具</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>介绍 Multica 的定位、运行方式、主要能力、适用场景，以及使用前需要注意的权限和许可证问题。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/08/12/Multica%EF%BC%9A%E6%8A%8A%E5%A4%9A%E4%B8%AA%20AI%20%E7%BC%96%E7%A0%81%E6%99%BA%E8%83%BD%E4%BD%93%E6%94%BE%E8%BF%9B%E5%90%8C%E4%B8%80%E5%9D%97%E4%BB%BB%E5%8A%A1%E7%9C%8B%E6%9D%BF/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/12/Codex%E3%80%81Claude%E3%80%81Cursor%20%E6%80%8E%E4%B9%88%E9%80%89%EF%BC%9A%E4%B8%80%E4%BB%BD%E9%9D%A2%E5%90%91%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E6%AF%94%E8%BE%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="欣然">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/12/Codex%E3%80%81Claude%E3%80%81Cursor%20%E6%80%8E%E4%B9%88%E9%80%89%EF%BC%9A%E4%B8%80%E4%BB%BD%E9%9D%A2%E5%90%91%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E6%AF%94%E8%BE%83/" class="post-title-link" itemprop="url">Codex、Claude、Cursor 怎么选：一份面向开发者的比较</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-08-12 11:04:00" itemprop="dateCreated datePublished" datetime="2026-08-12T11:04:00+08:00">2026-08-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-17 11:22:56" itemprop="dateModified" datetime="2026-08-17T11:22:56+08:00">2026-08-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/AI-%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">AI 工具</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>从工作位置、自动化方式和适用场景出发，比较 Codex、Claude Code 与 Cursor。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/08/12/Codex%E3%80%81Claude%E3%80%81Cursor%20%E6%80%8E%E4%B9%88%E9%80%89%EF%BC%9A%E4%B8%80%E4%BB%BD%E9%9D%A2%E5%90%91%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E6%AF%94%E8%BE%83/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/11/grill-me%EF%BC%9A%E6%8A%8A%E6%A8%A1%E7%B3%8A%E6%83%B3%E6%B3%95%E9%97%AE%E5%88%B0%E6%B8%85%E6%A5%9A/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="欣然">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/11/grill-me%EF%BC%9A%E6%8A%8A%E6%A8%A1%E7%B3%8A%E6%83%B3%E6%B3%95%E9%97%AE%E5%88%B0%E6%B8%85%E6%A5%9A/" class="post-title-link" itemprop="url">grill-me：把模糊想法问到清楚</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-08-11 16:24:00" itemprop="dateCreated datePublished" datetime="2026-08-11T16:24:00+08:00">2026-08-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-17 11:22:57" itemprop="dateModified" datetime="2026-08-17T11:22:57+08:00">2026-08-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/AI-%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">AI 工具</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>介绍 mattpocock/skills 中的 grill-me 技能，以及它和 grilling、grill-with-docs 的关系。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/08/11/grill-me%EF%BC%9A%E6%8A%8A%E6%A8%A1%E7%B3%8A%E6%83%B3%E6%B3%95%E9%97%AE%E5%88%B0%E6%B8%85%E6%A5%9A/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/10/Agent%E8%B7%91%E9%A3%9E%E4%BA%86-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="欣然">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/10/Agent%E8%B7%91%E9%A3%9E%E4%BA%86-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95/" class="post-title-link" itemprop="url">Agent 跑飞了：如何定位和兜底</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-08-10 14:08:00" itemprop="dateCreated datePublished" datetime="2026-08-10T14:08:00+08:00">2026-08-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-17 11:22:50" itemprop="dateModified" datetime="2026-08-17T11:22:50+08:00">2026-08-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>从止损、定位、预算、权限和复盘五个角度，整理智能体偏离任务后的排查与兜底方法。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/08/10/Agent%E8%B7%91%E9%A3%9E%E4%BA%86-%E5%A6%82%E4%BD%95%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%85%9C%E5%BA%95/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/07/AI%E8%AE%B0%E5%BF%86%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA-%E4%BB%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="欣然">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 欣然的备忘录">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/08/07/AI%E8%AE%B0%E5%BF%86%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA-%E4%BB%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/" class="post-title-link" itemprop="url">AI 记忆怎么构建：从上下文到长期记忆系统</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-08-07 16:57:00" itemprop="dateCreated datePublished" datetime="2026-08-07T16:57:00+08:00">2026-08-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-17 11:22:54" itemprop="dateModified" datetime="2026-08-17T11:22:54+08:00">2026-08-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>解释 AI 记忆系统的组成、写入与检索策略，以及处理冲突和遗忘的工程方法。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/08/07/AI%E8%AE%B0%E5%BF%86%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA-%E4%BB%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%B0%E9%95%BF%E6%9C%9F%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
       
     </div>
 
@@ -1081,7 +1401,7 @@
 
 
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

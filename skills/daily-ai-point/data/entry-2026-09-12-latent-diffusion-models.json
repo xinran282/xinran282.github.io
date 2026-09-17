@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-12",
+  "concept_id": "latent-diffusion-models",
+  "title": "潜空间扩散：为什么文生图常在压缩表示中进行去噪",
+  "aliases": ["latent diffusion", "LDM", "潜扩散模型"],
+  "category": "多模态",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["扩散模型", "潜空间", "文生图", "VAE", "去噪"],
+  "summary": "潜空间扩散先用自编码器将图像映射到紧凑潜变量，再在该空间执行多步去噪并由解码器还原像素，降低高分辨率图像生成的主要计算成本。",
+  "sources": [
+    {
+      "title": "High-Resolution Image Synthesis with Latent Diffusion Models",
+      "url": "https://arxiv.org/abs/2112.10752",
+      "published": "2021-12-20"
+    }
+  ]
+}

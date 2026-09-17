@@ -1,0 +1,46 @@
+[
+  {
+    "concept_id": "mixture-of-experts-sparse-routing",
+    "title": "稀疏混合专家（MoE）路由：让大模型扩大容量而不同比例增加计算",
+    "aliases": ["Mixture of Experts", "MoE", "稀疏专家模型", "top-k routing"],
+    "keywords": ["专家", "路由", "稀疏激活", "负载均衡", "token"],
+    "category": "基础原理",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity", "url": "https://arxiv.org/abs/2101.03961"},
+      {"title": "Mixtral of Experts", "url": "https://arxiv.org/abs/2401.04088"}
+    ],
+    "prerequisites": ["transformer", "softmax"]
+  },
+  {
+    "concept_id": "lora-low-rank-adaptation",
+    "title": "LoRA 低秩适配：为什么少量参数也能微调大模型",
+    "aliases": ["LoRA", "low-rank adaptation", "低秩微调"],
+    "keywords": ["微调", "低秩矩阵", "参数高效", "冻结权重", "适配器"],
+    "category": "训练与对齐",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "LoRA: Low-Rank Adaptation of Large Language Models", "url": "https://arxiv.org/abs/2106.09685"}
+    ],
+    "prerequisites": ["linear-algebra", "transformer"]
+  },
+  {
+    "concept_id": "model-context-protocol",
+    "title": "Model Context Protocol：AI Agent 如何用统一协议连接工具与数据",
+    "aliases": ["MCP", "Model Context Protocol", "模型上下文协议"],
+    "keywords": ["Agent", "工具调用", "资源", "协议", "客户端服务器"],
+    "category": "Agent 与工具",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Model Context Protocol 官方介绍", "url": "https://modelcontextprotocol.io/introduction"},
+      {"title": "Model Context Protocol Specification", "url": "https://modelcontextprotocol.io/specification"}
+    ],
+    "prerequisites": ["api", "json-rpc"]
+  }
+]

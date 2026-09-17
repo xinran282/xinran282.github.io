@@ -1,0 +1,44 @@
+[
+  {
+    "concept_id": "direct-preference-optimization",
+    "title": "直接偏好优化（DPO）：不用显式奖励模型，如何让模型学会偏好",
+    "aliases": ["DPO", "Direct Preference Optimization", "直接偏好优化"],
+    "keywords": ["偏好学习", "对齐", "奖励模型", "RLHF", "偏好对"],
+    "category": "训练与对齐",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model", "url": "https://arxiv.org/abs/2305.18290", "published": "2023-05-29"}
+    ],
+    "prerequisites": ["supervised-fine-tuning", "preference-data"]
+  },
+  {
+    "concept_id": "mixture-of-experts-sparse-routing",
+    "title": "稀疏混合专家路由：为什么模型容量可以增长得比计算量更快",
+    "aliases": ["Mixture of Experts", "MoE", "稀疏专家模型"],
+    "keywords": ["专家", "路由", "稀疏激活", "负载均衡", "token"],
+    "category": "基础原理",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity", "url": "https://arxiv.org/abs/2101.03961", "published": "2021-01-08"}
+    ],
+    "prerequisites": ["transformer", "softmax"]
+  },
+  {
+    "concept_id": "retrieval-augmented-generation-grounding",
+    "title": "RAG 证据归因：检索到资料后，怎样避免回答超出证据范围",
+    "aliases": ["RAG grounding", "citation faithfulness", "证据归因"],
+    "keywords": ["RAG", "证据", "引用", "忠实性", "幻觉"],
+    "category": "检索与知识",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "RAGAS: Automated Evaluation of Retrieval Augmented Generation", "url": "https://arxiv.org/abs/2309.15217", "published": "2023-09-26"}
+    ],
+    "prerequisites": ["rag", "evaluation"]
+  }
+]

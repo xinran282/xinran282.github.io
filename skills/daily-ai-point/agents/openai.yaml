@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daily AI Point"
+  short_description: "每天生成有来源、有深度且不重复的 AI 知识点"
+  default_prompt: "请生成今天的 AI 知识点：检查历史避免重复，结合可靠的最新资料，输出机制、例子、局限、来源和一个思考题。"

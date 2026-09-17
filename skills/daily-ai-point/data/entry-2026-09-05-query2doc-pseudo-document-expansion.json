@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-05",
+  "concept_id": "query2doc-pseudo-document-expansion",
+  "title": "Query2doc：用伪文档扩展查询，改善 RAG 的召回",
+  "aliases": ["Query2doc", "pseudo-document expansion", "伪文档查询扩展"],
+  "category": "检索与知识",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["RAG", "检索", "查询扩展", "伪文档", "召回"],
+  "summary": "Query2doc 先由 LLM 生成与问题相关的伪文档，再把它作为查询扩展去检索真实语料，以缓解短问题与知识库文档间的表述错位；伪文档不是最终回答的证据。",
+  "sources": [
+    {
+      "title": "Query2doc: Query Expansion with Large Language Models",
+      "url": "https://arxiv.org/abs/2303.07678",
+      "published": "2023-03-14"
+    }
+  ]
+}

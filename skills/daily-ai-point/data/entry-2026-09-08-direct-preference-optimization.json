@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-08",
+  "concept_id": "direct-preference-optimization",
+  "title": "直接偏好优化（DPO）：不用显式奖励模型，如何让模型学会偏好",
+  "aliases": ["DPO", "Direct Preference Optimization", "直接偏好优化"],
+  "category": "训练与对齐",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["偏好学习", "对齐", "奖励模型", "RLHF", "偏好对"],
+  "summary": "DPO 使用同一提示下的偏好/非偏好回答对，比较训练模型相对参考模型的对数概率差，直接优化语言模型策略，而不显式训练奖励模型或运行在线强化学习。",
+  "sources": [
+    {
+      "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+      "url": "https://arxiv.org/abs/2305.18290",
+      "published": "2023-05-29"
+    }
+  ]
+}

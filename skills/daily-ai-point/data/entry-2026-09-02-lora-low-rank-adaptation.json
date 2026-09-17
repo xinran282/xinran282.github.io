@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-02",
+  "concept_id": "lora-low-rank-adaptation",
+  "title": "LoRA 低秩适配：为什么少量参数也能微调大模型",
+  "aliases": ["LoRA", "low-rank adaptation", "低秩微调"],
+  "category": "训练与对齐",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["微调", "低秩矩阵", "参数高效", "冻结权重", "适配器"],
+  "summary": "LoRA 冻结基座模型，将权重更新限制为两个低秩矩阵的乘积，只训练少量参数，并可在部署时合并回原权重。",
+  "sources": [
+    {
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "url": "https://arxiv.org/abs/2106.09685",
+      "published": "2021-06-17"
+    }
+  ]
+}

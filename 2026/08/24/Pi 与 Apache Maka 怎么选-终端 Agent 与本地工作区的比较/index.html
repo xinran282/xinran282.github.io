@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="比较 pi.dev 的 Pi 与 Apache Maka：从产品定位、运行入口、扩展模型、权限与记录、平台状态和适用场景出发，给出选择建议。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pi 与 Apache Maka 怎么选：终端 Agent 与本地工作区的比较">
+<meta property="og:url" content="https://xinran282.github.io/2026/08/24/Pi%20%E4%B8%8E%20Apache%20Maka%20%E6%80%8E%E4%B9%88%E9%80%89-%E7%BB%88%E7%AB%AF%20Agent%20%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%9A%84%E6%AF%94%E8%BE%83/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="比较 pi.dev 的 Pi 与 Apache Maka：从产品定位、运行入口、扩展模型、权限与记录、平台状态和适用场景出发，给出选择建议。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-24T07:06:00.000Z">
+<meta property="article:modified_time" content="2026-08-24T12:39:40.705Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="AI Agent">
+<meta property="article:tag" content="Apache Maka">
+<meta property="article:tag" content="Pi">
+<meta property="article:tag" content="本地优先">
+<meta property="article:tag" content="终端工具">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/08/24/Pi%20%E4%B8%8E%20Apache%20Maka%20%E6%80%8E%E4%B9%88%E9%80%89-%E7%BB%88%E7%AB%AF%20Agent%20%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%9A%84%E6%AF%94%E8%BE%83/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/08/24/Pi%20%E4%B8%8E%20Apache%20Maka%20%E6%80%8E%E4%B9%88%E9%80%89-%E7%BB%88%E7%AB%AF%20Agent%20%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%9A%84%E6%AF%94%E8%BE%83/","path":"2026/08/24/Pi 与 Apache Maka 怎么选-终端 Agent 与本地工作区的比较/","title":"Pi 与 Apache Maka 怎么选：终端 Agent 与本地工作区的比较"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Pi 与 Apache Maka 怎么选：终端 Agent 与本地工作区的比较 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Pi-%E4%B8%8E-Apache-Maka-%E6%80%8E%E4%B9%88%E9%80%89%EF%BC%9A%E7%BB%88%E7%AB%AF-Agent-%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">1.</span> <span class="nav-text">Pi 与 Apache Maka 怎么选：终端 Agent 与本地工作区的比较</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E5%BC%84%E6%B8%85%E6%A5%9A-Pi-%E5%92%8C-Maka-%E5%90%84%E8%87%AA%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">先弄清楚 Pi 和 Maka 各自是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pi%EF%BC%9A%E6%9E%81%E7%AE%80%E7%9A%84%E7%BB%88%E7%AB%AF-coding-harness"><span class="nav-number">1.1.1.</span> <span class="nav-text">Pi：极简的终端 coding harness</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maka%EF%BC%9Alocal-first-%E7%9A%84-Agent-workspace"><span class="nav-number">1.1.2.</span> <span class="nav-text">Maka：local-first 的 Agent workspace</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%B7%AE%E5%BC%82%E4%B8%80%E8%A7%88"><span class="nav-number">1.2.</span> <span class="nav-text">核心差异一览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pi-%E7%9A%84%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%BB%A3%E4%BB%B7"><span class="nav-number">1.3.</span> <span class="nav-text">Pi 的优势与代价</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pi-%E7%9A%84%E4%BC%98%E5%8A%BF%E5%9C%A8%E4%BA%8E%E5%8F%AF%E5%A1%91%E6%80%A7"><span class="nav-number">1.3.1.</span> <span class="nav-text">Pi 的优势在于可塑性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pi-%E7%9A%84%E4%BB%A3%E4%BB%B7%E6%98%AF%E9%9C%80%E8%A6%81%E8%87%AA%E5%B7%B1%E6%90%AD%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.3.2.</span> <span class="nav-text">Pi 的代价是需要自己搭系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Maka-%E7%9A%84%E4%BC%98%E5%8A%BF%E4%B8%8E%E4%BB%A3%E4%BB%B7"><span class="nav-number">1.4.</span> <span class="nav-text">Maka 的优势与代价</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Maka-%E6%8A%8A%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B%E6%94%BE%E5%88%B0%E5%8F%B0%E9%9D%A2%E4%B8%8A"><span class="nav-number">1.4.1.</span> <span class="nav-text">Maka 把运行过程放到台面上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maka-%E4%BB%8D%E6%9C%89%E6%98%8E%E6%98%BE%E7%9A%84%E6%97%A9%E6%9C%9F%E9%A1%B9%E7%9B%AE%E5%B1%9E%E6%80%A7"><span class="nav-number">1.4.2.</span> <span class="nav-text">Maka 仍有明显的早期项目属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E8%80%85%E5%9C%A8%E5%87%A0%E4%B8%AA%E5%85%B7%E4%BD%93%E5%9C%BA%E6%99%AF%E4%B8%AD%E7%9A%84%E8%A1%A8%E7%8E%B0"><span class="nav-number">1.5.</span> <span class="nav-text">两者在几个具体场景中的表现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93%E9%87%8C%E7%9A%84-bug"><span class="nav-number">1.5.1.</span> <span class="nav-text">修一个仓库里的 bug</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA%E5%B0%8F%E6%97%B6%E4%BB%A5%E4%B8%8A%E7%9A%84%E5%A4%9A%E6%AD%A5%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.5.2.</span> <span class="nav-text">运行一个小时以上的多步任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%99%E5%9B%A2%E9%98%9F%E5%88%B6%E5%AE%9A%E7%BB%9F%E4%B8%80%E7%9A%84-Agent-%E6%9D%83%E9%99%90"><span class="nav-number">1.5.3.</span> <span class="nav-text">给团队制定统一的 Agent 权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%83%B3%E6%8A%8A%E5%B7%A5%E5%85%B7%E6%94%B9%E9%80%A0%E6%88%90%E8%87%AA%E5%B7%B1%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">1.5.4.</span> <span class="nav-text">想把工具改造成自己的工作流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E8%A6%81-Windows-%E6%88%96-Linux-%E6%A1%8C%E9%9D%A2%E7%89%88"><span class="nav-number">1.5.5.</span> <span class="nav-text">需要 Windows 或 Linux 桌面版</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E9%80%89%EF%BC%9A%E5%85%88%E7%9C%8B%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F%EF%BC%8C%E5%86%8D%E7%9C%8B%E5%8A%9F%E8%83%BD%E6%B8%85%E5%8D%95"><span class="nav-number">1.6.</span> <span class="nav-text">怎么选：先看工作方式，再看功能清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.7.</span> <span class="nav-text">我的建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%96%99%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%85%A5%E5%8F%A3"><span class="nav-number">1.8.</span> <span class="nav-text">资料与项目入口</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">100</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/08/24/Pi%20%E4%B8%8E%20Apache%20Maka%20%E6%80%8E%E4%B9%88%E9%80%89-%E7%BB%88%E7%AB%AF%20Agent%20%E4%B8%8E%E6%9C%AC%E5%9C%B0%E5%B7%A5%E4%BD%9C%E5%8C%BA%E7%9A%84%E6%AF%94%E8%BE%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Pi 与 Apache Maka 怎么选：终端 Agent 与本地工作区的比较 | 欣然的备忘录">
+      <meta itemprop="description" content="比较 pi.dev 的 Pi 与 Apache Maka：从产品定位、运行入口、扩展模型、权限与记录、平台状态和适用场景出发，给出选择建议。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pi 与 Apache Maka 怎么选：终端 Agent 与本地工作区的比较
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-08-24 15:06:00 / 修改时间：20:39:40" itemprop="dateCreated datePublished" datetime="2026-08-24T15:06:00+08:00">2026-08-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">开发工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">比较 pi.dev 的 Pi 与 Apache Maka：从产品定位、运行入口、扩展模型、权限与记录、平台状态和适用场景出发，给出选择建议。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Pi-与-Apache-Maka-怎么选：终端-Agent-与本地工作区的比较"><a href="#Pi-与-Apache-Maka-怎么选：终端-Agent-与本地工作区的比较" class="headerlink" title="Pi 与 Apache Maka 怎么选：终端 Agent 与本地工作区的比较"></a>Pi 与 Apache Maka 怎么选：终端 Agent 与本地工作区的比较</h1><p>先给结论：Pi 更像一个可以自己改造的终端编程 Agent 外壳，Maka 更像一套带工作区、权限边界和可恢复记录的 Agent 运行环境。喜欢在命令行里掌控流程、愿意用 TypeScript 组合工具的人，通常会先选 Pi；需要桌面会话、沙箱审批、分支与恢复，或者想把一次运行当成可追溯事实保存下来，Maka 更对路。</p>
+<p>两者不是同一层的产品。Pi 的重点是把核心做小，再把能力交给扩展；Maka 的重点是把 Agent 的运行过程组织起来。拿“谁更聪明”来比较没有太大意义，真正影响体验的是你从哪里开始工作、谁管理工具权限，以及任务中间状态是否需要留下来。</p>
+<h2 id="先弄清楚-Pi-和-Maka-各自是什么"><a href="#先弄清楚-Pi-和-Maka-各自是什么" class="headerlink" title="先弄清楚 Pi 和 Maka 各自是什么"></a>先弄清楚 Pi 和 Maka 各自是什么</h2><h3 id="Pi：极简的终端-coding-harness"><a href="#Pi：极简的终端-coding-harness" class="headerlink" title="Pi：极简的终端 coding harness"></a>Pi：极简的终端 coding harness</h3><p>Pi 官方文档将它称为 minimal terminal coding harness。它通过 npm 安装，进入项目目录后运行 <code>pi</code>。Pi 本身不等于某个模型，用户需要登录或配置模型提供商，再让它读文件、改代码、执行命令。</p>
+<p>Pi 的设计取舍很明确：核心保持小，功能通过 TypeScript extensions、skills、prompt templates、themes 和 pi packages 扩展。你可以添加自己的工具和事件处理逻辑，也可以把常用提示词、主题和工作流做成可复用包。它更接近一个可编程的 Agent 工具箱，而不是一套规定好的桌面产品。</p>
+<p>这会带来一种很特别的使用感。初始界面不复杂，配置文件和扩展就是主要的控制面；当你愿意动手时，它可以长成很贴合个人习惯的工作台。反过来，如果你只想安装后就有完整的会话管理、权限审批和可视化工作区，Pi 需要自己补不少东西。</p>
+<h3 id="Maka：local-first-的-Agent-workspace"><a href="#Maka：local-first-的-Agent-workspace" class="headerlink" title="Maka：local-first 的 Agent workspace"></a>Maka：local-first 的 Agent workspace</h3><p>Apache Maka 的 README 将它定义为 local-first AI agent workspace。会话、设置和运行记录默认保存在本机；模型可以来自云 API、本地模型或兼容网关。它通过一个 Runtime Host 统一执行 Agent，桌面端、TUI&#x2F;CLI 和评测入口共享这套运行层。</p>
+<p>Maka 很看重“记录”。模型消息、工具调用、工具结果以及一轮运行如何结束，都会写入追加式记录。下一次请求可以省略旧的工具输出以缩短上下文，但这些内容不会从保存的证据中消失。运行中断后，系统还可以恢复或继续执行。</p>
+<p>这让 Maka 的关注点超出了“让模型完成任务”。它还在处理权限审批、沙箱、失败分类、会话分支、搜索、评测和结果复盘。换句话说，Maka 试图把 Agent 变成一个有运行档案的工作系统。</p>
+<h2 id="核心差异一览"><a href="#核心差异一览" class="headerlink" title="核心差异一览"></a>核心差异一览</h2><table>
+<thead>
+<tr>
+<th>比较项</th>
+<th>Pi</th>
+<th>Apache Maka</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>产品层级</td>
+<td>终端编程 Agent harness</td>
+<td>Agent 工作区与运行时</td>
+</tr>
+<tr>
+<td>默认入口</td>
+<td>终端中的 <code>pi</code></td>
+<td>桌面应用、<code>maka</code> CLI&#x2F;TUI、评测入口</td>
+</tr>
+<tr>
+<td>核心取舍</td>
+<td>小核心，能力靠扩展组合</td>
+<td>统一 Runtime Host，运行过程可记录和恢复</td>
+</tr>
+<tr>
+<td>模型关系</td>
+<td>用户配置提供商和模型</td>
+<td>可接云 API、本地模型或兼容网关</td>
+</tr>
+<tr>
+<td>扩展方式</td>
+<td>TypeScript extensions、skills、prompt templates、themes、packages</td>
+<td>工具、技能、工作区设置、模型连接和运行时能力</td>
+</tr>
+<tr>
+<td>权限思路</td>
+<td>由终端环境、配置和扩展负责</td>
+<td>工具沙箱、越界审批、可中止运行是产品能力的一部分</td>
+</tr>
+<tr>
+<td>历史与恢复</td>
+<td>以 Pi 的 session、compaction 等机制为主</td>
+<td>追加式执行记录、分支、崩溃恢复、可选恢复运行</td>
+</tr>
+<tr>
+<td>当前平台信号</td>
+<td>以能运行 Node.js 的终端环境为入口</td>
+<td>官方 README 标注 macOS Apple Silicon 桌面版；Windows 为预览，Linux 尚未支持</td>
+</tr>
+<tr>
+<td>更适合</td>
+<td>个人开发、命令行工作流、深度定制</td>
+<td>日常 Agent 工作区、需要审计和恢复的任务</td>
+</tr>
+</tbody></table>
+<p>表里的“更适合”是选型方向，不是硬限制。Pi 也可以被封装进更复杂的自动化，Maka 也提供命令行入口；只是两者的默认重心不同。</p>
+<h2 id="Pi-的优势与代价"><a href="#Pi-的优势与代价" class="headerlink" title="Pi 的优势与代价"></a>Pi 的优势与代价</h2><h3 id="Pi-的优势在于可塑性"><a href="#Pi-的优势在于可塑性" class="headerlink" title="Pi 的优势在于可塑性"></a>Pi 的优势在于可塑性</h3><p>如果你已经有一套命令行习惯，Pi 的上手路径很短：进仓库、启动、让它查文件和跑测试。它不要求你先接受一套完整的界面结构，工具调用、提示词和扩展都能逐渐加入。</p>
+<p>TypeScript 扩展是它的关键。你可以把代码规范检查、特定目录的读取规则、内部 API 查询或自定义命令接进同一个 Agent。对喜欢自己设计工作流的开发者来说，这比等待官方把每个功能做成按钮更灵活。</p>
+<p>Pi 还适合频繁切换模型提供商的人。模型不是产品本身，提供商配置相对独立；你可以根据价格、上下文长度、隐私要求或任务类型更换后端。实际可用性仍取决于提供商适配、网络和模型质量，不能把“支持多个提供商”理解成结果自动相同。</p>
+<h3 id="Pi-的代价是需要自己搭系统"><a href="#Pi-的代价是需要自己搭系统" class="headerlink" title="Pi 的代价是需要自己搭系统"></a>Pi 的代价是需要自己搭系统</h3><p>可塑性意味着责任也在你这边。扩展写坏了会影响运行，权限边界要靠终端和配置管理，团队共享工作流需要自己整理包和文档。项目越大，越需要规定哪些扩展可以加载、哪些命令必须确认、哪些文件禁止触碰。</p>
+<p>Pi 的终端体验很直接，但对会话搜索、图形化分支、运行记录浏览、多人协作和评测的支持，不一定像专门的工作区产品那样完整。它有 session、compaction 等机制，具体行为要结合版本和配置验证；如果你的核心诉求是“任何一步都能回放”，不能只看一个简洁的 TUI。</p>
+<h2 id="Maka-的优势与代价"><a href="#Maka-的优势与代价" class="headerlink" title="Maka 的优势与代价"></a>Maka 的优势与代价</h2><h3 id="Maka-把运行过程放到台面上"><a href="#Maka-把运行过程放到台面上" class="headerlink" title="Maka 把运行过程放到台面上"></a>Maka 把运行过程放到台面上</h3><p>Maka 的桌面工作区可以管理会话、重试、重生成、归档、重命名、搜索和分支。工具时间线、模型设置、工作区指令与沙箱设置也集中在同一处。对长任务来说，知道 Agent 做过什么、在哪一步失败，比单纯看最后一段回答更有用。</p>
+<p>它的 local-first 取舍也很清楚。默认情况下，设置、会话和运行记录留在本机；你可以选择云模型，也可以接本地模型或网关。这个设计适合不希望把完整工作轨迹交给某个 SaaS 平台的团队，但本地保存并不等于天然安全，硬盘权限、备份和模型提供商的数据策略仍要单独检查。</p>
+<p>沙箱和审批是 Maka 的另一项重点。读取、写入、编辑、执行命令等工具都经过 Runtime Host；需要越过沙箱边界时，运行可以等待批准，也可以被中止。对自动修改代码、处理敏感仓库或运行长流程的任务，这种控制比“终端里多看一眼命令”更容易形成统一规则。</p>
+<h3 id="Maka-仍有明显的早期项目属性"><a href="#Maka-仍有明显的早期项目属性" class="headerlink" title="Maka 仍有明显的早期项目属性"></a>Maka 仍有明显的早期项目属性</h3><p>Apache Maka 当前处于 Incubating 阶段，README 明确提醒数据格式、CLI 命令和实验能力可能变化。官方还说明尚未发布 Apache release，并建议在正式发布前从源码构建；桌面端当前主要面向 Apple Silicon Mac，Windows 版本是未签名预览，Linux 尚未支持。</p>
+<p>这不是说 Maka 不能用，而是要把迁移成本算进去。个人试用、研究运行时和参与开源开发可以接受变化；公司若要把它作为统一生产工具，就需要锁定版本、保留构建脚本，并确认升级后 session 格式和权限策略是否兼容。</p>
+<h2 id="两者在几个具体场景中的表现"><a href="#两者在几个具体场景中的表现" class="headerlink" title="两者在几个具体场景中的表现"></a>两者在几个具体场景中的表现</h2><h3 id="修一个仓库里的-bug"><a href="#修一个仓库里的-bug" class="headerlink" title="修一个仓库里的 bug"></a>修一个仓库里的 bug</h3><p>Pi 更自然。你在终端启动它，说明复现步骤，让它搜索代码、运行测试，再检查 diff。整个过程贴近已有的 Git 和 shell 习惯。</p>
+<p>Maka 也能完成同样的事，但它会把任务放进工作区。若你需要在多次尝试之间保留完整工具记录、比较分支或恢复中断运行，Maka 的额外结构就有价值。</p>
+<h3 id="运行一个小时以上的多步任务"><a href="#运行一个小时以上的多步任务" class="headerlink" title="运行一个小时以上的多步任务"></a>运行一个小时以上的多步任务</h3><p>Maka 的记录和恢复机制更适合。你可以在时间线里确认模型做过哪些调用，旧工具输出也可以从后续上下文中省略而不丢失。</p>
+<p>Pi 的优势在于简单和可编排。你可以用脚本、扩展或外部终端管理长任务，但这些机制通常需要自己搭建，团队也要自己定义“完成”和“失败”的判定方式。</p>
+<h3 id="给团队制定统一的-Agent-权限"><a href="#给团队制定统一的-Agent-权限" class="headerlink" title="给团队制定统一的 Agent 权限"></a>给团队制定统一的 Agent 权限</h3><p>Maka 更接近现成方案。Runtime Host、沙箱和审批流程本身就是它的产品边界，可以把“哪些工具默认允许、哪些操作需要批准”放进工作区管理。</p>
+<p>Pi 并非不能做安全控制，但更多依赖宿主终端、容器、操作系统权限和扩展约定。对个人开发者这可能足够，对团队则要额外写规范和自动检查。</p>
+<h3 id="想把工具改造成自己的工作流"><a href="#想把工具改造成自己的工作流" class="headerlink" title="想把工具改造成自己的工作流"></a>想把工具改造成自己的工作流</h3><p>Pi 往往更省力。TypeScript 扩展、skills 和 packages 就是为此准备的，你可以从一个小钩子开始，慢慢长成自己的 Agent。</p>
+<p>Maka 更适合在既定运行时上组合能力。它提供工作区指令、工具、模型连接和评测入口，但如果你想改变底层交互方式，可能需要理解 Runtime Host 和项目结构，而不是只写一个提示词。</p>
+<h3 id="需要-Windows-或-Linux-桌面版"><a href="#需要-Windows-或-Linux-桌面版" class="headerlink" title="需要 Windows 或 Linux 桌面版"></a>需要 Windows 或 Linux 桌面版</h3><p>这里要谨慎看待 Maka 的当前状态。官方 README 对平台支持的标注会随版本变化，但目前 macOS Apple Silicon 是主要桌面目标，Windows 为预览，Linux 标注为尚未支持。Pi 以终端和 Node.js 环境为入口，跨平台范围通常更宽；不过它不是一个提供统一桌面安装器的产品。</p>
+<h2 id="怎么选：先看工作方式，再看功能清单"><a href="#怎么选：先看工作方式，再看功能清单" class="headerlink" title="怎么选：先看工作方式，再看功能清单"></a>怎么选：先看工作方式，再看功能清单</h2><p>可以先问自己四个问题：</p>
+<ol>
+<li>你每天的入口是终端，还是希望有一个能浏览会话和文件的桌面工作区？</li>
+<li>你更在意自己改造工具，还是更在意权限、记录和恢复开箱可用？</li>
+<li>任务完成后，是否需要把每次工具调用作为可回放、可审计的事实保存？</li>
+<li>目标平台是否包含 Windows 和 Linux，且需要稳定的桌面发行版？</li>
+</ol>
+<p>如果答案偏向终端、定制和个人效率，先试 Pi。它的学习曲线主要在扩展和配置，换来的则是更少的默认约束。</p>
+<p>如果答案偏向工作区、审批、恢复和运行复盘，试 Maka。尤其是你想比较不同模型、做可重复评测，或者需要让多次 Agent 运行留下清晰档案时，它的设计更贴近问题本身。</p>
+<p>如果你要在团队里部署，还要加一层现实判断：Maka 的版本和平台状态需要持续跟踪；Pi 则要为扩展治理、权限隔离和共享配置补齐工程制度。一个更“轻”，一个更“完整”，都不等于维护工作更少。</p>
+<h2 id="我的建议"><a href="#我的建议" class="headerlink" title="我的建议"></a>我的建议</h2><p>把两者放在同一个真实仓库里试，不要只看欢迎页。选一个能代表日常工作的任务，例如定位一个跨文件 bug、补测试并生成变更说明，然后记录：</p>
+<ul>
+<li>首次启动和登录是否顺手；</li>
+<li>模型调用、命令执行和文件修改是否容易检查；</li>
+<li>任务中断后能否接着做；</li>
+<li>自定义工具需要写多少代码；</li>
+<li>失败时能否找到原因，而不是只看到一句“执行失败”；</li>
+<li>团队是否愿意维护这套配置和权限规则。</li>
+</ul>
+<p>我会这样分配角色：Pi 用来探索和打磨个人工作流，Maka 用来观察 Agent 运行、保存证据和做重复实验。两者并不冲突，甚至可以在同一台机器上服务不同类型的任务。只有当你明确需要统一入口、统一权限和统一记录时，才值得把选择收敛到其中一个。</p>
+<h2 id="资料与项目入口"><a href="#资料与项目入口" class="headerlink" title="资料与项目入口"></a>资料与项目入口</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://pi.dev/docs/latest">Pi 官方文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://pi.dev/docs/latest/quickstart">Pi 安装与快速开始</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/maka">Apache Maka GitHub 仓库</a></li>
+<li><a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/apache/maka/main/README.md">Apache Maka README（原始文档）</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/maka/blob/main/ARCHITECTURE.md">Apache Maka 后端架构</a></li>
+</ul>
+<p>本文中的版本和平台判断以 2026 年 8 月 24 日能访问到的官方文档为准。Pi 和 Maka 都在快速变化，安装命令、平台列表和扩展接口应以项目当前文档为准。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Pi/" rel="tag"># Pi</a>
+              <a href="/tags/%E7%BB%88%E7%AB%AF%E5%B7%A5%E5%85%B7/" rel="tag"># 终端工具</a>
+              <a href="/tags/AI-Agent/" rel="tag"># AI Agent</a>
+              <a href="/tags/Apache-Maka/" rel="tag"># Apache Maka</a>
+              <a href="/tags/%E6%9C%AC%E5%9C%B0%E4%BC%98%E5%85%88/" rel="tag"># 本地优先</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/21/Electron%20%E5%81%9A%E6%A1%8C%E9%9D%A2%E8%BD%AF%E4%BB%B6%EF%BC%9A%E4%BC%98%E7%BC%BA%E7%82%B9%E3%80%81%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/" rel="prev" title="Electron 做桌面软件：优缺点、适用场景与替代方案">
+                  <i class="fa fa-angle-left"></i> Electron 做桌面软件：优缺点、适用场景与替代方案
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/26/Orca%20%E4%BB%8B%E7%BB%8D-%E9%9D%A2%E5%90%91%E5%A4%9A%20Agent%20%E5%B9%B6%E8%A1%8C%E5%BC%80%E5%8F%91%E7%9A%84%E5%BC%80%E6%BA%90%20IDE/" rel="next" title="Orca 介绍：面向多 Agent 并行开发的开源 IDE">
+                  Orca 介绍：面向多 Agent 并行开发的开源 IDE <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
