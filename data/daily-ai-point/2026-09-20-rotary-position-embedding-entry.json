@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-20",
+  "concept_id": "rotary-position-embedding",
+  "title": "旋转位置编码：用复数旋转表示相对位置",
+  "aliases": ["RoPE", "rotary position embedding", "旋转位置编码"],
+  "category": "基础原理",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["位置编码", "RoPE", "相对位置", "注意力", "长上下文"],
+  "summary": "RoPE 将 query/key 向量的维度配对并按 token 位置旋转，注意力内积只依赖内容与相对角度，从而以绝对编码式实现相对位置建模。",
+  "sources": [
+    {
+      "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+      "url": "https://arxiv.org/abs/2104.09864",
+      "published": "2021-04-20"
+    }
+  ]
+}

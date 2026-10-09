@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-09",
+  "concept_id": "knowledge-distillation",
+  "title": "知识蒸馏：用教师模型教会学生模型",
+  "aliases": ["knowledge distillation", "teacher student", "distillation"],
+  "category": "训练与对齐",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["蒸馏", "教师模型", "学生模型", "训练", "压缩"],
+  "summary": "知识蒸馏用温度软化的教师输出、中间表示或生成数据训练学生模型，使小模型继承类间关系和教师判别结构，实现压缩与加速部署。",
+  "sources": [{"title": "Distilling the Knowledge in a Neural Network", "url": "https://arxiv.org/abs/1503.02531", "published": "2015-03-09"}]
+}

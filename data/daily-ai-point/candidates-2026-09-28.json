@@ -1,0 +1,50 @@
+[
+  {
+    "concept_id": "cross-encoder-reranking",
+    "title": "交叉编码器重排：检索后再精排证据",
+    "aliases": ["cross encoder reranking", "reranker", "重排序"],
+    "keywords": ["RAG", "重排", "交叉编码器", "检索", "精度"],
+    "category": "检索与知识",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [{"title": "Passage Re-ranking with BERT", "url": "https://arxiv.org/abs/1901.04085", "published": "2019-01-12"}],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "best-of-n-sampling",
+    "title": "Best-of-N 采样：多答几次再挑一个",
+    "aliases": ["Best-of-N", "BoN sampling", "rejection sampling"],
+    "keywords": ["采样", "候选", "重排", "奖励模型", "推理"],
+    "category": "推理与效率",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [{"title": "A Minimalist Approach to Offline Reinforcement Learning", "url": "https://arxiv.org/abs/2306.17231", "published": "2023-06-29"}],
+    "prerequisites": ["process-reward-model"]
+  },
+  {
+    "concept_id": "chunked-prefill-streaming-batch",
+    "title": "分块预填充与流式批处理：把长请求切成可插入的小任务",
+    "aliases": ["chunked prefill", "streaming batch", "Sarathi-Serve"],
+    "keywords": ["批处理", "预填充", "解码", "延迟", "吞吐"],
+    "category": "工程与产品",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [{"title": "Sarathi-Serve: Taming Throughput-Latency Tradeoff in LLM Inference", "url": "https://arxiv.org/abs/2403.02310", "published": "2024-03-04"}],
+    "prerequisites": ["continuous-batching-llm-serving"]
+  },
+  {
+    "concept_id": "self-consistency-voting",
+    "title": "自洽性：多个推理路径投票能提升准确率吗",
+    "aliases": ["self consistency", "CoT voting", "多数投票"],
+    "keywords": ["思维链", "采样", "投票", "推理", "准确率"],
+    "category": "推理与效率",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [{"title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models", "url": "https://arxiv.org/abs/2203.11171", "published": "2022-03-21"}],
+    "prerequisites": ["process-reward-model"]
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-27",
+  "concept_id": "agent-workflow-observability",
+  "title": "Agent 可观测性：用轨迹追踪定位失败",
+  "aliases": ["agent observability", "trace", "轨迹追踪"],
+  "category": "工程与产品",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["Agent", "可观测性", "轨迹", "工具调用", "失败定位"],
+  "summary": "Agent 可观测性用树形 trace 记录任务、模型调用、工具调用、错误与版本信息，保留因果关系，从而支持失败定位、回归分析、成本审计和责任追踪。",
+  "sources": [
+    {
+      "title": "OpenTelemetry Documentation: Traces",
+      "url": "https://opentelemetry.io/docs/concepts/signals/traces/",
+      "published": "2026-09-27"
+    }
+  ]
+}

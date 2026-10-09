@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-07",
+  "concept_id": "benchmark-contamination",
+  "title": "基准污染：测试题为什么会进入训练数据",
+  "aliases": ["benchmark contamination", "data contamination", "基准污染"],
+  "category": "评估与可靠性",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["评估", "基准", "污染", "测试集", "训练数据"],
+  "summary": "基准污染指测试题、答案、讨论或语义改写进入训练数据，使模型通过记忆或捷径获得虚高分数；需结合重叠检测、扰动测试和干净子集报告稳健评估。",
+  "sources": [{"title": "Data Contamination: From Memorization to Exploitation", "url": "https://arxiv.org/abs/2309.10618", "published": "2023-09-19"}]
+}

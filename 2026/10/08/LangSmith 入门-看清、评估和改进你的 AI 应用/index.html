@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="从一次客服智能体的错误回答出发，理解 LangSmith 的追踪、评估、提示词管理与微调，以及它和 LangChain、LangGraph 的区别。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LangSmith 入门：看清、评估和改进你的 AI 应用">
+<meta property="og:url" content="https://xinran282.github.io/2026/10/08/LangSmith%20%E5%85%A5%E9%97%A8-%E7%9C%8B%E6%B8%85%E3%80%81%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B%E4%BD%A0%E7%9A%84%20AI%20%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="从一次客服智能体的错误回答出发，理解 LangSmith 的追踪、评估、提示词管理与微调，以及它和 LangChain、LangGraph 的区别。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-08T11:41:00.000Z">
+<meta property="article:modified_time" content="2026-10-08T11:42:13.493Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="LangSmith">
+<meta property="article:tag" content="可观测性">
+<meta property="article:tag" content="智能体">
+<meta property="article:tag" content="模型评估">
+<meta property="article:tag" content="监督微调">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/10/08/LangSmith%20%E5%85%A5%E9%97%A8-%E7%9C%8B%E6%B8%85%E3%80%81%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B%E4%BD%A0%E7%9A%84%20AI%20%E5%BA%94%E7%94%A8/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/10/08/LangSmith%20%E5%85%A5%E9%97%A8-%E7%9C%8B%E6%B8%85%E3%80%81%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B%E4%BD%A0%E7%9A%84%20AI%20%E5%BA%94%E7%94%A8/","path":"2026/10/08/LangSmith 入门-看清、评估和改进你的 AI 应用/","title":"LangSmith 入门：看清、评估和改进你的 AI 应用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>LangSmith 入门：看清、评估和改进你的 AI 应用 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LangSmith-%E5%85%A5%E9%97%A8%EF%BC%9A%E7%9C%8B%E6%B8%85%E3%80%81%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B%E4%BD%A0%E7%9A%84-AI-%E5%BA%94%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">LangSmith 入门：看清、评估和改进你的 AI 应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-AI-%E5%BA%94%E7%94%A8%E9%9C%80%E8%A6%81%E8%BF%99%E6%A0%B7%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.</span> <span class="nav-text">为什么 AI 应用需要这样的工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LangSmith%E3%80%81LangChain-%E5%92%8C-LangGraph-%E5%88%86%E5%88%AB%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.</span> <span class="nav-text">LangSmith、LangChain 和 LangGraph 分别做什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%EF%BC%9A%E7%9C%8B%E6%B8%85%E4%B8%80%E6%AC%A1%E8%AF%B7%E6%B1%82%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">1.3.</span> <span class="nav-text">追踪：看清一次请求发生了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%EF%BC%9A%E8%AF%81%E6%98%8E%E4%BF%AE%E6%94%B9%E6%98%AF%E5%90%A6%E6%9C%89%E6%95%88"><span class="nav-number">1.4.</span> <span class="nav-text">评估：证明修改是否有效</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E8%AF%8D%E7%AE%A1%E7%90%86%E4%B8%8E%E9%83%A8%E7%BD%B2%EF%BC%8C%E6%98%AF%E5%8F%A6%E5%A4%96%E4%B8%A4%E7%B1%BB%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.5.</span> <span class="nav-text">提示词管理与部署，是另外两类工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fine-Tuning%EF%BC%9A%E6%8A%8A%E4%BC%98%E8%B4%A8%E8%BD%A8%E8%BF%B9%E7%94%A8%E4%BA%8E%E8%AE%AD%E7%BB%83"><span class="nav-number">1.6.</span> <span class="nav-text">Fine-Tuning：把优质轨迹用于训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8%EF%BC%8C%E5%85%88%E5%81%9A%E4%B8%80%E4%B8%AA%E5%B0%8F%E8%8C%83%E5%9B%B4%E6%8E%A5%E5%85%A5"><span class="nav-number">1.7.</span> <span class="nav-text">初次使用，先做一个小范围接入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.8.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/10/08/LangSmith%20%E5%85%A5%E9%97%A8-%E7%9C%8B%E6%B8%85%E3%80%81%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B%E4%BD%A0%E7%9A%84%20AI%20%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="LangSmith 入门：看清、评估和改进你的 AI 应用 | 欣然的备忘录">
+      <meta itemprop="description" content="从一次客服智能体的错误回答出发，理解 LangSmith 的追踪、评估、提示词管理与微调，以及它和 LangChain、LangGraph 的区别。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LangSmith 入门：看清、评估和改进你的 AI 应用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-08 19:41:00 / 修改时间：19:42:13" itemprop="dateCreated datePublished" datetime="2026-10-08T19:41:00+08:00">2026-10-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">从一次客服智能体的错误回答出发，理解 LangSmith 的追踪、评估、提示词管理与微调，以及它和 LangChain、LangGraph 的区别。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="LangSmith-入门：看清、评估和改进你的-AI-应用"><a href="#LangSmith-入门：看清、评估和改进你的-AI-应用" class="headerlink" title="LangSmith 入门：看清、评估和改进你的 AI 应用"></a>LangSmith 入门：看清、评估和改进你的 AI 应用</h1><p>LangSmith 是 LangChain 团队提供的 AI 应用开发与运维平台。它记录模型和工具如何执行，帮助开发者定位错误、评估不同版本，并管理提示词与上下文。平台还提供智能体部署能力；新推出的 Fine-Tuning 则把经过筛选的执行轨迹接入模型微调流程。</p>
+<p>对刚开始做 AI 应用的人，最值得先用的是追踪和评估：一次回答为什么错了？改完之后，是否真的更好？这两个问题比“换个更强的模型试试”更具体，也更容易验证。</p>
+<h2 id="为什么-AI-应用需要这样的工具"><a href="#为什么-AI-应用需要这样的工具" class="headerlink" title="为什么 AI 应用需要这样的工具"></a>为什么 AI 应用需要这样的工具</h2><p>假设你做了一个客服智能体。用户问：“这笔订单还能退货吗？”系统需要检索退货政策、查询订单，再生成回答。</p>
+<p>如果最终回答错了，只看输入和输出，很难判断问题出在哪里：检索到了旧政策，订单工具查错了编号，模型误读了返回结果，还是提示词根本没要求检查时间限制？</p>
+<p>普通日志也能记录这些信息，但你需要自己组织调用关系、关联多轮对话，再把错误样本整理成测试数据。LangSmith 提供了围绕这些工作的一套工具。它能帮助你找到问题发生的环节，却不会自动保证回答正确。</p>
+<h2 id="LangSmith、LangChain-和-LangGraph-分别做什么"><a href="#LangSmith、LangChain-和-LangGraph-分别做什么" class="headerlink" title="LangSmith、LangChain 和 LangGraph 分别做什么"></a>LangSmith、LangChain 和 LangGraph 分别做什么</h2><p>这三个名字经常一起出现，但用途不同。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主要用途</th>
+<th>在应用中的位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LangChain</td>
+<td>开源框架，提供模型、工具等组件的集成与智能体开发接口</td>
+<td>编写应用逻辑</td>
+</tr>
+<tr>
+<td>LangGraph</td>
+<td>开源智能体编排框架，处理状态、执行流程和持久化执行等问题</td>
+<td>组织复杂工作流</td>
+</tr>
+<tr>
+<td>LangSmith</td>
+<td>追踪、评估、提示词与上下文管理，以及部署等平台能力</td>
+<td>检查、比较和运维应用</td>
+</tr>
+</tbody></table>
+<p>LangSmith 的可观测性不要求应用使用 LangChain 或 LangGraph。官方文档列出了 OpenAI、Anthropic、CrewAI、Vercel AI SDK、Pydantic AI 等集成，也支持通过 SDK 给自定义函数添加追踪。</p>
+<p>因此，即使你用模型服务商的原生 SDK 写应用，也可以接入 LangSmith。反过来，使用 LangChain 或 LangGraph，也不意味着必须使用 LangSmith。</p>
+<h2 id="追踪：看清一次请求发生了什么"><a href="#追踪：看清一次请求发生了什么" class="headerlink" title="追踪：看清一次请求发生了什么"></a>追踪：看清一次请求发生了什么</h2><p>LangSmith 中几个常见概念需要分开理解。</p>
+<p>一次运行单元通常称为 <strong>run</strong>，可以是一段应用函数、一次模型调用或一次工具调用。相关运行组成一次端到端的 <strong>trace</strong>，展示一项请求的执行过程。<strong>thread</strong> 用来关联多轮交互，而 <strong>trajectory</strong> 按顺序组织消息、工具调用与工具结果，更适合查看智能体每一轮实际经历了什么。</p>
+<p>前面的客服例子，可以得到类似下面的执行结构。这是说明概念的示意，并非真实运行记录。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">客服请求</span><br><span class="line">  检索退货政策</span><br><span class="line">  查询订单状态</span><br><span class="line">  调用模型生成答复</span><br></pre></td></tr></table></figure>
+
+<p>打开对应的追踪记录，可以检查各步骤的输入、输出、耗时和错误，以及模型调用的消息内容。Token 用量及成本信息是否完整，还取决于集成上报的数据和价格配置。</p>
+<p>调试时，可以先找第一个偏离预期的步骤。如果检索结果已经错了，应先修检索；如果工具返回正确而回答错误，再检查模型收到的上下文和指令。这样能减少无依据地修改提示词。</p>
+<p>记录本身也有边界。没有接入追踪的函数或外部系统，不会因为安装了 SDK 就自动变得可见。接入时应确认：你真正关心的检索、工具和模型调用，是否都出现在记录里。</p>
+<h2 id="评估：证明修改是否有效"><a href="#评估：证明修改是否有效" class="headerlink" title="评估：证明修改是否有效"></a>评估：证明修改是否有效</h2><p>追踪解释一次执行，评估比较一批执行。</p>
+<p>LangSmith 的离线评估通常围绕数据集、评估器和实验展开。数据集保存测试输入，也可以包含参考输出；评估器按既定标准打分；实验记录某个应用版本在这批数据上的表现。</p>
+<p>例如，客服智能体可以检查：</p>
+<ul>
+<li>是否查询了正确订单。</li>
+<li>是否依据适用的退货政策回答。</li>
+<li>是否在缺少依据时避免编造结论。</li>
+<li>是否满足响应时间和成本要求。</li>
+</ul>
+<p>不同标准需要不同评估方法。订单编号、输出格式这类明确规则，可以用代码检查；政策解释是否准确，可能需要人工审查或模型评判。LangSmith 支持人工、代码、LLM-as-judge 和成对比较等方式，但评分标准仍然需要你定义。</p>
+<p>模型评判也会出错。比较重要版本前，最好用人工标注样本检查评判器是否符合业务要求。一次总分上涨，可能掩盖某类问题的退步；查看具体失败样本，往往比只看平均分更有用。</p>
+<p>离线评估适合上线前比较版本。在线评估则对生产环境的真实交互进行检查，通常没有逐条准备好的参考答案，可以采用格式规则、安全检查或无需参考答案的模型评判，并通过筛选和采样控制成本。</p>
+<p>一个实用做法是：把线上发现的错误整理进回归测试集。以后每次改提示词、工具或模型，都重新跑这些样本，检查旧问题有没有回来。用于调试的样本与最终测试集应适当分开，避免只把应用调到擅长已见过的题目。</p>
+<h2 id="提示词管理与部署，是另外两类工作"><a href="#提示词管理与部署，是另外两类工作" class="headerlink" title="提示词管理与部署，是另外两类工作"></a>提示词管理与部署，是另外两类工作</h2><p>提示词和检索上下文往往比代码改得更频繁。LangSmith 的 Prompt &amp; Context Hub 可以保存提示词版本，以及包含指令和工具等内容的上下文包。Playground 用来测试提示词和模型配置。</p>
+<p>版本管理的好处是能追溯：某次实验用了哪个提示词，线上应用拉取的是哪个版本，修改是谁做的。应用需要显式接入拉取逻辑；在平台里修改提示词，不会自动改变所有运行中的程序。</p>
+<p>LangSmith Deployment 则负责智能体的生产运行，包括持久化执行、流式响应和扩展等能力。官方提供 LangGraph 等框架的部署路径，以及其他框架的适配方式。</p>
+<p>应用运行在哪里，与追踪数据存在哪里，是两个不同问题。你可以让应用继续运行在现有服务器上，只接入 LangSmith 的追踪和评估，而不迁移到它的部署服务。</p>
+<h2 id="Fine-Tuning：把优质轨迹用于训练"><a href="#Fine-Tuning：把优质轨迹用于训练" class="headerlink" title="Fine-Tuning：把优质轨迹用于训练"></a>Fine-Tuning：把优质轨迹用于训练</h2><p>你刚才阅读的 <a target="_blank" rel="noopener" href="https://www.langchain.com/blog/langsmith-fine-tuning">LangSmith Fine-Tuning 发布文章</a>，介绍了命令行工具 <strong>smithtune</strong>。发布文章将这一功能列为公开测试版，并说明当前支持监督微调（SFT）。</p>
+<p>SFT 用表现良好的输入、输出示例更新模型权重，让模型学习这些行为。对于智能体，训练样本除了最终回答，还可能包含工具调用，以及作出该动作时的上下文。</p>
+<p>这正是轨迹数据的用途。在长任务中，可用工具可能逐轮变化。只导出最终消息列表，可能无法准确还原模型当时看到了哪些工具和信息。LangSmith 的轨迹格式为这类训练保留每一轮的上下文。</p>
+<p>按照发布文章，smithtune 的流程包括筛选轨迹、准备数据集、在 Fireworks 或 Baseten 上训练、通过 LangSmith 比较结果，再部署微调模型。CLI 的 <code>deploy</code> 步骤用于提供微调模型的推理服务，和前面提到的智能体应用部署不是同一件事。</p>
+<p>微调不应是接入后的第一步。先检查工作流、工具定义和上下文是否合理；只有在任务反复出现、仍有稳定的行为错误，而且具备足够的优质示例时，才值得考虑 SFT。如果错误来自过期政策或失效接口，应先修数据和工具。</p>
+<p>发布文章还提到，早期筛选不够严格的训练集曾让代码审查模型的 F1 分数下降。这个例子说明，保存了大量轨迹，不等于拥有大量适合训练的数据。文中的内部实验结果也不能直接推导为所有应用都能获得相同收益。</p>
+<h2 id="初次使用，先做一个小范围接入"><a href="#初次使用，先做一个小范围接入" class="headerlink" title="初次使用，先做一个小范围接入"></a>初次使用，先做一个小范围接入</h2><p>建议先选一条容易出错、又能人工判断对错的业务流程，接入追踪，积累失败样本，再建立一个小型评估集。暂时不必把提示词管理、部署和微调全部用上。</p>
+<p>官方快速入门使用以下环境变量启用追踪。下面是 PowerShell 写法，密钥只是占位符：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$env:LANGSMITH_TRACING</span> = <span class="string">&quot;true&quot;</span></span><br><span class="line"><span class="variable">$env:LANGSMITH_API_KEY</span> = <span class="string">&quot;&lt;your-langsmith-api-key&gt;&quot;</span></span><br><span class="line"><span class="variable">$env:LANGSMITH_PROJECT</span> = <span class="string">&quot;customer-support-dev&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这些变量只是配置。应用还需要安装相应 SDK，并通过框架集成、模型客户端包装器或 <code>traceable</code> 包装函数产生追踪数据。LangSmith API Key 与模型服务商的 API Key 也不同，前者用于上传和管理追踪，后者用于调用模型。</p>
+<p>如果账户所在区域不是默认区域，还应按官方文档设置对应的 <code>LANGSMITH_ENDPOINT</code>。完整接入步骤见 <a target="_blank" rel="noopener" href="https://docs.langchain.com/langsmith/observability-quickstart">Tracing quickstart</a>。</p>
+<p>接入前，先检查输入、输出和工具结果里有没有个人信息、商业机密或凭证。需要脱敏的数据应在上报前处理。追踪存储、数据保留、评估模型调用和训练服务也可能分别产生费用，应按实际套餐与使用量核算。</p>
+<p>对于只有几次手动调用的实验脚本，普通日志可能已经够用。当工具调用、多轮对话和版本迭代增多，你开始需要反复回答“哪里错了”和“是否修好了”，LangSmith 的追踪与评估才更容易体现价值。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.langchain.com/langsmith/observability">LangSmith Observability</a>：运行追踪、监控及框架集成。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.langchain.com/langsmith/evaluation">LangSmith Evaluation</a>：数据集、评估器，以及离线和在线评估。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.langchain.com/langsmith/prompt-context-hub">Prompt &amp; Context Hub</a>：提示词与上下文版本管理。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.langchain.com/langsmith/deployments">LangSmith Deployment</a>：智能体运行与部署方式。</li>
+<li><a target="_blank" rel="noopener" href="https://www.langchain.com/blog/langsmith-fine-tuning">Introducing LangSmith Fine-Tuning</a>：smithtune 的训练流程与内部实验。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/langchain-ai/smithtune">smithtune GitHub 仓库</a>：CLI 与使用说明。</li>
+</ul>
+<p>本文依据 2026 年 10 月 8 日查阅的官方资料整理。套餐、界面和测试版能力可能调整，实际接入时以最新文档为准。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%99%BA%E8%83%BD%E4%BD%93/" rel="tag"># 智能体</a>
+              <a href="/tags/LangSmith/" rel="tag"># LangSmith</a>
+              <a href="/tags/%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7/" rel="tag"># 可观测性</a>
+              <a href="/tags/%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0/" rel="tag"># 模型评估</a>
+              <a href="/tags/%E7%9B%91%E7%9D%A3%E5%BE%AE%E8%B0%83/" rel="tag"># 监督微调</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/23/System%201%20%E5%86%B3%E7%AD%96%E5%BC%95%E6%93%8E%EF%BC%9A%E7%BB%99%E8%BD%AF%E4%BB%B6%E7%94%A8%E7%9A%84%E5%BF%AB%E5%88%A4%E6%96%AD/" rel="prev" title="System 1 决策引擎：给软件用的快判断">
+                  <i class="fa fa-angle-left"></i> System 1 决策引擎：给软件用的快判断
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/10/09/Open%20Code%20Review%20%E6%8A%8A%E4%B8%8D%E8%AF%A5%E4%BA%A4%E7%BB%99%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%A1%E6%9F%A5%E6%AD%A5%E9%AA%A4%E6%94%B6%E5%9B%9E%E6%9D%A5/" rel="next" title="Open Code Review 把不该交给模型的审查步骤收回来">
+                  Open Code Review 把不该交给模型的审查步骤收回来 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

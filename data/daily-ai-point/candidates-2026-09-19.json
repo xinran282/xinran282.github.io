@@ -1,0 +1,45 @@
+[
+  {
+    "concept_id": "semantic-router-embedding-classification",
+    "title": "语义路由：用请求特征决定调用哪个模型",
+    "aliases": ["semantic routing", "LLM router", "model router"],
+    "keywords": ["路由", "模型选择", "成本", "延迟", "难度估计"],
+    "category": "工程与产品",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "RouteLLM: Learning to Route LLMs with Preference Data", "url": "https://arxiv.org/abs/2406.18665", "published": "2024-06-26"}
+    ],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "vision-token-patching",
+    "title": "视觉 token 化：把图像切成 patch 交给 Transformer",
+    "aliases": ["vision transformer patch embedding", "patchify", "ViT patch"],
+    "keywords": ["ViT", "patch", "视觉", "token", "位置编码"],
+    "category": "多模态",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale", "url": "https://arxiv.org/abs/2010.11929", "published": "2020-10-22"}
+    ],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "contrastive-decoding",
+    "title": "对比解码：从语言模型输出中减去常见偏差",
+    "aliases": ["contrastive decoding", "CD decoding", "contrastive search"],
+    "keywords": ["解码", "幻觉", "分布", "expert", "amateur", "采样"],
+    "category": "推理与效率",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "A Contrastive Framework for Neural Text Generation", "url": "https://arxiv.org/abs/2202.06417", "published": "2022-02-13"},
+      {"title": "Contrastive Decoding: Open-ended Text Generation as Optimization", "url": "https://arxiv.org/abs/2210.15097", "published": "2022-10-19"}
+    ],
+    "prerequisites": ["speculative-decoding"]
+  }
+]

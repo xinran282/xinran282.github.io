@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-30",
+  "concept_id": "low-rank-adaptation-memory",
+  "title": "LoRA 的显存机制：为什么冻结权重也能省显存",
+  "aliases": ["LoRA memory", "low rank adaptation memory", "低秩适配显存"],
+  "category": "训练与对齐",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "related",
+  "keywords": ["LoRA", "显存", "优化器", "梯度", "冻结权重"],
+  "summary": "LoRA 冻结基座权重并只训练低秩 A/B 增量，使梯度与 Adam 优化器状态等训练态显存随少量可训练参数而非总参数增长；这是与 LoRA 低秩机制不同的工程视角。",
+  "sources": [{"title": "LoRA: Low-Rank Adaptation of Large Language Models", "url": "https://arxiv.org/abs/2106.09685", "published": "2021-06-17"}]
+}

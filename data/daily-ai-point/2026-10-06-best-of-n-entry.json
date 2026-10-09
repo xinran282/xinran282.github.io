@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-06",
+  "concept_id": "best-of-n-sampling",
+  "title": "Best-of-N 采样：多答几次再挑一个",
+  "aliases": ["Best-of-N", "BoN sampling", "rejection sampling"],
+  "category": "推理与效率",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["采样", "候选", "重排", "奖励模型", "推理"],
+  "summary": "Best-of-N 先并行采样多个候选，再用结果奖励、过程奖励、验证器或奖励模型选择最优输出；它改变选样策略而不更新模型权重。",
+  "sources": [{"title": "A Minimalist Approach to Offline Reinforcement Learning", "url": "https://arxiv.org/abs/2306.17231", "published": "2023-06-29"}]
+}

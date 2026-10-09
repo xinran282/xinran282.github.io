@@ -1,0 +1,51 @@
+[
+  {
+    "concept_id": "cross-encoder-reranking",
+    "title": "交叉编码器重排：检索后再精排证据",
+    "aliases": ["cross encoder reranking", "reranker", "重排序"],
+    "keywords": ["RAG", "重排", "交叉编码器", "检索", "精度"],
+    "category": "检索与知识",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [{"title": "Passage Re-ranking with BERT", "url": "https://arxiv.org/abs/1901.04085", "published": "2019-01-12"}],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "best-of-n-sampling",
+    "title": "Best-of-N 采样：多答几次再挑一个",
+    "aliases": ["Best-of-N", "BoN sampling", "rejection sampling"],
+    "keywords": ["采样", "候选", "重排", "奖励模型", "推理"],
+    "category": "推理与效率",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [{"title": "A Minimalist Approach to Offline Reinforcement Learning", "url": "https://arxiv.org/abs/2306.17231", "published": "2023-06-29"}],
+    "prerequisites": ["process-reward-model", "self-consistency-voting"]
+  },
+  {
+    "concept_id": "low-rank-adaptation-memory",
+    "title": "LoRA 的显存机制：为什么冻结权重也能省显存",
+    "aliases": ["LoRA memory", "low rank adaptation memory", "低秩适配显存"],
+    "keywords": ["LoRA", "显存", "优化器", "梯度", "冻结权重"],
+    "category": "训练与对齐",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [{"title": "LoRA: Low-Rank Adaptation of Large Language Models", "url": "https://arxiv.org/abs/2106.09685", "published": "2021-06-17"}],
+    "prerequisites": ["lora-low-rank-adaptation"]
+  },
+  {
+    "concept_id": "graph-rag-structured-retrieval",
+    "title": "知识图谱增强 RAG：用实体关系约束答案",
+    "aliases": ["GraphRAG", "knowledge graph RAG", "图检索增强生成"],
+    "keywords": ["RAG", "知识图谱", "实体关系", "图检索", "结构化"],
+    "category": "检索与知识",
+    "level": 4,
+    "kind": "current",
+    "published": "2024-04-24",
+    "source_quality": 0.95,
+    "sources": [{"title": "From Local to Global: A Graph RAG Approach to Query-Focused Summarization", "url": "https://arxiv.org/abs/2404.16130", "published": "2024-04-24"}],
+    "prerequisites": []
+  }
+]

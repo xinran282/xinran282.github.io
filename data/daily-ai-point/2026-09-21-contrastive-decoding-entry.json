@@ -1,0 +1,24 @@
+{
+  "date": "2026-09-21",
+  "concept_id": "contrastive-decoding",
+  "title": "对比解码：从语言模型输出中减去常见偏差",
+  "aliases": ["contrastive decoding", "CD decoding", "amateur-expert decoding"],
+  "category": "推理与效率",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["解码", "偏差", "expert", "amateur", "采样"],
+  "summary": "对比解码在每个生成位置用专家模型减去业余模型的分布，突出强模型独有的信息，从而抑制重复、套路化和平庸高概率输出。",
+  "sources": [
+    {
+      "title": "A Contrastive Framework for Neural Text Generation",
+      "url": "https://arxiv.org/abs/2202.06417",
+      "published": "2022-02-13"
+    },
+    {
+      "title": "Contrastive Decoding: Open-ended Text Generation as Optimization",
+      "url": "https://arxiv.org/abs/2210.15097",
+      "published": "2022-10-19"
+    }
+  ]
+}

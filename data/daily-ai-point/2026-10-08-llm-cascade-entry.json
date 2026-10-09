@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-08",
+  "concept_id": "llm-cascade-escalation",
+  "title": "LLM 级联：先小模型，失败再升级大模型",
+  "aliases": ["LLM cascade", "model cascade", "级联推理"],
+  "category": "工程与产品",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["级联", "小模型", "大模型", "成本", "升级"],
+  "summary": "LLM 级联按成本递增顺序调用模型链，用规则、测试、评估器或证据检查判断答案是否可接受，不可靠时携带失败上下文升级到下一级。",
+  "sources": [{"title": "FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance", "url": "https://arxiv.org/abs/2305.05176", "published": "2023-05-09"}]
+}

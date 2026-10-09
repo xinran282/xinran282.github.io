@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-05",
+  "concept_id": "sparse-attention-longformer",
+  "title": "稀疏注意力：长文档如何减少全局注意力开销",
+  "aliases": ["sparse attention", "Longformer", "sliding window attention"],
+  "category": "基础原理",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["注意力", "长文档", "稀疏", "窗口", "复杂度"],
+  "summary": "Longformer 用滑动窗口和空洞窗口让注意力随序列长度线性增长，并为少数任务关键 token 保留全局连接，从而以可配置稀疏模式处理长文档。",
+  "sources": [{"title": "Longformer: The Long-Document Transformer", "url": "https://arxiv.org/abs/2004.05150", "published": "2020-04-10"}]
+}

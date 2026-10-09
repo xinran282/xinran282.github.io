@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-17",
+  "concept_id": "process-reward-model",
+  "title": "过程奖励模型：给推理步骤打分，而不只给答案打分",
+  "aliases": ["PRM", "process supervision", "步骤级奖励"],
+  "category": "训练与对齐",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["过程奖励", "步骤", "验证", "数学推理", "监督"],
+  "summary": "过程奖励模型评估推理链中每个步骤的正确性和可靠性，可用于候选重排与密集反馈，从而发现最终答案碰对但中间过程错误的解法。",
+  "sources": [
+    {
+      "title": "Let's Verify Step by Step",
+      "url": "https://arxiv.org/abs/2305.20050",
+      "published": "2023-05-31"
+    }
+  ]
+}

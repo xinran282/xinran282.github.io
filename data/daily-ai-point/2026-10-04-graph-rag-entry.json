@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-04",
+  "concept_id": "graph-rag-structured-retrieval",
+  "title": "GraphRAG：用实体关系图组织全局问答证据",
+  "aliases": ["GraphRAG", "knowledge graph RAG", "图检索增强生成"],
+  "category": "检索与知识",
+  "level": 4,
+  "kind": "current",
+  "status": "new",
+  "keywords": ["RAG", "知识图谱", "实体关系", "图检索", "结构化"],
+  "summary": "GraphRAG 将语料抽取为实体关系图，用 Leiden 社区检测和分层摘要组织全局主题；查询时可在局部实体邻域与社区摘要之间选择证据来源。",
+  "sources": [{"title": "From Local to Global: A Graph RAG Approach to Query-Focused Summarization", "url": "https://arxiv.org/abs/2404.16130", "published": "2024-04-24"}]
+}

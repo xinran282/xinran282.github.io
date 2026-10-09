@@ -1,0 +1,50 @@
+[
+  {
+    "concept_id": "cross-encoder-reranking",
+    "title": "交叉编码器重排：检索后再精排证据",
+    "aliases": ["cross encoder reranking", "reranker", "重排序"],
+    "keywords": ["RAG", "重排", "交叉编码器", "检索", "精度"],
+    "category": "检索与知识",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [{"title": "Passage Re-ranking with BERT", "url": "https://arxiv.org/abs/1901.04085", "published": "2019-01-12"}],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "multi-query-retrieval",
+    "title": "多查询检索：一个问题变多个查询再召回",
+    "aliases": ["multi query retrieval", "query expansion", "多查询扩展"],
+    "keywords": ["RAG", "查询扩展", "多查询", "召回", "检索"],
+    "category": "检索与知识",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.85,
+    "sources": [{"title": "Query Expansion by Prompting Large Language Models", "url": "https://arxiv.org/abs/2303.07678", "published": "2023-03-14"}],
+    "prerequisites": ["query2doc-pseudo-document-expansion"]
+  },
+  {
+    "concept_id": "ring-attention",
+    "title": "环形注意力：多设备长上下文如何分块计算",
+    "aliases": ["Ring Attention", "blockwise parallel transformer", "环形注意力"],
+    "keywords": ["注意力", "长上下文", "分块", "多设备", "并行"],
+    "category": "基础原理",
+    "level": 5,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [{"title": "Blockwise Parallel Transformer for Long Context Large Models", "url": "https://arxiv.org/abs/2305.19370", "published": "2023-05-30"}],
+    "prerequisites": ["sparse-attention-longformer"]
+  },
+  {
+    "concept_id": "llm-cascade-escalation",
+    "title": "LLM 级联：先小模型，失败再升级大模型",
+    "aliases": ["LLM cascade", "model cascade", "级联推理"],
+    "keywords": ["级联", "小模型", "大模型", "成本", "升级"],
+    "category": "工程与产品",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [{"title": "FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance", "url": "https://arxiv.org/abs/2305.05176", "published": "2023-05-09"}],
+    "prerequisites": ["semantic-router-embedding-classification"]
+  }
+]

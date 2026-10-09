@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="System 1 决策引擎要解决的不是「写一段像样的回复」，而是：给定当前状态，在你规定好的答案空间里，很快给出一个程序能直接用的判断，并带上概率。 这个名字借自 Kahneman《思考，快与慢》里的 System 1：快、直觉、不逐步推理。TypeSafe 在文档里写明了借用关系，同时把重点收窄成「快、聚焦的判断」。它不是在复现人类认知科学，只是拿这个对比来说明：模型不做慢思考，也不写解释。 产">
+<meta property="og:type" content="article">
+<meta property="og:title" content="System 1 决策引擎：给软件用的快判断">
+<meta property="og:url" content="https://xinran282.github.io/2026/09/23/System%201%20%E5%86%B3%E7%AD%96%E5%BC%95%E6%93%8E%EF%BC%9A%E7%BB%99%E8%BD%AF%E4%BB%B6%E7%94%A8%E7%9A%84%E5%BF%AB%E5%88%A4%E6%96%AD/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="System 1 决策引擎要解决的不是「写一段像样的回复」，而是：给定当前状态，在你规定好的答案空间里，很快给出一个程序能直接用的判断，并带上概率。 这个名字借自 Kahneman《思考，快与慢》里的 System 1：快、直觉、不逐步推理。TypeSafe 在文档里写明了借用关系，同时把重点收窄成「快、聚焦的判断」。它不是在复现人类认知科学，只是拿这个对比来说明：模型不做慢思考，也不写解释。 产">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-23T09:07:38.000Z">
+<meta property="article:modified_time" content="2026-09-23T09:09:32.204Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="Jev">
+<meta property="article:tag" content="Laya">
+<meta property="article:tag" content="System 1">
+<meta property="article:tag" content="TypeSafe">
+<meta property="article:tag" content="类型化决策">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/09/23/System%201%20%E5%86%B3%E7%AD%96%E5%BC%95%E6%93%8E%EF%BC%9A%E7%BB%99%E8%BD%AF%E4%BB%B6%E7%94%A8%E7%9A%84%E5%BF%AB%E5%88%A4%E6%96%AD/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/09/23/System%201%20%E5%86%B3%E7%AD%96%E5%BC%95%E6%93%8E%EF%BC%9A%E7%BB%99%E8%BD%AF%E4%BB%B6%E7%94%A8%E7%9A%84%E5%BF%AB%E5%88%A4%E6%96%AD/","path":"2026/09/23/System 1 决策引擎：给软件用的快判断/","title":"System 1 决策引擎：给软件用的快判断"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>System 1 决策引擎：给软件用的快判断 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E4%B8%8D%E6%98%AF%E5%88%86%E7%B1%BB%E5%99%A8%EF%BC%8C%E4%B9%9F%E4%B8%8D%E6%98%AF-Agent"><span class="nav-number">1.</span> <span class="nav-text">它不是分类器，也不是 Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E5%8E%9F%E8%AF%AD"><span class="nav-number">2.</span> <span class="nav-text">三种原语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E6%80%8E%E4%B9%88%E6%8B%86"><span class="nav-number">3.</span> <span class="nav-text">工作流怎么拆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%B0%E6%88%90%E5%AE%9E%E7%8E%B0%E5%B7%AE%E5%9C%A8%E5%93%AA"><span class="nav-number">4.</span> <span class="nav-text">现成实现差在哪</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E8%AF%A5%E4%BA%A4%E7%BB%99%E5%AE%83%E7%9A%84%E4%BA%8B"><span class="nav-number">5.</span> <span class="nav-text">不该交给它的事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E5%80%BC%E5%BE%97%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">什么时候值得用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">7.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/09/23/System%201%20%E5%86%B3%E7%AD%96%E5%BC%95%E6%93%8E%EF%BC%9A%E7%BB%99%E8%BD%AF%E4%BB%B6%E7%94%A8%E7%9A%84%E5%BF%AB%E5%88%A4%E6%96%AD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="System 1 决策引擎：给软件用的快判断 | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          System 1 决策引擎：给软件用的快判断
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-23 17:07:38 / 修改时间：17:09:32" itemprop="dateCreated datePublished" datetime="2026-09-23T17:07:38+08:00">2026-09-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>System 1 决策引擎要解决的不是「写一段像样的回复」，而是：给定当前状态，在你规定好的答案空间里，很快给出一个程序能直接用的判断，并带上概率。</p>
+<p>这个名字借自 Kahneman《思考，快与慢》里的 System 1：快、直觉、不逐步推理。TypeSafe 在文档里写明了借用关系，同时把重点收窄成「快、聚焦的判断」。它不是在复现人类认知科学，只是拿这个对比来说明：模型不做慢思考，也不写解释。</p>
+<p>产品形态已经有两家能对上看。TypeSafe 把这类模型叫 System One，旗舰是 Jev，走 <code>POST /v1/systemone</code>。<a target="_blank" rel="noopener" href="https://github.com/NandhaKishorM/laya">Laya</a> 自称非自回归 System 1 决策引擎，协议故意兼容同一套接口。下面按这个共同形状写，不把某一家的延迟数字当成定律。</p>
+<h2 id="它不是分类器，也不是-Agent"><a href="#它不是分类器，也不是-Agent" class="headerlink" title="它不是分类器，也不是 Agent"></a>它不是分类器，也不是 Agent</h2><p>传统软件把决策写成 if&#x2F;else。规则清楚时这最稳，也最便宜。一碰到邮件正文、工单、对话记录，规则就开始漏。</p>
+<p>常见补法是丢给大模型：「读完这段，用 JSON 告诉我该分给哪个组。」模型会写字。你再解析。字段名会飘，枚举会发明，偶发的一句解释会把解析器弄死。Agent 更进一步，自己决定下一步调什么工具。TypeSafe 把这种架构和「代码掌控流程、模型只在需要常识的地方出现」分开：后者才是它说的 AI-powered software。</p>
+<p>System 1 决策引擎站在中间。它懂自然语言，但输出被钉在你给的选项上：</p>
+<ul>
+<li>这段话该给 billing、technical 还是 account</li>
+<li>客户有多着急，落在你定义的几档上</li>
+<li>「有没有明确要求退款」为真的概率是多少</li>
+</ul>
+<p>它不写回复，不写代码，不生成推理过程。Jev 目前只吃文本：字符串、JSON、文本数组，不吃图、音频、视频。这是 TypeSafe 文档里的限制，不是我的推断。</p>
+<p>和经典分类器的差别在输入侧。分类器通常要你先标一堆数据、固定标签集。这里的问题是运行时用自然语言描述的：<code>instructions</code> 写判断本身，<code>criteria</code> 写选项或量表。标签可以按业务改，不必先训一个新头。代价是：描述写糊了，输出的概率就不好解释；领域一偏，仍然要微调或至少在自己的数据上校准。</p>
+<h2 id="三种原语"><a href="#三种原语" class="headerlink" title="三种原语"></a>三种原语</h2><p>TypeSafe 和 Laya 用同一套问题类型。选哪种，看你的代码接下来要干什么，不看哪一个听起来更「智能」。</p>
+<p><strong>Choice</strong>：从无序集合里挑一个。工单分部门、文档类型、编程语言。返回选中项、每项概率、以及描述分布有多尖的 <code>confidence</code>。列表可能盖不住时，自己加 <code>other</code> 或 <code>none</code>。</p>
+<p><strong>Score</strong>：落在你定义的有序档位上，返回值可以落在两档之间。紧急程度、受挫程度、技能深浅。档位必须能独立读懂，写具体情境，不要只写「低 &#x2F; 中 &#x2F; 高」。</p>
+<p><strong>Noul</strong>：是或否，返回 0 到 1 的 P(true)。有没有要退款、像不像钓鱼、简历有没有写过分布式。Noul 没有单独的 <code>confidence</code>。0.5 表示是和否差不多，不表示「中等强度」。TypeSafe 特意警告：不要用 Noul 去问「这个候选人 Python 强不强」——「强」没定义时，0.5 无法当中级水平用。要程度就用 Score，要是否就写清条件。</p>
+<p>同一份 state 上可以一次问很多道，题与题互相看不见答案。这是设计，不是缺陷。你要的是可拆开检查的信号，不是模型在内部把几件事揉成一句「建议」。</p>
+<p>问题 ID 只给你的代码用，不会送给模型。判断必须完整写在 <code>instructions</code> 里。state 是结构化对象时，用反引号路径指到字段，例如 <code>`ticket.messages[0].text`</code>。</p>
+<h2 id="工作流怎么拆"><a href="#工作流怎么拆" class="headerlink" title="工作流怎么拆"></a>工作流怎么拆</h2><p>TypeSafe 的构建指南可以压成几条，和产品无关。</p>
+<p>能用代码就算的，不要问模型。逾期天数、订单是否已关闭、金额是否相等，用日期和数字。模型出现的位置应当是：这段非结构化文本在说什么。</p>
+<p>state 只放当前这批问题需要的上下文。退款政策、相关交易、客户原话可以放；三年工单历史不要整包塞进去。当前事实来自你的知识库时，不要指望权重里「记得」政策。</p>
+<p>问题要窄。TypeSafe 把「把判断拆开」写成指南里最重要的一条。「这是不是垃圾邮件」里面至少叠了：要不要密码、有没有意外奖金、是否制造紧迫、发件人显示名和域名是否冲突。拆开以后，每道题可以单独看错在哪，权重可以在代码里改，不必重写一整段 prompt。</p>
+<p>同一份 state 上能一起问的，就一起问。并行几乎不增加等待，多出来的主要是题面 token。可能用得上的题也可以先问，代码按分支决定用哪几个答案——他们叫 speculative fan-out。只有后一步必须先拿到前一步答案才能构造 state、拉证据、或决定下一题的选项时，才发第二次请求。</p>
+<p>概率和置信度用来分流，不用来证明「这次一定对」。校准是对一批预测说的，单条没有保证。阈值要在你的数据上对着准确率画，cookbook 里的 0.8 只是例子。Noul 接近 0.5 该升级；Choice 的低置信度也可能只是几个可接受选项把概率摊开了，不一定等于判断失败。</p>
+<h2 id="现成实现差在哪"><a href="#现成实现差在哪" class="headerlink" title="现成实现差在哪"></a>现成实现差在哪</h2><p><strong>Jev &#x2F; TypeSafe。</strong> 闭源 API。文档写大多数查询大约 100 ms，训练目标是校准过的决策（他们称为 RLCD）。你定义 state 和 questions，代码组合答案。适合已经按 System One 协议写客户端、不想自己伺候编码器的人。价格、配额以 <a target="_blank" rel="noopener" href="https://docs.typesafe.ai/models">Models</a> 为准，这里不抄可能过期的数字。</p>
+<p><strong>Laya。</strong> Apache 2.0，ModernBERT &#x2F; mmBERT 编码器，一次前向，不生成文本。作者在 T4 上测过单问大约 33 ms。带 Router：非拉丁文字走多语言模型，避免英文权重在高棉语上准确率 0 却自信 0.95 那种事故。HTTP 服务兼容 <code>/v1/systemone</code>。它自己承认：基座在 typed-decisions 上接近随机，0.766 来自微调后的 checkpoint；选项一多、<code>score</code>、英文 <code>noul</code> 都有已知坑。把它当特化基座，不要当开箱裁判。</p>
+<p>两者协议能对上，不代表同一道题分数相同。Laya README 里对 Jev 的对比，Jev 一侧来自第三方已发表数字，样本和提示并不相同。</p>
+<p>再往外，BERT 分类头、交叉编码器重排、CALM 一类校准分类器，也能承担「快判断」。缺的是运行时用自然语言定义 <code>choice</code> &#x2F; <code>score</code> &#x2F; <code>noul</code>、以及和 System One 客户端的那层契约。有没有必要上专用引擎，看你是不是真的在组合很多这类判断，而不是偶尔抽一个字段。</p>
+<h2 id="不该交给它的事"><a href="#不该交给它的事" class="headerlink" title="不该交给它的事"></a>不该交给它的事</h2><p>需要逐步推理、工具循环、写给用户看的句子，这是 System 2 或普通 LLM 的工作。决策引擎最多提供「要不要升级到那边」的门闩。</p>
+<p>选项特别多时，所有选项要挤进同一段上下文预算。Laya 在 Banking77 上默认设置会把每个标签压到三四个 token；Jev 声称开箱能到 255 个选项，仍然不是无限。分层 Choice，或先短名单再精排，是代码的事。</p>
+<p>输出类型安全不等于真。模型不会发明列表外的标签，仍可能在列表内选错。领域一偏就要微调或至少做温度校准。Laya 出厂过自信；Jev 文档也写校准不保证单条正确。</p>
+<p>当前这一代基本上是文本 in、结构 out。界面截图、语音工单，要先变成字，或等多模态版本。</p>
+<h2 id="什么时候值得用"><a href="#什么时候值得用" class="headerlink" title="什么时候值得用"></a>什么时候值得用</h2><p>你已经能画出业务流程图，只是某几处必须读懂人话：分诊、是否触发政策、候选证据里选一条、要不要人工。那些节点改成类型化问题，周围仍是普通代码。</p>
+<p>你在用大模型抽 JSON，却把大量时间花在修解析和枚举漂移上。换决策引擎，是把「生成再解析」收成「在给定集合上打分布」。</p>
+<p>你需要在请求路径里做判断，等不起一轮完整对话。具体毫秒数看部署：托管 API、本地 GPU、CPU 差一截。先测你的 p50，再决定它够不够当同步依赖。</p>
+<p>反例也清楚。没有稳定的答案空间，每次问题都在变，那是聊天，不是决策引擎。没有人维护 <code>instructions</code> 和校准数据，上了也会在领域漂移里静默变差。一次只问一件小事、用正则就能做，不必为这个词专门加模型。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>System 1 决策引擎是给软件用的快判断层：读状态，在你规定的 Choice &#x2F; Score &#x2F; Noul 上返回概率，流程仍由代码收口。名字来自认知科学的快系统，产品承诺的是延迟和可组合的类型，不是「更像人」。</p>
+<p>Jev 把这套做成 API。Laya 做成可自托管的编码器。要不要用，看你的痛是不是「非结构化输入上的窄判断」，以及你有没有把判断拆开、用代码组合的意愿。拆不开的大问题，仍然该给会慢慢想的模型，或者给人。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Laya/" rel="tag"># Laya</a>
+              <a href="/tags/System-1/" rel="tag"># System 1</a>
+              <a href="/tags/Jev/" rel="tag"># Jev</a>
+              <a href="/tags/TypeSafe/" rel="tag"># TypeSafe</a>
+              <a href="/tags/%E7%B1%BB%E5%9E%8B%E5%8C%96%E5%86%B3%E7%AD%96/" rel="tag"># 类型化决策</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/23/Laya%EF%BC%9A%E4%B8%80%E6%AC%A1%E5%89%8D%E5%90%91%E7%BB%99%E5%87%BA%E7%B1%BB%E5%9E%8B%E5%8C%96%E5%88%A4%E6%96%AD/" rel="prev" title="Laya：一次前向给出类型化判断">
+                  <i class="fa fa-angle-left"></i> Laya：一次前向给出类型化判断
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/10/08/LangSmith%20%E5%85%A5%E9%97%A8-%E7%9C%8B%E6%B8%85%E3%80%81%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B%E4%BD%A0%E7%9A%84%20AI%20%E5%BA%94%E7%94%A8/" rel="next" title="LangSmith 入门：看清、评估和改进你的 AI 应用">
+                  LangSmith 入门：看清、评估和改进你的 AI 应用 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

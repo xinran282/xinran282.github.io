@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-24",
+  "concept_id": "instruction-tuning",
+  "title": "指令微调：把语言模型变成能听懂任务的助手",
+  "aliases": ["instruction tuning", "instruction fine-tuning", "指令跟随"],
+  "category": "训练与对齐",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["微调", "指令", "监督训练", "泛化", "助手"],
+  "summary": "指令微调将多任务数据改写为自然语言指令和目标输出，用监督训练教模型按任务约束行动，并在未见任务上评估指令泛化能力。",
+  "sources": [
+    {
+      "title": "Finetuned Language Models Are Zero-Shot Learners",
+      "url": "https://arxiv.org/abs/2109.01652",
+      "published": "2021-09-03"
+    }
+  ]
+}

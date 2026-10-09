@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-29",
+  "concept_id": "chunked-prefill-streaming-batch",
+  "title": "分块预填充与流式批处理：把长请求切成可插入的小任务",
+  "aliases": ["chunked prefill", "streaming batch", "Sarathi-Serve"],
+  "category": "工程与产品",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["批处理", "预填充", "解码", "延迟", "吞吐"],
+  "summary": "分块预填充把长 prompt 的 prefill 拆成多个计算块，并按 token budget 与 decode 请求混合组批，避免长输入阻塞在线生成，改善流式输出的 token 间延迟。",
+  "sources": [{"title": "Sarathi-Serve: Taming Throughput-Latency Tradeoff in LLM Inference", "url": "https://arxiv.org/abs/2403.02310", "published": "2024-03-04"}]
+}

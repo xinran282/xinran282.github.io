@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-19",
+  "concept_id": "semantic-router-embedding-classification",
+  "title": "语义路由：用请求特征决定调用哪个模型",
+  "aliases": ["semantic routing", "LLM router", "model router"],
+  "category": "工程与产品",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["路由", "模型选择", "成本", "延迟", "难度估计"],
+  "summary": "语义路由在请求前估计任务难度、预期质量增益和成本，决定调用强模型或弱模型，并可结合级联与升级机制降低平均推理成本。",
+  "sources": [
+    {
+      "title": "RouteLLM: Learning to Route LLMs with Preference Data",
+      "url": "https://arxiv.org/abs/2406.18665",
+      "published": "2024-06-26"
+    }
+  ]
+}

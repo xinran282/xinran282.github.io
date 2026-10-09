@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-25",
+  "concept_id": "retrieval-evaluation-rag-triad",
+  "title": "RAG 评估：不只查答案对错，还要看证据链",
+  "aliases": ["RAG evaluation", "retrieval evaluation", "RAG triad"],
+  "category": "评估与可靠性",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["RAG", "评估", "检索", "忠实性", "相关性"],
+  "summary": "RAG 评估将上下文精确率、召回率、回答忠实性和答案相关性拆开度量，用于定位检索、排序、证据使用和生成阶段的独立失败。",
+  "sources": [
+    {
+      "title": "RAGAS: Automated Evaluation of Retrieval Augmented Generation",
+      "url": "https://arxiv.org/abs/2309.15217",
+      "published": "2023-09-26"
+    }
+  ]
+}

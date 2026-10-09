@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-22",
+  "concept_id": "vision-transformer-patching",
+  "title": "视觉 token 化：把图像切成 patch 交给 Transformer",
+  "aliases": ["Vision Transformer", "ViT", "patch embedding"],
+  "category": "多模态",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["视觉", "Transformer", "patch", "token", "位置编码"],
+  "summary": "ViT 将图像划分为固定大小 patch，经线性投影与位置编码形成视觉 token 序列，再由自注意力建模任意图像块之间的关系。",
+  "sources": [
+    {
+      "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+      "url": "https://arxiv.org/abs/2010.11929",
+      "published": "2020-10-22"
+    }
+  ]
+}

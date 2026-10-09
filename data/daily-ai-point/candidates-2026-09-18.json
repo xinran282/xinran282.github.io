@@ -1,0 +1,60 @@
+[
+  {
+    "concept_id": "chain-of-thought-faithfulness",
+    "title": "思维链忠实性：模型说出的理由不一定是真实原因",
+    "aliases": ["CoT faithfulness", "reasoning faithfulness", "忠实性"],
+    "keywords": ["思维链", "忠实性", "解释", "评估", "偏差线索"],
+    "category": "评估与可靠性",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Reasoning models don't always say what they think", "url": "https://www.anthropic.com/research/reasoning-models-dont-say-think", "published": "2025-04-03"}
+    ],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "contrastive-decoding",
+    "title": "对比解码：从语言模型输出中减去常见偏差",
+    "aliases": ["contrastive decoding", "CD decoding", "对比搜索解码"],
+    "keywords": ["解码", "幻觉", "分布", "expert", "amateur", "采样"],
+    "category": "推理与效率",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "A Contrastive Framework for Neural Text Generation", "url": "https://arxiv.org/abs/2202.06417", "published": "2022-02-13"},
+      {"title": "Contrastive Decoding: Open-ended Text Generation as Optimization", "url": "https://arxiv.org/abs/2210.15097", "published": "2022-10-19"}
+    ],
+    "prerequisites": ["speculative-decoding"]
+  },
+  {
+    "concept_id": "semantic-router-embedding-classification",
+    "title": "语义路由：用向量分类把请求导向合适模型",
+    "aliases": ["semantic routing", "LLM router", "semantic classifier"],
+    "keywords": ["路由", "嵌入", "分类", "成本", "模型选择"],
+    "category": "工程与产品",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.85,
+    "sources": [
+      {"title": "RouteLLM: Learning to Route LLMs with Preference Data", "url": "https://arxiv.org/abs/2406.18665", "published": "2024-06-26"},
+      {"title": "FrugalGPT", "url": "https://arxiv.org/abs/2305.05176", "published": "2023-05-09"}
+    ],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "vision-token-patching",
+    "title": "视觉 token 化：把图像切成 patch 交给 Transformer",
+    "aliases": ["vision transformer patch embedding", "patchify", "ViT patch"],
+    "keywords": ["ViT", "patch", "视觉", "token", "位置编码"],
+    "category": "多模态",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale", "url": "https://arxiv.org/abs/2010.11929", "published": "2020-10-22"}
+    ],
+    "prerequisites": []
+  }
+]

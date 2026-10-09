@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-03",
+  "concept_id": "clip-image-text-contrastive-pretraining",
+  "title": "CLIP 双塔对比学习：图文检索为什么能用同一个语义空间",
+  "aliases": ["CLIP", "contrastive image-text pretraining", "图文对比学习"],
+  "category": "多模态",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["多模态", "CLIP", "对比学习", "图文检索", "嵌入"],
+  "summary": "CLIP 用图像和文本双塔分别编码配对图文，并通过 N×N 对比目标拉近正样本、推远负样本，使两类模态共享可比较的语义空间，支持高效图文检索和文本驱动的零样本分类。",
+  "sources": [{"title": "Learning Transferable Visual Models From Natural Language Supervision", "url": "https://arxiv.org/abs/2103.00020", "published": "2021-02-26"}]
+}

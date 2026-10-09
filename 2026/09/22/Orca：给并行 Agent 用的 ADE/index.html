@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Orca 不是又一个聊天窗口，也不是又一个绑定单一模型的 IDE。它把自己叫成 ADE：Agent Development Environment。仓库 stablyai&#x2F;orca 的定位很直白：用你自己的订阅，同时跑一队编码智能体。桌面、手机、远程机器都能接进来。 到 2026 年 9 月 22 日，这个 TypeScript 仓库大约 7.5 万 Star，MIT 许可证，Stabl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Orca：给并行 Agent 用的 ADE">
+<meta property="og:url" content="https://xinran282.github.io/2026/09/22/Orca%EF%BC%9A%E7%BB%99%E5%B9%B6%E8%A1%8C%20Agent%20%E7%94%A8%E7%9A%84%20ADE/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="Orca 不是又一个聊天窗口，也不是又一个绑定单一模型的 IDE。它把自己叫成 ADE：Agent Development Environment。仓库 stablyai&#x2F;orca 的定位很直白：用你自己的订阅，同时跑一队编码智能体。桌面、手机、远程机器都能接进来。 到 2026 年 9 月 22 日，这个 TypeScript 仓库大约 7.5 万 Star，MIT 许可证，Stabl">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-22T11:53:51.000Z">
+<meta property="article:modified_time" content="2026-09-22T11:57:21.847Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="ADE">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="Orca">
+<meta property="article:tag" content="worktree">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/09/22/Orca%EF%BC%9A%E7%BB%99%E5%B9%B6%E8%A1%8C%20Agent%20%E7%94%A8%E7%9A%84%20ADE/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/09/22/Orca%EF%BC%9A%E7%BB%99%E5%B9%B6%E8%A1%8C%20Agent%20%E7%94%A8%E7%9A%84%20ADE/","path":"2026/09/22/Orca：给并行 Agent 用的 ADE/","title":"Orca：给并行 Agent 用的 ADE"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Orca：给并行 Agent 用的 ADE | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E5%88%B0%E5%BA%95%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">它到底解决什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9E%8B%EF%BC%9A%E4%B8%80%E4%B8%AA%E4%BB%BB%E5%8A%A1%E4%B8%80%E4%BB%BD-worktree"><span class="nav-number">2.</span> <span class="nav-text">核心模型：一个任务一份 worktree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C%E8%B7%91%EF%BC%8C%E7%84%B6%E5%90%8E%E6%8C%91%E4%B8%80%E4%B8%AA%E7%95%99%E4%B8%8B"><span class="nav-number">3.</span> <span class="nav-text">并行跑，然后挑一个留下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%8C%E9%9D%A2%E9%87%8C%E8%BF%98%E5%A1%9E%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">4.</span> <span class="nav-text">桌面里还塞了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">5.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%92%8C%E6%99%AE%E9%80%9A-AI-IDE-%E5%B7%AE%E5%9C%A8%E5%93%AA"><span class="nav-number">6.</span> <span class="nav-text">和普通 AI IDE 差在哪</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%97%B6%E8%A6%81%E6%B3%A8%E6%84%8F"><span class="nav-number">7.</span> <span class="nav-text">使用时要注意</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">8.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/09/22/Orca%EF%BC%9A%E7%BB%99%E5%B9%B6%E8%A1%8C%20Agent%20%E7%94%A8%E7%9A%84%20ADE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Orca：给并行 Agent 用的 ADE | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Orca：给并行 Agent 用的 ADE
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-22 19:53:51 / 修改时间：19:57:21" itemprop="dateCreated datePublished" datetime="2026-09-22T19:53:51+08:00">2026-09-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Orca 不是又一个聊天窗口，也不是又一个绑定单一模型的 IDE。它把自己叫成 ADE：Agent Development Environment。仓库 <a target="_blank" rel="noopener" href="https://github.com/stablyai/orca">stablyai&#x2F;orca</a> 的定位很直白：用你自己的订阅，同时跑一队编码智能体。桌面、手机、远程机器都能接进来。</p>
+<p>到 2026 年 9 月 22 日，这个 TypeScript 仓库大约 7.5 万 Star，MIT 许可证，Stably 出品，Y Combinator 背景。官网是 <a target="_blank" rel="noopener" href="https://onorca.dev/">onOrca.dev</a>。宣传语写的是「面向 100x 构建者的 AI 编排器」，听起来夸张，产品本身倒不绕：把 Codex、Claude Code、OpenCode、Pi 这类 CLI 智能体并排跑起来，每个占一个 git worktree，状态集中看。</p>
+<h2 id="它到底解决什么"><a href="#它到底解决什么" class="headerlink" title="它到底解决什么"></a>它到底解决什么</h2><p>现在常见的用法是：开一个 Claude Code 终端，改一个仓库；卡住了再开 Cursor 或 Codex 重来一遍。文件在同一份 checkout 上互相覆盖，stash 和切分支很快变成体力活。</p>
+<p>Orca 把单位从「一个仓库窗口」改成「一个任务一份磁盘副本」。文档写得很清楚：每个功能或 bug 对应一个 <code>git worktree</code>。智能体改的是自己那份文件，不会踩到旁边那个 agent 正在改的同一行。</p>
+<p>这不是新发明。<code>git worktree</code> 一直能做到隔离。Orca 做的是把创建、分发提示、对比 diff、提交、开 PR、远程跑、手机盯进度，收进同一个桌面应用。</p>
+<h2 id="核心模型：一个任务一份-worktree"><a href="#核心模型：一个任务一份-worktree" class="headerlink" title="核心模型：一个任务一份 worktree"></a>核心模型：一个任务一份 worktree</h2><p>按官方文档，仓库有一个 base ref，通常是 <code>origin/main</code>。每个 worktree 再选自己的 start-from：base、本地分支、某个 SHA，或已有远程分支。每个 worktree 有自己的分支、磁盘目录和 agent 终端。</p>
+<p>生命周期也按任务走：</p>
+<ol>
+<li>创建：填任务名，选起点，可选挂上 GitHub &#x2F; Linear &#x2F; Jira &#x2F; GitLab 链接。</li>
+<li>干活：agent 终端、编辑器、浏览器、普通终端都绑在这个 worktree 上。</li>
+<li>评审：对着 start-from 看 diff，可以在行上批注再丢回给智能体。</li>
+<li>发出去：提交、push、开 PR、等检查，都在应用里完成。</li>
+<li>归档或删除：确认后删掉目录和分支。</li>
+</ol>
+<p>创建是后台进行的。对话框提交后立刻关掉，<code>git fetch</code> 和 <code>git worktree add</code> 继续跑。侧边栏会出现进度条，你可以先去别的 worktree。失败了能重试。</p>
+<p>新 worktree 默认是干净 checkout。<code>node_modules</code>、缓存、<code>.env</code> 这类 gitignore 文件不会自动出现。Orca 用三套机制补：</p>
+<ul>
+<li>仓库设置里的 Worktree Shared Paths，从主 checkout 物化过来。macOS 上能走 APFS clone-copy，否则用符号链接。</li>
+<li><code>orca.yaml</code> 里的 <code>worktree.sharedDirectories</code>，适合 <code>node_modules</code>、<code>.cache</code> 这种可重建的大目录，共享而不是复制。</li>
+<li>仓库根目录的 <code>.worktreeinclude</code>，把 <code>.env</code> 这类文件复制进每个 worktree，各自一份。</li>
+</ul>
+<p>这些 worktree 就是普通 git worktree。你在终端里 <code>git rebase</code> 或 <code>git cherry-pick</code>，Orca 下一次刷新会跟上。自己用 <code>git worktree add</code> 建出来的，默认先藏着，可以在 Non-Orca worktrees 里选「显示」。</p>
+<h2 id="并行跑，然后挑一个留下"><a href="#并行跑，然后挑一个留下" class="headerlink" title="并行跑，然后挑一个留下"></a>并行跑，然后挑一个留下</h2><p>README 里最显眼的能力是：把同一条提示发给五个智能体，各自隔离 worktree，比完再合赢的那份。文档里也有对应食谱，比如三个 agent 赛同一件事。</p>
+<p>它宣称支持任何能在终端里跑的 CLI 智能体。名单很长，Claude Code、Codex、Grok、Cursor CLI、GitHub Copilot、OpenCode、Pi、Kimi、Qwen Code 都在上面，末尾还写了「+ any CLI agent」。这更像兼容层，不是官方认证清单。能不能用，取决于那个 CLI 自己能不能在你的机器上跑起来。</p>
+<p>桌面端还带账号切换和用量追踪，至少覆盖 Claude 和 Codex：看用量、看限额重置时间，切账号不必重新登录。</p>
+<h2 id="桌面里还塞了什么"><a href="#桌面里还塞了什么" class="headerlink" title="桌面里还塞了什么"></a>桌面里还塞了什么</h2><p>如果只是 worktree 管理器，它不会涨到这个体量。仓库 README 还列了这些：</p>
+<p><strong>手机 Companion。</strong> 桌面配对后，agent 跑完会推通知，你可以在外面补一句后续指令。iOS 上架 App Store，也有 TestFlight；Android 目前是 APK，英文 README 写到 0.0.50，中文 README 还停在 0.0.48，以 GitHub Release 为准更稳。</p>
+<p><strong>终端分屏。</strong> 自称 Ghostty 级，WebGL 渲染，无限分屏，滚动历史能熬过重启。</p>
+<p><strong>设计模式。</strong> 内嵌真实 Chromium。点页面上的某个元素，HTML、CSS 和裁好的截图直接进 agent 提示。修 UI 时比口头描述「那个按钮偏右一点」靠谱。</p>
+<p><strong>GitHub 和 Linear 原生界面。</strong> 应用里看 PR、issue、看板，从任务直接开 worktree。文档里还有 Jira 抽屉，创建 worktree 时也能贴 Jira 链接。</p>
+<p><strong>SSH worktree。</strong> agent 可以跑在远程大机器上，文件编辑、git、终端都走过去，带自动重连和端口转发。无头 Linux 服务器另有 <code>orca serve</code> 指南。</p>
+<p><strong>给 AI diff 写批注。</strong> 某一行不行，评论丢回给智能体，评审、改、提交不用切出去。</p>
+<p><strong>编辑器。</strong> 用的是 VS Code 那套编辑器，自动保存。文件和图片可以拖进提示。Markdown、图片、PDF 能在工作区预览。</p>
+<p><strong>Orca CLI。</strong> <code>orca worktree create</code>、<code>snapshot</code>、<code>click</code>、<code>fill</code> 这类命令让智能体反过来驱动 Orca。还有 Computer Use：需要真的点桌面应用时，走无障碍树、截图和受限制的 UI 操作。</p>
+<p>快速打开可以搜 worktree、文件、智能体、命令和仓库上下文。通知系统会标出谁跑完了、谁卡住了，也可以标未读稍后再看。README 自己承认功能列表永远落后，真正的清单在 <a target="_blank" rel="noopener" href="https://github.com/stablyai/orca/releases">Releases</a>，他们说每天都发。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>桌面支持 macOS、Windows、Linux。</p>
+<ul>
+<li>官网：<a target="_blank" rel="noopener" href="https://onorca.dev/download">onorca.dev&#x2F;download</a></li>
+<li>GitHub Release 直链：Apple Silicon dmg、Intel dmg、Windows exe、Linux AppImage</li>
+<li>Homebrew：<code>brew install --cask stablyai/orca/orca</code></li>
+<li>Arch：AUR 上的 <code>stably-orca-bin</code>，源码包是 <code>stably-orca-git</code></li>
+</ul>
+<p>Windows 代码签名由 SignPath.io 赞助，证书来自 SignPath Foundation。</p>
+<p>手机端需要先有桌面。iOS：<a target="_blank" rel="noopener" href="https://apps.apple.com/us/app/orca-ide/id6766130217">App Store</a>。Android APK 在 Releases 里，安装步骤见 <a target="_blank" rel="noopener" href="https://www.onorca.dev/docs/android-apk">Android 文档</a>。</p>
+<p>配对手机用的 relay 也在同一个仓库的 <code>cloud/</code> 目录，单独一套 pnpm workspace。</p>
+<h2 id="和普通-AI-IDE-差在哪"><a href="#和普通-AI-IDE-差在哪" class="headerlink" title="和普通 AI IDE 差在哪"></a>和普通 AI IDE 差在哪</h2><p>Cursor、Windsurf 这类产品把模型和编辑器绑在一起卖。Orca 反向：模型你自己订，应用负责编排。GitHub 简介写的就是「Run any coding agent with your own subscription」。</p>
+<p>Claude Code 或 Codex 单独用，已经能改代码。缺的是同时跑多个、文件不打架、结果能并排看、远程机器和手机能接着管。Orca 押的是这个调度层。</p>
+<p>它仍然是本地优先的桌面应用，不是云端把代码交出去代跑的服务。远程能力走 SSH 或自建 Orca Server。遥测文档说收集匿名使用数据，可以关掉。</p>
+<h2 id="使用时要注意"><a href="#使用时要注意" class="headerlink" title="使用时要注意"></a>使用时要注意</h2><p>并行有成本。五个 worktree 就是五份磁盘，再加依赖目录。共享 <code>node_modules</code> 能省空间，也可能让两个 agent 同时改构建缓存时互相干扰。<code>.env</code> 这类文件官方建议复制，不要共享。</p>
+<p>删除 worktree 会连分支一起删。如果 git 认为还有未合并提交，Orca 会留下分支并提示你复查，文件夹不会自动恢复。</p>
+<p>Issue 数量不少。仓库公开 issue 有六千多，fork 大约五千。日更产品常见：功能来得快，边角会毛。合不合适，看你是不是真的在并行用多个 CLI agent。如果你一次只开一个 Claude Code，Orca 多半显得重。</p>
+<p>中文社区有微信群。README 写的是第 9 群，二维码在仓库文档资源里。英文社区在 <a target="_blank" rel="noopener" href="https://discord.gg/fzjDKHxv8Q">Discord</a>，更新在 <a target="_blank" rel="noopener" href="https://x.com/orca_build">@orca_build</a>。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>Orca 是一个开源桌面 ADE。它把「多个 CLI 编码智能体 + 每个任务一份 git worktree」当成默认工作方式，再补上终端、内嵌浏览器、评审、SSH 和手机监控。</p>
+<p>值不值得装，取决于你有没有这种痛：同一个改动想让几个 agent 各写一版，或者一边修 bug 一边开新功能，还不想在同一份工作树上互相覆盖。有的话，从 <a target="_blank" rel="noopener" href="https://github.com/stablyai/orca">GitHub 仓库</a> 或 <a target="_blank" rel="noopener" href="https://onorca.dev/download">下载页</a> 装一份就够判断。没有的话，它就是个功能很多的终端管理器，不必为了名单上的几十个 agent logo 专门换工具。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Agent/" rel="tag"># Agent</a>
+              <a href="/tags/Orca/" rel="tag"># Orca</a>
+              <a href="/tags/worktree/" rel="tag"># worktree</a>
+              <a href="/tags/ADE/" rel="tag"># ADE</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/16/Oh%20My%20Pi%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%8A%8A%20IDE%20%E8%83%BD%E5%8A%9B%E6%8E%A5%E8%BF%9B%E7%BB%88%E7%AB%AF%E7%9A%84%E7%BC%96%E7%A0%81%20Agent/" rel="prev" title="Oh My Pi：一个把 IDE 能力接进终端的编码 Agent">
+                  <i class="fa fa-angle-left"></i> Oh My Pi：一个把 IDE 能力接进终端的编码 Agent
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/23/Laya%EF%BC%9A%E4%B8%80%E6%AC%A1%E5%89%8D%E5%90%91%E7%BB%99%E5%87%BA%E7%B1%BB%E5%9E%8B%E5%8C%96%E5%88%A4%E6%96%AD/" rel="next" title="Laya：一次前向给出类型化判断">
+                  Laya：一次前向给出类型化判断 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

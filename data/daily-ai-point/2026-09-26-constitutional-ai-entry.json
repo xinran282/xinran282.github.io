@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-26",
+  "concept_id": "constitutional-ai",
+  "title": "Constitutional AI：用原则反馈约束助手行为",
+  "aliases": ["Constitutional AI", "CAI", "principle feedback"],
+  "category": "训练与对齐",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["对齐", "原则", "反馈", "批评", "助手"],
+  "summary": "Constitutional AI 用显式原则引导模型批评并改写初始回答，再由 AI 反馈生成偏好数据训练助手，使安全与行为约束更可审计。",
+  "sources": [
+    {
+      "title": "Constitutional AI: Harmlessness from AI Feedback",
+      "url": "https://arxiv.org/abs/2212.08073",
+      "published": "2022-12-16"
+    }
+  ]
+}

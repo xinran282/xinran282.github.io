@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-02",
+  "concept_id": "repetition-frequency-penalties",
+  "title": "频率惩罚与存在惩罚：解码参数如何影响生成",
+  "aliases": ["frequency penalty", "presence penalty", "解码惩罚"],
+  "category": "基础原理",
+  "level": 3,
+  "kind": "current",
+  "status": "new",
+  "keywords": ["解码", "采样", "重复", "惩罚", "温度"],
+  "summary": "频率惩罚按 token 已出现次数持续下调 logits，存在惩罚只按 token 是否出现过一次性下调；两者减少重复的方式不同，且不等于提升事实正确性。",
+  "sources": [{"title": "OpenAI API Reference: Parameter details", "url": "https://platform.openai.com/docs/api-reference/parameter-details", "published": "2026-10-01"}]
+}

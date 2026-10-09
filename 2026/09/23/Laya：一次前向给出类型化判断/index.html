@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Laya 是一个非自回归的 System 1 决策引擎。你给它一段状态（邮件、工单、JSON、纯文本）和一组类型化问题，它做一次前向，返回 choice、score 或 noul（是否），不生成句子。仓库是 NandhaKishorM&#x2F;laya，Apache 2.0，Convai Innovations 做的。权重在 Hugging Face。 到 2026 年 9 月 23 日，这个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laya：一次前向给出类型化判断">
+<meta property="og:url" content="https://xinran282.github.io/2026/09/23/Laya%EF%BC%9A%E4%B8%80%E6%AC%A1%E5%89%8D%E5%90%91%E7%BB%99%E5%87%BA%E7%B1%BB%E5%9E%8B%E5%8C%96%E5%88%A4%E6%96%AD/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="Laya 是一个非自回归的 System 1 决策引擎。你给它一段状态（邮件、工单、JSON、纯文本）和一组类型化问题，它做一次前向，返回 choice、score 或 noul（是否），不生成句子。仓库是 NandhaKishorM&#x2F;laya，Apache 2.0，Convai Innovations 做的。权重在 Hugging Face。 到 2026 年 9 月 23 日，这个">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-23T09:04:36.000Z">
+<meta property="article:modified_time" content="2026-09-23T09:06:15.994Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="Jev">
+<meta property="article:tag" content="Laya">
+<meta property="article:tag" content="ModernBERT">
+<meta property="article:tag" content="System 1">
+<meta property="article:tag" content="决策模型">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/09/23/Laya%EF%BC%9A%E4%B8%80%E6%AC%A1%E5%89%8D%E5%90%91%E7%BB%99%E5%87%BA%E7%B1%BB%E5%9E%8B%E5%8C%96%E5%88%A4%E6%96%AD/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/09/23/Laya%EF%BC%9A%E4%B8%80%E6%AC%A1%E5%89%8D%E5%90%91%E7%BB%99%E5%87%BA%E7%B1%BB%E5%9E%8B%E5%8C%96%E5%88%A4%E6%96%AD/","path":"2026/09/23/Laya：一次前向给出类型化判断/","title":"Laya：一次前向给出类型化判断"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Laya：一次前向给出类型化判断 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E5%9B%9E%E7%AD%94%E5%93%AA%E4%B8%89%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">它回答哪三类问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E4%B8%AA-checkpoint%EF%BC%8C%E5%8A%A0%E4%B8%80%E4%B8%AA-Router"><span class="nav-number">2.</span> <span class="nav-text">三个 checkpoint，加一个 Router</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%92%8C-Jev-%E6%AF%94%EF%BC%8C%E6%95%B0%E5%AD%97%E6%80%8E%E4%B9%88%E8%AF%BB"><span class="nav-number">3.</span> <span class="nav-text">和 Jev 比，数字怎么读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%B9%8B%E5%89%8D%E5%85%88%E7%9C%8B%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">用之前先看限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E8%B0%83%E6%89%8D%E6%98%AF%E6%AD%A3%E8%B7%AF"><span class="nav-number">5.</span> <span class="nav-text">微调才是正路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E8%B7%91"><span class="nav-number">6.</span> <span class="nav-text">怎么跑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">7.</span> <span class="nav-text">结论</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/09/23/Laya%EF%BC%9A%E4%B8%80%E6%AC%A1%E5%89%8D%E5%90%91%E7%BB%99%E5%87%BA%E7%B1%BB%E5%9E%8B%E5%8C%96%E5%88%A4%E6%96%AD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Laya：一次前向给出类型化判断 | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Laya：一次前向给出类型化判断
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-23 17:04:36 / 修改时间：17:06:15" itemprop="dateCreated datePublished" datetime="2026-09-23T17:04:36+08:00">2026-09-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Laya 是一个非自回归的 System 1 决策引擎。你给它一段状态（邮件、工单、JSON、纯文本）和一组类型化问题，它做一次前向，返回 <code>choice</code>、<code>score</code> 或 <code>noul</code>（是否），不生成句子。仓库是 <a target="_blank" rel="noopener" href="https://github.com/NandhaKishorM/laya">NandhaKishorM&#x2F;laya</a>，Apache 2.0，Convai Innovations 做的。权重在 <a target="_blank" rel="noopener" href="https://huggingface.co/convaiinnovations/laya">Hugging Face</a>。</p>
+<p>到 2026 年 9 月 23 日，这个 9 月 18 日才公开的 Python 仓库大约 1.8 万 Star。宣传数字是 T4 上一问 33 ms，批量大约 7.2 ms&#x2F;问。数字来自作者自己的测量，可以当数量级，不必当成你机器上的保证。</p>
+<p>它想替代的，是「让大模型写一段 JSON，再自己解析」这条路。解析会失败，模型会编。Laya 的输出本来就是标签、分数和概率。</p>
+<h2 id="它回答哪三类问题"><a href="#它回答哪三类问题" class="headerlink" title="它回答哪三类问题"></a>它回答哪三类问题</h2><table>
+<thead>
+<tr>
+<th>原语</th>
+<th>返回什么</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>choice</code></td>
+<td>选中的标签、每项概率、置信度</td>
+<td>工单分部门、意图分类</td>
+</tr>
+<tr>
+<td><code>score</code></td>
+<td>有序量表上的期望档位、分布、置信度</td>
+<td>紧急程度、受挫程度</td>
+</tr>
+<tr>
+<td><code>noul</code></td>
+<td>校准过的 P(true)，0 到 1</td>
+<td>是否退款、是否要流失、是否越狱</td>
+</tr>
+</tbody></table>
+<p>一次调用可以塞多道题，共用同一次前向。README 的客服例子里，同一封「三月收了两次费，今天退款否则取消」的邮件，同时问部门、紧急度、流失风险、是否明确要求退款。</p>
+<p>作者说训练用了 RLCD：按严格真评分规则做强化学习。因此他们主张置信度可以拿来做门槛，高置信度自动处理，低的转人工。这是训练目标上的说法。后面会写到，出厂权重本身过自信，要用温度校准；<code>action.act_probability</code> 目前几乎不能用。</p>
+<h2 id="三个-checkpoint，加一个-Router"><a href="#三个-checkpoint，加一个-Router" class="headerlink" title="三个 checkpoint，加一个 Router"></a>三个 checkpoint，加一个 Router</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>编码器</th>
+<th>参数量</th>
+<th>上下文</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>laya</code></td>
+<td>ModernBERT-large</td>
+<td>421M</td>
+<td>512</td>
+<td>英文</td>
+</tr>
+<tr>
+<td><code>laya-multilingual</code></td>
+<td>mmBERT-base</td>
+<td>322M</td>
+<td>1024</td>
+<td>100 多种语言，更快</td>
+</tr>
+<tr>
+<td><code>laya-typed-decisions</code></td>
+<td>ModernBERT-large</td>
+<td>421M</td>
+<td>1024</td>
+<td>类型化决策工作流微调版</td>
+</tr>
+</tbody></table>
+<p>推荐入口是 <code>Router</code>。它先用纯 Python 做脚本和语言探测（作者写小于 0.5 ms），再决定走英文还是多语言模型。探测发生在前向之前。原因写在基准里：英文 checkpoint 在高棉语上准确率 0.000，置信度却是 0.952。错了还很笃定，靠模型自己的置信度挡不住。</p>
+<p>路由证据（同一套问题，一块 T4，17416 题）：</p>
+<ul>
+<li>MASSIVE 意图，英文：<code>laya</code> 0.783，多语言 0.657，Router 跟英文走 0.783</li>
+<li>MASSIVE 意图，另外 13 种语言：英文 0.306，多语言 0.451，Router 跟多语言</li>
+<li>XNLI 非英文 14 种语言：英文 0.521，多语言 0.731</li>
+<li>51 种语言里，高于 3 倍随机的：英文 23&#x2F;51，多语言和 Router 都是 45&#x2F;51</li>
+</ul>
+<p>短拉丁文本经常看不出语种，比如 <code>Quero cancelar</code>。默认会进英文。流量主要不是英文时，设 <code>Router(default=&quot;multilingual&quot;)</code>。0.3.7 还修了被邮件客户端扒掉口音的西语、意语、葡语、法语，以及巴西葡语，让它们能进多语言模型。内置探测是无依赖的启发式，不准可以自己塞 <code>lang_guess</code>，接 fastText 或别的 LID。</p>
+<p>生产环境别每次冷加载。作者测过：<code>max_loaded=1</code> 时语言一切换，CPU 中位重载 7.4 秒，T4 上 10.3 秒。默认 <code>Router()</code> 常驻英文和多语言两个；<code>Router(preload=True)</code> 三个都放内存，之后语言切换只付探测成本。预加载后他们报的延迟是 GPU 32.8 ms，CPU 193–464 ms。</p>
+<h2 id="和-Jev-比，数字怎么读"><a href="#和-Jev-比，数字怎么读" class="headerlink" title="和 Jev 比，数字怎么读"></a>和 Jev 比，数字怎么读</h2><p>TypeSafe 的 Jev 是同类产品：类型化判断，走 System One API。Laya 的 HTTP 服务 <code>laya-serve</code> 故意兼容 <code>POST /v1/systemone</code>，现有 Jev 客户端改 <code>baseUrl</code> 就能打过来。impossibl 上也有免费托管，同样这套协议。</p>
+<p>README 里有一张「Laya（经 Router）对 Jev」表。Laya 数字是作者自己测的；Jev 数字来自第三方已发表结果，作者写明没有 TypeSafe API 权限，样本和提示并不相同。当作方向，不要当成同一次对照实验。</p>
+<p>作者列出的差异大致是：</p>
+<ul>
+<li>typed-decisions 2000 条：Jev 0.727，Laya 0.766</li>
+<li>AG News：0.910 对 0.950</li>
+<li>DAIR Emotion：0.480 对 0.595；Jev 有 16% 样本给真标签的概率是 0</li>
+<li>Banking77：Jev 0.870（72 类），Laya 默认 0.425（77 类）</li>
+<li>ECE（越低越好，Laya 是温度校准后）：0.246 对 0.081</li>
+<li>单问 p50 延迟：Jev 第三方测到 236–276 ms，Laya 自测 32.8 ms</li>
+<li>权重：Jev 闭源 API，Laya Apache 2.0，自托管按他们的算法是 $0</li>
+</ul>
+<p>Jev 仍强的地方，作者自己写了。选项超过大约 20 个时，Laya 把选项挤进固定的 <code>head_max_len</code>（英文默认 192，多语言 256）。77 个标签大约每个只分到 3 到 4 个 token，字面值会糊在一起。Jev 开箱能到 255 个选项。软分布匹配上 Jev 也更好（soft accuracy 0.580 对 0.471）。出厂未校准的 ECE，Laya 原始值并不更好，0.081 是拟合温度之后的数。</p>
+<p>typed-decisions 那 0.766 来自专门微调的 <code>laya-typed-decisions</code>。两个基座在同一套基准上是 0.362 和 0.342，低于多数类基线 0.461，只略高于随机 0.318。作者原话：Laya 是一个很快的、用来特化的基座，不是开箱即用的零样本决策引擎。能力主要来自微调。</p>
+<h2 id="用之前先看限制"><a href="#用之前先看限制" class="headerlink" title="用之前先看限制"></a>用之前先看限制</h2><p>这些是仓库自己写的，不是外人挑刺。</p>
+<p>选项很多时，加大 <code>head_max_len</code> &#x2F; <code>max_len</code>，或者用 <code>predict_shortlist</code> 先按向量召回 top k 再打一次前向。Issue #102 有人报告 Banking77 短名单从 54.3% 到 60.8%，仓库没有复测。</p>
+<p><code>score</code> 是最弱的原语。SST-5 上英文 checkpoint 0.372。多语言模型在 <code>score</code> 上有位置偏差，很少选列表里第一档（#131）。英文分数题应指定 <code>model=&quot;english&quot;</code>。</p>
+<p>英文 checkpoint 的 <code>noul</code> 可能跟着 <code>false:</code> &#x2F; <code>true:</code> 这两个选项词走，而不是跟着正文走（#156）。正例也会给出很自信的「否」。未换权重之前，用自己的数据检查；不行就改成两个中性 key 的 <code>choice</code>。</p>
+<p><code>action.act_probability</code> 几乎恒为 1.0，在 396 条标注上 AUROC 0.30，和正确性反着来（#185）。门控用 <code>confidence</code>，同一批 AUROC 0.77。</p>
+<p>两个基座出厂都过自信。按题型和选项数在留出数据上重拟合温度后，平均 ECE 从 0.466 降到 0.081（英文），多语言从 0.314 到 0.106。多语言权重不带拟合温度，要用概率就自己拟合。加载时温度会被夹到 <code>[0.5, 5.0]</code>，非法值回退到 1.0，这只是避免加载失败，不代表已经校准。</p>
+<p>0.3.7 把 <code>laya.load()</code> 在 CPU 上从大约 22 秒降到大约 2 秒，并绕开了 Windows + Python 3.14 的崩溃（#123）。微调笔记本的校准改到留出切片上拟合（#186）。</p>
+<h2 id="微调才是正路"><a href="#微调才是正路" class="headerlink" title="微调才是正路"></a>微调才是正路</h2><p>Kaggle 免费 2xT4 上有完整笔记本：造数据、RLCD 训练、拟合温度、评估、推 Hub。大约 4 到 5 小时，4 个 epoch，约 3 万题。</p>
+<p>一份完整特化记录在 <code>docs/finetune_browser_agent.md</code>：在 16 GB 单卡、不调用付费 API 的情况下，把 Laya 做成 <a target="_blank" rel="noopener" href="https://github.com/browser-use/jev-ultrafast">browser-use&#x2F;jev-ultrafast</a> 的操作&#x2F;目标决策头。约 45 个候选元素的 top-1 从零样本 0.10 到 0.66，真实任务成功率从 0% 到 62%，每步 17–23 ms。权重在 <a target="_blank" rel="noopener" href="https://huggingface.co/cklxx/laya-browser">cklxx&#x2F;laya-browser</a>。</p>
+<p>仓库还带几套现成问题模板：小模型&#x2F;前沿模型路由、提示词护栏、内容审核、工单分诊。那是起点，不是替你完成领域适配。</p>
+<h2 id="怎么跑"><a href="#怎么跑" class="headerlink" title="怎么跑"></a>怎么跑</h2><p>Python 3.10+（<code>huggingface_hub</code> 1.x、<code>transformers</code> 5.x、<code>torch</code> 2.14 都卡在这）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m pip install laya</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> laya <span class="keyword">import</span> Router</span><br><span class="line">router = Router(preload=<span class="literal">True</span>)</span><br><span class="line">res = router.predict(state, questions)</span><br></pre></td></tr></table></figure>
+
+<p>只跑一个权重时用 <code>laya.load(&quot;convaiinnovations/laya&quot;)</code>，多语言和 typed-decisions 走对应 <code>subfolder</code>。空问题字典会直接返回空答案，不做分词和前向。</p>
+<p>自托管：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install <span class="string">&quot;laya[serve]&quot;</span></span><br><span class="line">LAYA_DEVICE=cuda LAYA_PRELOAD=1 laya-serve</span><br></pre></td></tr></table></figure>
+
+<p>默认 <code>0.0.0.0:8000</code>。环境变量可配设备、预加载列表、CPU 线程上限、可选 Bearer。仓库是 Nix flake，也有 NixOS 模块。Docker 说明在 <code>docs/docker.md</code>。</p>
+<p>不想管 GPU 可以用 <a target="_blank" rel="noopener" href="https://impossibl.com/">impossibl</a> 的免费托管。<code>convaiinnovations/laya</code> 走 Router；<code>convaiinnovations/laya-multilingual</code> 钉死多语言权重。托管侧 <code>max_len</code> 写的是 8192。注意：按脚本路由时，拉丁字母文本会进英文 checkpoint，西语葡语不会自己跑到多语言权重，所以才单独给了第二个 model id。</p>
+<p>在线试：<a target="_blank" rel="noopener" href="https://huggingface.co/spaces/convaiinnovations/laya-demo">HF Space</a>。作者在 <a target="_blank" rel="noopener" href="https://dev.to/nandakishor_m_6cc0adfde9f/i-built-non-autoregressive-decision-models-a-year-ago-then-a-frontier-lab-called-it-a-18me">Dev.to</a> 写过来龙去脉。社区有 <a target="_blank" rel="noopener" href="https://github.com/F0Rextasy/omp-laya-judge">omp-laya-judge</a>（oh-my-pi 插件）和 <a target="_blank" rel="noopener" href="https://github.com/Ashfaqbs/laya-adk-toolkit">laya-adk-toolkit</a>（Google ADK 工具）。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>Laya 把「分类 &#x2F; 打分 &#x2F; 是否」从文本生成里拆出来，用编码器一次前向给出带概率的结构化答案。Router 解决了英文权重在非拉丁文字上又错又自信的问题。协议上能接 Jev 那一类 System One 客户端。</p>
+<p>它不是通用零样本裁判。基座在 typed-decisions 上接近随机；选项一多、<code>score</code>、英文 <code>noul</code> 都有已知坑。置信度要校准，<code>act_probability</code> 先别用。你有稳定的判断模式、愿意微调、还在意毫秒级延迟和可自托管，它值得试。你只是偶尔让 LLM 抽几个字段，上 Laya 多半是在给自己加一套训练和校准负担。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Laya/" rel="tag"># Laya</a>
+              <a href="/tags/System-1/" rel="tag"># System 1</a>
+              <a href="/tags/%E5%86%B3%E7%AD%96%E6%A8%A1%E5%9E%8B/" rel="tag"># 决策模型</a>
+              <a href="/tags/Jev/" rel="tag"># Jev</a>
+              <a href="/tags/ModernBERT/" rel="tag"># ModernBERT</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/22/Orca%EF%BC%9A%E7%BB%99%E5%B9%B6%E8%A1%8C%20Agent%20%E7%94%A8%E7%9A%84%20ADE/" rel="prev" title="Orca：给并行 Agent 用的 ADE">
+                  <i class="fa fa-angle-left"></i> Orca：给并行 Agent 用的 ADE
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/23/System%201%20%E5%86%B3%E7%AD%96%E5%BC%95%E6%93%8E%EF%BC%9A%E7%BB%99%E8%BD%AF%E4%BB%B6%E7%94%A8%E7%9A%84%E5%BF%AB%E5%88%A4%E6%96%AD/" rel="next" title="System 1 决策引擎：给软件用的快判断">
+                  System 1 决策引擎：给软件用的快判断 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

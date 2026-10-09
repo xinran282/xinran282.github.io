@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="阿里开源的 Open Code Review 用确定流程卡住选文件、配规则和评论落点，只把查上下文和判断问题留给模型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Open Code Review 把不该交给模型的审查步骤收回来">
+<meta property="og:url" content="https://xinran282.github.io/2026/10/09/Open%20Code%20Review%20%E6%8A%8A%E4%B8%8D%E8%AF%A5%E4%BA%A4%E7%BB%99%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%A1%E6%9F%A5%E6%AD%A5%E9%AA%A4%E6%94%B6%E5%9B%9E%E6%9D%A5/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="阿里开源的 Open Code Review 用确定流程卡住选文件、配规则和评论落点，只把查上下文和判断问题留给模型。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-09T07:34:13.000Z">
+<meta property="article:modified_time" content="2026-10-09T07:35:09.933Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="CLI">
+<meta property="article:tag" content="Open Code Review">
+<meta property="article:tag" content="代码审查">
+<meta property="article:tag" content="开源">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/10/09/Open%20Code%20Review%20%E6%8A%8A%E4%B8%8D%E8%AF%A5%E4%BA%A4%E7%BB%99%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%A1%E6%9F%A5%E6%AD%A5%E9%AA%A4%E6%94%B6%E5%9B%9E%E6%9D%A5/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/10/09/Open%20Code%20Review%20%E6%8A%8A%E4%B8%8D%E8%AF%A5%E4%BA%A4%E7%BB%99%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%A1%E6%9F%A5%E6%AD%A5%E9%AA%A4%E6%94%B6%E5%9B%9E%E6%9D%A5/","path":"2026/10/09/Open Code Review 把不该交给模型的审查步骤收回来/","title":"Open Code Review 把不该交给模型的审查步骤收回来"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Open Code Review 把不该交给模型的审查步骤收回来 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Open-Code-Review-%E6%8A%8A%E4%B8%8D%E8%AF%A5%E4%BA%A4%E7%BB%99%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%A1%E6%9F%A5%E6%AD%A5%E9%AA%A4%E6%94%B6%E5%9B%9E%E6%9D%A5"><span class="nav-number">1.</span> <span class="nav-text">Open Code Review 把不该交给模型的审查步骤收回来</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%83%E6%83%B3%E6%94%B6%E4%BD%8F%E7%9A%84%E4%B8%8D%E6%98%AF%E2%80%9C%E6%A8%A1%E5%9E%8B%E4%B8%8D%E5%A4%9F%E8%81%AA%E6%98%8E%E2%80%9D"><span class="nav-number">1.1.</span> <span class="nav-text">它想收住的不是“模型不够聪明”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E6%AC%A1-ocr-review-%E5%AE%9E%E9%99%85%E6%80%8E%E4%B9%88%E8%B5%B0"><span class="nav-number">1.2.</span> <span class="nav-text">一次 ocr review 实际怎么走</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%84%E5%88%99%E6%98%AF%E6%8F%90%E7%A4%BA%E8%AF%8D%EF%BC%8C%E4%B8%8D%E6%98%AF%E6%89%AB%E6%8F%8F%E5%99%A8"><span class="nav-number">1.3.</span> <span class="nav-text">规则是提示词，不是扫描器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E5%87%86%E5%85%88%E7%9C%8B%E5%8F%96%E8%88%8D"><span class="nav-number">1.4.</span> <span class="nav-text">基准先看取舍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E7%9A%84%E6%97%B6%E5%80%99%E8%A6%81%E6%8E%A5%E5%8F%97%E4%BB%80%E4%B9%88"><span class="nav-number">1.5.</span> <span class="nav-text">用的时候要接受什么</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/10/09/Open%20Code%20Review%20%E6%8A%8A%E4%B8%8D%E8%AF%A5%E4%BA%A4%E7%BB%99%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%A1%E6%9F%A5%E6%AD%A5%E9%AA%A4%E6%94%B6%E5%9B%9E%E6%9D%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Open Code Review 把不该交给模型的审查步骤收回来 | 欣然的备忘录">
+      <meta itemprop="description" content="阿里开源的 Open Code Review 用确定流程卡住选文件、配规则和评论落点，只把查上下文和判断问题留给模型。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Open Code Review 把不该交给模型的审查步骤收回来
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-09 15:34:13 / 修改时间：15:35:09" itemprop="dateCreated datePublished" datetime="2026-10-09T15:34:13+08:00">2026-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">阿里开源的 Open Code Review 用确定流程卡住选文件、配规则和评论落点，只把查上下文和判断问题留给模型。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Open-Code-Review-把不该交给模型的审查步骤收回来"><a href="#Open-Code-Review-把不该交给模型的审查步骤收回来" class="headerlink" title="Open Code Review 把不该交给模型的审查步骤收回来"></a>Open Code Review 把不该交给模型的审查步骤收回来</h1><p>阿里开源的 <a target="_blank" rel="noopener" href="https://github.com/alibaba/open-code-review">Open Code Review</a> 不是又一个“把 diff 丢给编程 Agent”的审查 Skill。命令行叫 <code>ocr</code>。它把选哪些文件、套哪条规则、评论落在哪一行做成工程流程，模型主要负责查上下文和判断有没有问题。兼容多少家模型只是配置；和普通 Skill 的差别在选文件和落点。</p>
+<p>仓库 2026 年 5 月 18 日创建，Apache-2.0，主语言是 Go，官网在 <a target="_blank" rel="noopener" href="https://open-codereview.ai/">open-codereview.ai</a>。2026 年 10 月 9 日我查 GitHub API，star 是 44710，fork 3233，开放 issue 282，最新 release 是 10 月 8 日的 v1.12.13。star 会变。7 月 29 日团队复盘里写的还是 15.5k。</p>
+<h2 id="它想收住的不是“模型不够聪明”"><a href="#它想收住的不是“模型不够聪明”" class="headerlink" title="它想收住的不是“模型不够聪明”"></a>它想收住的不是“模型不够聪明”</h2><p>README 把前身说成阿里集团内部的官方 AI 代码审查助手：过去两年服务了数万开发者，识别了数百万个缺陷。更具体的数在 <a target="_blank" rel="noopener" href="https://github.com/alibaba/open-code-review/blob/main/pages/src/content/blog/zh/oss-two-month-retrospective.md">2026-07-29 的复盘</a> 里，作者 lizhengfeng101 写，内部有 2 万月活，采纳率 30% 以上，误报率不到 5%，合并进基线的有效建议里近八成来自 AI。这些都是项目自述，我没有独立审计。它们说明团队想证明的是“大规模用过”，不是开源仓库本身已经把效果证完。</p>
+<p>项目点名了通用 Agent 加 Skill 做审查时的三个毛病：变更一大就漏文件，评论行号对不上，提示词稍改质量就飘。我更在意前两个。漏文件和行号漂移会让审查结果没法用；提示词不稳是原因，用户先看见的是错位的评论。</p>
+<p>它没有再堆一份更长的审查提示词，而是把文件范围、规则选择和评论坐标从模型手里拿回来。模型仍然会错，只是错的位置变了。</p>
+<h2 id="一次-ocr-review-实际怎么走"><a href="#一次-ocr-review-实际怎么走" class="headerlink" title="一次 ocr review 实际怎么走"></a>一次 <code>ocr review</code> 实际怎么走</h2><p>仓库里的<a target="_blank" rel="noopener" href="https://github.com/alibaba/open-code-review/blob/main/pages/src/content/docs/zh/architecture.md">中文架构文档</a> 把流水线写得很具体。<code>ocr review</code> 先解析 LLM 端点，端点必须凑齐 URL、token 和 model，缺一个就退出，不猜。然后用 Git 取 diff。需要 Git 2.41 或更高。</p>
+<p>diff 有三种。不带参数看工作区，包括 staged、unstaged 和 untracked。<code>--commit</code> 看单个提交。<code>--from</code> 加 <code>--to</code> 看的是 merge-base 到目标分支，不是两个 ref 的朴素两点 diff。上下文行固定 3 行，和 Git 默认一样。</p>
+<p>文件接着过过滤。二进制先丢。用户的 <code>exclude</code> 优先。配了 <code>include</code> 且命中的文件，可以绕过后面的扩展名白名单和默认路径排除。扩展名不在 <a target="_blank" rel="noopener" href="https://github.com/alibaba/open-code-review/blob/main/internal/config/allowlist/supported_file_types.json">supported_file_types.json</a> 里就丢。测试文件默认不审，例如 <code>*_test.go</code>、<code>*.test.ts</code>、<code>src/test/java</code> 下的 Java 测试。<code>vendor/</code>、<code>node_modules/</code>、<code>target/</code> 这些依赖目录在更早的 diff 层就被丢掉，<code>include</code> 救不回来。被删的文件不审。单个 diff 超过 token 上限的 80% 会标成 <code>too_large</code> 跳过。<code>ocr review --preview</code> 可以不花 token 看每个文件为什么留下或被丢。</p>
+<p>留下的文件先做一次分组。这次调用只发路径、状态和增删行数，不发 diff 正文，让模型把相关文件捆在一起。一组最多 10 个文件。分组失败就退回一个文件一组。</p>
+<p>每个组是一个子 agent，默认并发 8，上下文互不共享。变更够大才先做 plan：组内单文件变更达到 50 行，或者至少两个文件且合计达到 100 行。plan 不能调工具，只产出一份清单。小 diff 跳过这一步，省一次调用。</p>
+<p>真正写评论的是 main 循环。<code>--effort</code> 决定轮数：<code>low</code> 1 轮，<code>medium</code> 2 轮，默认就是 medium，<code>high</code> 3 轮。工具调用上限默认 100。文档列出的工具是六个：<code>code_search</code>、<code>file_read_diff</code>、<code>file_find</code>、<code>file_read</code>、<code>code_comment</code>、<code>task_done</code>。提示词预算默认 20 万 token，到 60% 开始后台压缩，到 80% 必须先压缩再请求。输出另有 16384 token 的上限，把 <code>--max-tokens</code> 调高不会把输出预算一起放大。<code>ocr scan</code> 扫整文件时用更小的 58888。</p>
+<p>评论落点不靠模型报一个行号就算数。<code>code_comment</code> 要给出 <code>existing_code</code>，工程再用滑动窗口去 diff 里对。对不上就跑重新定位。循环结束后还有一次 <code>REVIEW_FILTER_TASK</code>，去掉能证明是错的评论。仍然对不上的评论不会被扔掉，<code>start_line</code> 和 <code>end_line</code> 记为 0，表示没锚上。</p>
+<p>跨文件推理停在组边界。同组文件共享一轮对话，可以直接一起看。其他组只能通过工具去读，不能当成评论目标。架构文档写明，模型应把上下文工具用于理解，并忽略给定 diff 之外冒出来的问题。大 PR 因此不会变成一次无限上下文的闲聊。代价也直接：跨模块的问题更容易漏。README 把低召回说成有意取舍，和这条边界是同一件事。</p>
+<p>会话以 JSONL 写在 <code>~/.opencodereview/sessions/</code>。<code>ocr viewer</code> 读这些文件回放，没有单独的数据库。</p>
+<h2 id="规则是提示词，不是扫描器"><a href="#规则是提示词，不是扫描器" class="headerlink" title="规则是提示词，不是扫描器"></a>规则是提示词，不是扫描器</h2><p>规则按四层匹配，先命中先生效：命令行 <code>--rule</code>，仓库里的 <code>.opencodereview/rule.json</code>，用户目录的 <code>~/.opencodereview/rule.json</code>，最后是打进二进制的 <code>system_rules.json</code>。系统层按路径挂不同的规则文档。Java 走 <code>java.md</code>，Go 走 <code>go.md</code>，TypeScript 和 JavaScript 走同一份，MyBatis 风格的 mapper XML 另有一份。不认识的扩展名落到 <code>default.md</code>，除非 <code>include</code> 把它放进来。<code>ocr rules check &lt;path&gt;</code> 会告诉你命中的是哪一层、哪条 glob。</p>
+<p>仓库简介里的 NPE、线程安全、XSS 和 SQL 注入，能在规则正文里对上，但它们不是静态分析规则。我看的是 main 分支上的 <code>rule_docs</code>：</p>
+<p>Java 规则要求检查可能的 NPE，并让模型用 <code>file_read</code> 和 <code>code_search</code> 看调用链。线程安全只在有证据时报，局部变量、只读操作、看不到多线程调用的代码，明确要求别报。Go 规则写了 goroutine 捕获请求内可变数据、资源没关闭、SQL 或命令由不可信输入拼接。JS&#x2F;TS 规则写了 XSS、<code>innerHTML</code> 插入用户输入，以及 <code>eval</code> 和 <code>Function</code>。mapper XML 规则把 <code>${}</code> 拼接用户参数标成注入风险，同时说上下文不清时宁可忽略，不要误报。Python 和 PHP 也有参数化查询、字符串拼 SQL 的条款。</p>
+<p>这套规则的作用是收窄注意力，不是保证找出漏洞。它反复要求模型在证据不足时不要报。这和内部“误报率不到 5%”的说法方向一致，也解释了召回为什么上不去：少报错的，就会放过一些真问题。</p>
+<p>语言覆盖很宽，从 Java、Go、Python、PHP、Rust、C&#x2F;C++、Kotlin 到 Solidity、Terraform、Rego。宽不等于每份规则一样深。main 分支上的 <code>go.md</code> 有一万多个字符，<code>java.md</code> 只有三千多，而且两份都是英文规则。支持某种扩展名，不等于对这种语言有同等的审查深度。</p>
+<h2 id="基准先看取舍"><a href="#基准先看取舍" class="headerlink" title="基准先看取舍"></a>基准先看取舍</h2><p>README 的基准叫 AACR-Bench，数据集在 <a target="_blank" rel="noopener" href="https://huggingface.co/datasets/Alibaba-Aone/aacr-bench">Hugging Face</a>。项目说它来自 50 个热门开源仓库、200 个真实 PR、10 种语言，由 80 多位资深工程师交叉标注，共 1505 个缺陷。对照物是同一个底层模型上的通用 Agent，文中点名 Claude Code。结论是 Precision 和 F1 更高，token 大约是对方的 1&#x2F;9，审查更快，召回更低。</p>
+<p>具体百分比在官网图片里。我没有从图片抄数字，所以这里不报分数。实验设计比“我们觉得更好”认真，但它仍是项目自己的基准。仓库怎么选、缺陷怎么定义、Claude Code 挂了什么 Skill，都会改结论。低召回如果正好漏掉你在意的那类问题，省下的 token 就不算赚到。</p>
+<h2 id="用的时候要接受什么"><a href="#用的时候要接受什么" class="headerlink" title="用的时候要接受什么"></a>用的时候要接受什么</h2><p>安装最直接的方式是 <code>npm install -g @alibaba-group/open-code-review</code>。NPM 包装出来的命令是 <code>ocr</code>，release 里的静态二进制叫 <code>opencodereview</code>。默认模式要自己配模型，兼容 OpenAI 风格和 Anthropic 风格的端点。委托模式不需要给 OCR 单独配 key：它负责选文件、解析规则、收集 diff，宿主 Agent 用自己的模型和订阅额度跑审查。插件覆盖 Claude Code、Codex、Cursor、Kimi Code 和 OpenCode。仓库里还有 VS Code 扩展和 IntelliJ 插件，后者是 CLI 的图形前端，不是另一套审查引擎。CI 示例包括 GitHub Actions、GitLab CI、Gerrit。</p>
+<p>有几条限制比安装步骤重要。</p>
+<p>diff 会发到你配置的模型端点。会话和规则留在本地。遥测文档写明，prompt 和响应内容不会导出；<code>content_logging</code> 接进了配置，但目前不控制任何代码路径。没有内置脱敏。含密钥的文件得自己放进 <code>exclude</code>，或者别让它进入 diff。</p>
+<p>模型必须支持原生 tool call。FAQ 把 <code>deepseek-r1</code> 当成反例：它如果只在文本里叙述“我要调用某工具”，OCR 会一直重试，最后零评论。换一个会返回结构化 <code>tool_calls</code> 的模型，比改提示词有用。</p>
+<p>子任务失败被隔离，不重试。只要还有成功的组，进程仍以 0 退出。CI 如果只看退出码，会把部分失败当成通过。要看 JSON 里的 <code>warnings</code>，或者文本模式的 stderr。</p>
+<p>默认不审测试，大文件会跳过，跨组问题不作为评论目标，召回又被主动往下压。四件事叠在一起，“没报问题”不能读成“这段改动没问题”。OCR 也不做无人值守的自动修复。IDE 插件可以让人逐条应用、忽略或标误报，那是人点的。</p>
+<p>它不支持 Git 以外的版本库。diff provider 就是调 <code>git</code>。</p>
+<p>如果你已经有编程 Agent，烦的是审查漏文件、评论对不上行，或者希望规则待在仓库里而不是散落在某段 Skill 提示词里，这个工具对得上。如果你要的是一次审查代替安全审计，它的设计目标就不是这个。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Agent/" rel="tag"># Agent</a>
+              <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E6%9F%A5/" rel="tag"># 代码审查</a>
+              <a href="/tags/Open-Code-Review/" rel="tag"># Open Code Review</a>
+              <a href="/tags/CLI/" rel="tag"># CLI</a>
+              <a href="/tags/%E5%BC%80%E6%BA%90/" rel="tag"># 开源</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/08/LangSmith%20%E5%85%A5%E9%97%A8-%E7%9C%8B%E6%B8%85%E3%80%81%E8%AF%84%E4%BC%B0%E5%92%8C%E6%94%B9%E8%BF%9B%E4%BD%A0%E7%9A%84%20AI%20%E5%BA%94%E7%94%A8/" rel="prev" title="LangSmith 入门：看清、评估和改进你的 AI 应用">
+                  <i class="fa fa-angle-left"></i> LangSmith 入门：看清、评估和改进你的 AI 应用
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

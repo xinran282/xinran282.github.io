@@ -1,0 +1,58 @@
+[
+  {
+    "concept_id": "hybrid-search-bm25-dense-retrieval",
+    "title": "混合检索：BM25 与向量检索为什么互补",
+    "aliases": ["hybrid search", "BM25 dense retrieval", "混合搜索"],
+    "keywords": ["RAG", "BM25", "向量检索", "混合检索", "召回"],
+    "category": "检索与知识",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models", "url": "https://arxiv.org/abs/2104.08663", "published": "2021-04-18"}
+    ],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "retrieval-evaluation-rag-triad",
+    "title": "RAG 评估：不只查答案对错，还要看证据链",
+    "aliases": ["RAG evaluation", "retrieval evaluation", "RAG triad"],
+    "keywords": ["RAG", "评估", "检索", "忠实性", "相关性"],
+    "category": "评估与可靠性",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "RAGAS: Automated Evaluation of Retrieval Augmented Generation", "url": "https://arxiv.org/abs/2309.15217", "published": "2023-09-26"}
+    ],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "best-of-n-sampling",
+    "title": "Best-of-N 采样：多答几次再挑一个",
+    "aliases": ["Best-of-N", "BoN sampling", "rejection sampling"],
+    "keywords": ["采样", "候选", "重排", "奖励模型", "推理"],
+    "category": "推理与效率",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "A General Language Assistant as a Laboratory for Alignment", "url": "https://arxiv.org/abs/2112.00861", "published": "2021-12-01"}
+    ],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "instruction-tuning",
+    "title": "指令微调：把语言模型变成能听指令的助手",
+    "aliases": ["instruction tuning", "instruction fine-tuning", "指令跟随"],
+    "keywords": ["微调", "指令", "监督训练", "泛化", "助手"],
+    "category": "训练与对齐",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "Finetuned Language Models Are Zero-Shot Learners", "url": "https://arxiv.org/abs/2109.01652", "published": "2021-09-03"}
+    ],
+    "prerequisites": []
+  }
+]

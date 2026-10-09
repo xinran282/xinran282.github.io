@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-18",
+  "concept_id": "chain-of-thought-faithfulness",
+  "title": "思维链忠实性：模型说出的理由不一定是真实原因",
+  "aliases": ["CoT faithfulness", "reasoning faithfulness", "忠实性"],
+  "category": "评估与可靠性",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["思维链", "忠实性", "解释", "评估", "偏差线索"],
+  "summary": "思维链忠实性通过控制输入中的可追踪线索并检查模型是否披露其影响，衡量展示的推理是否真实反映行为原因；流畅解释不能直接当作审计证据。",
+  "sources": [
+    {
+      "title": "Reasoning models don't always say what they think",
+      "url": "https://www.anthropic.com/research/reasoning-models-dont-say-think",
+      "published": "2025-04-03"
+    }
+  ]
+}

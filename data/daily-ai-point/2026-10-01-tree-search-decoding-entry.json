@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-01",
+  "concept_id": "tree-search-decoding",
+  "title": "树搜索解码：语言模型推理如何显式探索分支",
+  "aliases": ["Tree of Thoughts", "ToT", "language model search"],
+  "category": "Agent 与工具",
+  "level": 4,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["推理", "搜索", "分支", "回溯", "规划"],
+  "summary": "Tree of Thoughts 将部分解组织为搜索树，由模型生成候选分支并评估状态，再用 BFS/DFS 等策略选择、剪枝和回溯，从而支持显式探索而非单链生成。",
+  "sources": [{"title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models", "url": "https://arxiv.org/abs/2305.10601", "published": "2023-05-17"}]
+}

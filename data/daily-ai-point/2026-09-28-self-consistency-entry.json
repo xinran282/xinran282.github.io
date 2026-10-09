@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-28",
+  "concept_id": "self-consistency-voting",
+  "title": "自洽性：多个推理路径投票能提升准确率吗",
+  "aliases": ["self consistency", "CoT voting", "多数投票"],
+  "category": "推理与效率",
+  "level": 3,
+  "kind": "evergreen",
+  "status": "new",
+  "keywords": ["思维链", "采样", "投票", "推理", "准确率"],
+  "summary": "自洽性对同一问题采样多条思维链并抽取最终答案，通过等价答案归并与多数投票选择共识结果，以约 N 倍推理成本降低单次生成中的偶然错误。",
+  "sources": [{"title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models", "url": "https://arxiv.org/abs/2203.11171", "published": "2022-03-21"}]
+}

@@ -1,0 +1,45 @@
+[
+  {
+    "concept_id": "contrastive-decoding",
+    "title": "对比解码：从语言模型输出中减去常见偏差",
+    "aliases": ["contrastive decoding", "CD decoding", "amateur-expert decoding"],
+    "keywords": ["解码", "偏差", "expert", "amateur", "采样"],
+    "category": "推理与效率",
+    "level": 4,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "A Contrastive Framework for Neural Text Generation", "url": "https://arxiv.org/abs/2202.06417", "published": "2022-02-13"},
+      {"title": "Contrastive Decoding: Open-ended Text Generation as Optimization", "url": "https://arxiv.org/abs/2210.15097", "published": "2022-10-19"}
+    ],
+    "prerequisites": ["speculative-decoding"]
+  },
+  {
+    "concept_id": "vision-transformer-patching",
+    "title": "视觉 token 化：把图像切成 patch 交给 Transformer",
+    "aliases": ["Vision Transformer", "ViT", "patch embedding"],
+    "keywords": ["视觉", "Transformer", "patch", "token", "位置编码"],
+    "category": "多模态",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.95,
+    "sources": [
+      {"title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale", "url": "https://arxiv.org/abs/2010.11929", "published": "2020-10-22"}
+    ],
+    "prerequisites": []
+  },
+  {
+    "concept_id": "best-of-n-sampling",
+    "title": "Best-of-N 采样：多答几次再挑一个",
+    "aliases": ["Best-of-N", "BoN sampling", "rejection sampling"],
+    "keywords": ["采样", "候选", "重排", "奖励模型", "推理"],
+    "category": "推理与效率",
+    "level": 3,
+    "kind": "evergreen",
+    "source_quality": 0.9,
+    "sources": [
+      {"title": "A General Language Assistant as a Laboratory for Alignment", "url": "https://arxiv.org/abs/2112.00861", "published": "2021-12-01"}
+    ],
+    "prerequisites": []
+  }
+]
