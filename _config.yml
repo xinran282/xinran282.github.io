@@ -74,10 +74,13 @@ updated_option: mtime
 per_page: 10
 pagination_dir: page
 
-# Include / Exclude file(s)
 include:
 exclude:
 ignore:
+  # These are not blog posts. Hexo would otherwise inline their <link> tags
+  # and let WeChat export CSS override the whole site.
+  - "**/*.html"
+  - "**/*.bak*"
 
 # Extensions
 theme: next
