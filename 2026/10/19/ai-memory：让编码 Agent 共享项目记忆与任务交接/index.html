@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="用 Claude Code 查了半天问题，换一个编码助手后，又得解释项目结构、失败过的方案和接下来要做什么。即使各个工具都有记忆功能，这些信息也未必能跟着你一起换过去。 ai-memory 为这类场景提供了一套自托管的共享记忆服务：通过客户端的生命周期 hooks 采集工作记录，整理成 Git 管理的 Markdown wiki，再让编码 Agent 通过 MCP 等接口检索。项目知识可以跨工具、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ai-memory：让编码 Agent 共享项目记忆与任务交接">
+<meta property="og:url" content="https://xinran282.github.io/2026/10/19/ai-memory%EF%BC%9A%E8%AE%A9%E7%BC%96%E7%A0%81%20Agent%20%E5%85%B1%E4%BA%AB%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BF%86%E4%B8%8E%E4%BB%BB%E5%8A%A1%E4%BA%A4%E6%8E%A5/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="用 Claude Code 查了半天问题，换一个编码助手后，又得解释项目结构、失败过的方案和接下来要做什么。即使各个工具都有记忆功能，这些信息也未必能跟着你一起换过去。 ai-memory 为这类场景提供了一套自托管的共享记忆服务：通过客户端的生命周期 hooks 采集工作记录，整理成 Git 管理的 Markdown wiki，再让编码 Agent 通过 MCP 等接口检索。项目知识可以跨工具、">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-19T12:02:43.000Z">
+<meta property="article:modified_time" content="2026-10-19T12:02:43.909Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="Agent Memory">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="ai-memory">
+<meta property="article:tag" content="跨 Agent 协作">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/10/19/ai-memory%EF%BC%9A%E8%AE%A9%E7%BC%96%E7%A0%81%20Agent%20%E5%85%B1%E4%BA%AB%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BF%86%E4%B8%8E%E4%BB%BB%E5%8A%A1%E4%BA%A4%E6%8E%A5/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/10/19/ai-memory%EF%BC%9A%E8%AE%A9%E7%BC%96%E7%A0%81%20Agent%20%E5%85%B1%E4%BA%AB%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BF%86%E4%B8%8E%E4%BB%BB%E5%8A%A1%E4%BA%A4%E6%8E%A5/","path":"2026/10/19/ai-memory：让编码 Agent 共享项目记忆与任务交接/","title":"ai-memory：让编码 Agent 共享项目记忆与任务交接"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ai-memory：让编码 Agent 共享项目记忆与任务交接 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%83%E4%BF%9D%E5%AD%98%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF"><span class="nav-number">1.</span> <span class="nav-text">一、它保存哪些信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BB%8E%E5%B7%A5%E4%BD%9C%E8%AE%B0%E5%BD%95%E5%88%B0%E4%B8%8B%E4%B8%80%E6%AC%A1%E4%BC%9A%E8%AF%9D"><span class="nav-number">2.</span> <span class="nav-text">二、从工作记录到下一次会话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Markdown-wiki-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%87%8D%E8%A6%81"><span class="nav-number">3.</span> <span class="nav-text">三、Markdown wiki 为什么重要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%85%B1%E4%BA%AB%E8%AE%B0%E5%BF%86%E4%B8%8E%E5%AE%8C%E6%95%B4%E6%8E%A5%E7%BB%AD%E7%9B%B8%E5%B7%AE%E5%A4%9A%E8%BF%9C"><span class="nav-number">4.</span> <span class="nav-text">四、共享记忆与完整接续相差多远</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E2%80%9C%E6%97%A0%E9%9C%80-LLM%E2%80%9D%E5%85%B7%E4%BD%93%E6%84%8F%E5%91%B3%E7%9D%80%E4%BB%80%E4%B9%88"><span class="nav-number">5.</span> <span class="nav-text">五、“无需 LLM”具体意味着什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%8E%A5%E5%85%A5%E4%B9%8B%E5%89%8D%EF%BC%8C%E5%85%88%E7%9C%8B%E6%94%AF%E6%8C%81%E5%B1%82%E7%BA%A7"><span class="nav-number">6.</span> <span class="nav-text">六、接入之前，先看支持层级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%8E%E6%A0%B7%E5%88%A4%E6%96%AD%E5%AE%83%E6%98%AF%E5%90%A6%E9%80%82%E5%90%88%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="nav-number">7.</span> <span class="nav-text">七、怎样判断它是否适合自己的项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%9B%A2%E9%98%9F%E5%85%B1%E4%BA%AB%E6%97%B6%EF%BC%8C%E6%95%B0%E6%8D%AE%E8%BE%B9%E7%95%8C%E8%A6%81%E4%B8%80%E8%B5%B7%E8%AE%BE%E8%AE%A1"><span class="nav-number">8.</span> <span class="nav-text">八、团队共享时，数据边界要一起设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">123</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/10/19/ai-memory%EF%BC%9A%E8%AE%A9%E7%BC%96%E7%A0%81%20Agent%20%E5%85%B1%E4%BA%AB%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BF%86%E4%B8%8E%E4%BB%BB%E5%8A%A1%E4%BA%A4%E6%8E%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ai-memory：让编码 Agent 共享项目记忆与任务交接 | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ai-memory：让编码 Agent 共享项目记忆与任务交接
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-10-19 20:02:43" itemprop="dateCreated datePublished" datetime="2026-10-19T20:02:43+08:00">2026-10-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">AI 工程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>用 Claude Code 查了半天问题，换一个编码助手后，又得解释项目结构、失败过的方案和接下来要做什么。即使各个工具都有记忆功能，这些信息也未必能跟着你一起换过去。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/akitaonrails/ai-memory">ai-memory</a> 为这类场景提供了一套自托管的共享记忆服务：通过客户端的生命周期 hooks 采集工作记录，整理成 Git 管理的 Markdown wiki，再让编码 Agent 通过 MCP 等接口检索。项目知识可以跨工具、跨机器复用，未完成任务则通过交接记录延续。</p>
+<p>它最值得关注的设计是：wiki 页面是知识的权威来源，SQLite 承担检索等索引工作；默认核心路径无需调用 LLM，也不要求配置云端 API key。更深入的会话接续和模型辅助整理，则有各自的启用条件。</p>
+<p>本文依据 2026 年 10 月 19 日核对的仓库文档，固定参考提交为 <a target="_blank" rel="noopener" href="https://github.com/akitaonrails/ai-memory/tree/b18f22a7c2f3068575c70d37f13d167fed3476bb"><code>b18f22a</code></a>。以下是文档解读，未在本机安装或实测；主分支描述的能力也需要与实际安装版本对照。</p>
+<h2 id="一、它保存哪些信息"><a href="#一、它保存哪些信息" class="headerlink" title="一、它保存哪些信息"></a>一、它保存哪些信息</h2><p>理解 ai-memory，可以先分清项目规则、经验和任务状态。</p>
+<table>
+<thead>
+<tr>
+<th>信息</th>
+<th>示例</th>
+<th>应怎样使用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>项目指令</td>
+<td>测试命令、代码规范、禁止改动的目录</td>
+<td>继续由项目指令文件明确约束</td>
+</tr>
+<tr>
+<td>项目知识</td>
+<td>模块职责、架构决策、已确认的坑</td>
+<td>整理成可检索、可维护的 wiki 页面</td>
+</tr>
+<tr>
+<td>任务交接</td>
+<td>做到了哪里、试过什么、还有哪些疑问</td>
+<td>传给接手的下一次会话</td>
+</tr>
+<tr>
+<td>原生会话历史</td>
+<td>某次讨论和工具调用的具体细节</td>
+<td>在支持的受管启动流程中按需补读</td>
+</tr>
+</tbody></table>
+<p>假设你在处理数据库迁移：已经发现旧版本不支持某个语法，排除了一个方案，还剩回滚测试没跑。下一位 Agent 既需要知道数据库版本这个长期事实，也需要知道本次任务停在哪里。</p>
+<p>ai-memory 同时处理这两类信息。项目知识可以让团队检索，个人交接则保留所属人的边界。交接采用有所有者、单次认领的协议，避免同一条记录被重复领取。</p>
+<p>这些记录仍然属于历史资料。当前用户要求、项目指令和工作区实际代码决定本次任务应该怎么做；旧记忆中的命令不能自动变成新的执行授权。</p>
+<h2 id="二、从工作记录到下一次会话"><a href="#二、从工作记录到下一次会话" class="headerlink" title="二、从工作记录到下一次会话"></a>二、从工作记录到下一次会话</h2><p>仓库把基本流程概括为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">生命周期 hooks 采集</span><br><span class="line">        ↓</span><br><span class="line">服务端清理、分类并保存观察记录</span><br><span class="line">        ↓</span><br><span class="line">会话结束时生成 Markdown 页面与交接</span><br><span class="line">        ↓</span><br><span class="line">下一次会话获得有限摘要，并按需检索</span><br></pre></td></tr></table></figure>
+
+<p>Hooks 是客户端在会话开始、用户提交提示、工具调用等时点触发的接入点。ai-memory 利用这些事件记录工作过程，减少用户手动要求“记住这件事”的负担。具体能采到哪些事件，取决于客户端的 hooks 能力和安装配置。</p>
+<p>服务端会对输入做清理，再将记录纳入存储。在真正的会话结束事件到来时，默认可以用规则生成会话摘要页面和交接，不需要先调用一个模型来写总结。配置 LLM 后，系统还能进一步整理出概念、决策、注意事项等页面。</p>
+<p>读回时也不会把整个知识库塞进提示词。系统通过交接、受配置控制的项目简报提供有长度预算的上下文，Agent 再检索或打开相关页面。这样能控制启动时的上下文用量，但也意味着：信息保存成功，并不保证每次任务都能自动拿到全部细节。</p>
+<h2 id="三、Markdown-wiki-为什么重要"><a href="#三、Markdown-wiki-为什么重要" class="headerlink" title="三、Markdown wiki 为什么重要"></a>三、Markdown wiki 为什么重要</h2><p>ai-memory 用一个 Rust 二进制提供 MCP&#x2F;HTTP 服务，管理一个数据目录。文档列出的主要布局如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;data_dir&gt;/</span><br><span class="line">├── wiki/     Markdown 知识页面，使用 Git 管理版本</span><br><span class="line">├── raw/      受管工作流的脱敏转录片段</span><br><span class="line">├── db/       SQLite 索引及运行状态</span><br><span class="line">├── models/   模型相关文件</span><br><span class="line">└── logs/     运行日志</span><br></pre></td></tr></table></figure>
+
+<p>wiki 是知识页面的权威来源。你可以直接阅读、搜索或编辑这些文件，用 Git 查看修改历史，也可以用熟悉的 Markdown 工具维护它们。</p>
+<p>检索层在页面之上组合全文搜索、实体匹配和链接邻居等结果；启用向量能力时，还可以加入向量检索。各路结果通过排序融合合并，因此系统不依赖一套必须另行维护的向量数据库才能工作。</p>
+<p>这里有个容易误解的地方：页面索引可以从 wiki 重建，不代表整个数据库都只是可随手丢弃的缓存。SQLite 还保存会话、观察记录、交接和审计等状态。备份可阅读的知识页面与备份完整服务，范围不同。</p>
+<h2 id="四、共享记忆与完整接续相差多远"><a href="#四、共享记忆与完整接续相差多远" class="headerlink" title="四、共享记忆与完整接续相差多远"></a>四、共享记忆与完整接续相差多远</h2><p>只接入 hooks 和 MCP，已经可以共享知识、检索旧经验和传递交接。直接启动原来的编码助手，会继续使用这些已有接入能力。</p>
+<p>如果希望同一条工作线在不同客户端之间继续，仓库还提供可选的 <code>ai-memory run</code> 启动器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /path/to/project</span><br><span class="line">ai-memory run claude</span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出 Claude Code 后，在同一工作目录接着做</span></span><br><span class="line">ai-memory run codex</span><br><span class="line"></span><br><span class="line"><span class="comment"># 之后再回到 Claude Code</span></span><br><span class="line">ai-memory run claude</span><br></pre></td></tr></table></figure>
+
+<p>启动器维护逻辑工作流与各客户端原生会话之间的对应关系。同一种客户端可以恢复其原生会话；切换客户端时，则提供可移交的工作流上下文。</p>
+<p>在同一台机器上，如果上一客户端的会话存储可读且适配器支持，启动器还能把可见历史转换成私有的临时 Markdown 文件，供接手的 Agent 补查摘要没覆盖的细节。文档明确说明，这个临时文件的路径和正文不会发送给远程 ai-memory 服务端，也不包含隐藏推理。</p>
+<p>这项能力有实际边界：原生历史接续需要 3.1.0 或更新的主机客户端；如果历史文件不在本机、不可读或超过安全读取限制，就退回到可移交的工作流记录与交接。换机器后仍能使用服务端保存的共享知识，但不能假定另一台机器上的原生聊天历史也会自动出现。</p>
+<h2 id="五、“无需-LLM”具体意味着什么"><a href="#五、“无需-LLM”具体意味着什么" class="headerlink" title="五、“无需 LLM”具体意味着什么"></a>五、“无需 LLM”具体意味着什么</h2><p>默认采集、规则化摘要、搜索和交接可以不调用 LLM。对于已有 Agent 的用户，这意味着记忆服务的核心流程无需额外配置一个云端大模型账号；编码助手自身的模型调用费用仍按原来的方式产生。</p>
+<p>可选能力需要分开看：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>作用与条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LLM 整理</td>
+<td>将会话材料整理成更丰富的知识页面，需要配置相应提供方</td>
+</tr>
+<tr>
+<td>向量检索</td>
+<td>补充语义召回，数据流向取决于使用的嵌入提供方</td>
+</tr>
+<tr>
+<td>LLM 重排序</td>
+<td>将查询及受限的标题、片段交给模型重新排序，需显式开启</td>
+</tr>
+<tr>
+<td>“dream” 后台整理</td>
+<td>空闲时合并整理冷记忆，属于默认关闭的可选功能</td>
+</tr>
+</tbody></table>
+<p>配置 LLM 也会改变维护行为。当前架构文档写明：配置提供方后，自动改进调度器会审阅新结束的会话，经过验证的提案默认可自动批准。管理员可以关闭调度，或设置 <code>require_approval = true</code>，让提案等待人工审核。</p>
+<p>因此，试用时可以先观察无需 LLM 的采集和检索是否够用，再决定哪些整理工作值得交给模型。</p>
+<h2 id="六、接入之前，先看支持层级"><a href="#六、接入之前，先看支持层级" class="headerlink" title="六、接入之前，先看支持层级"></a>六、接入之前，先看支持层级</h2><p>“支持某个 Agent”可能意味着 MCP 查询可用，也可能意味着采集、启动注入和受管会话恢复都已接通。这些能力不能互相替代。</p>
+<table>
+<thead>
+<tr>
+<th>接入层级</th>
+<th>能做什么</th>
+<th>需要核对什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MCP-only</td>
+<td>Agent 可以调用记忆工具</td>
+<td>不代表自动采集工作过程或注入交接</td>
+</tr>
+<tr>
+<td>Hooks-only</td>
+<td>可以采集部分生命周期事件</td>
+<td>不代表同时提供 MCP 检索接入</td>
+</tr>
+<tr>
+<td>MCP 与 hooks</td>
+<td>同时具备查询和采集入口</td>
+<td>启动注入、会话结束等事件仍有客户端差异</td>
+</tr>
+<tr>
+<td>Managed workstreams</td>
+<td>通过 <code>ai-memory run</code> 管理接续</td>
+<td>只覆盖文档列出的客户端与版本</td>
+</tr>
+</tbody></table>
+<p>仓库列出了二十多种客户端的接入方式，Claude Code、Codex、Cursor、Gemini CLI、OpenCode、OMP 等都在其中。选择时应查看<a target="_blank" rel="noopener" href="https://github.com/akitaonrails/ai-memory/blob/b18f22a7c2f3068575c70d37f13d167fed3476bb/docs/support-matrix.md">完整支持矩阵</a>，尤其是会话结束和交接注入的限制。</p>
+<p>平台方面，Linux、macOS 和 WSL2 标为支持；原生 Windows 仍标为实验性。Windows 用户应根据编码助手实际运行在 Windows 还是 WSL2 中，选择相应安装路径。</p>
+<h2 id="七、怎样判断它是否适合自己的项目"><a href="#七、怎样判断它是否适合自己的项目" class="headerlink" title="七、怎样判断它是否适合自己的项目"></a>七、怎样判断它是否适合自己的项目</h2><p>ai-memory 比较适合反复遇到交接成本的人：同一仓库会轮换使用多个编码助手，工作在不同机器间切换，或团队希望共享排错和架构经验。</p>
+<p>如果项目规模很小、一直使用同一个助手，现有项目指令和少量手写笔记已经够用，那么再维护服务、客户端接入和数据备份，未必划算。</p>
+<p>决定试用后，可以先按<a target="_blank" rel="noopener" href="https://github.com/akitaonrails/ai-memory/blob/b18f22a7c2f3068575c70d37f13d167fed3476bb/docs/install.md">安装文档</a>完成安装，再检查接入计划：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 setup 准备配置哪些客户端，不应用修改</span></span><br><span class="line">ai-memory setup --plan</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实际配置数据目录、后台运行方式与选中的客户端</span></span><br><span class="line">ai-memory setup</span><br></pre></td></tr></table></figure>
+
+<p>文档说明，<code>setup</code> 会展示计划并要求选择；配置后需要重启客户端。一次有用的试验可以很小：完成一段排错工作，结束会话，然后换一个已接入的 Agent，检查它能否准确说出已排除的方案、未完成事项和对应依据。</p>
+<p>比起问“你记住了吗”，这种具体任务更容易检验系统是否真的减少了重复解释。</p>
+<h2 id="八、团队共享时，数据边界要一起设计"><a href="#八、团队共享时，数据边界要一起设计" class="headerlink" title="八、团队共享时，数据边界要一起设计"></a>八、团队共享时，数据边界要一起设计</h2><p>跨机器使用通常是把客户端连到同一个服务端，数据最终保存在服务端所在机器。项目知识可以按项目共享，个人交接和用户归属则有单独的规则；一个数据目录只能由一个服务端管理。</p>
+<p>仓库提供输入清理、采集排除规则和认证能力，但脱敏属于尽力处理，不能保证识别所有敏感内容。配置云端 LLM 或嵌入提供方后，相应材料可能离开自托管服务端。团队应把这些配置与采集范围一起确认。</p>
+<p>记忆也需要维护。旧决策会失效，失败方案可能因为依赖升级重新可用。Git 版本历史便于追踪变化，却不等于任何删除都可无限期撤销；清理、保留与备份应按实际配置检查。</p>
+<p>我更看重 ai-memory 把经验变成可检查页面的做法。遇到错误记忆时，能找到原文、纠正页面，再验证下一次检索是否改正，比单纯增加历史记录更有用。是否采用它，最终可以用一个标准衡量：下一次接手项目时，重复解释有没有减少，错误的历史结论有没有被及时纠正。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/akitaonrails/ai-memory/tree/b18f22a7c2f3068575c70d37f13d167fed3476bb">ai-memory 仓库与 README</a>：项目定位、安装入口与默认路径。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/akitaonrails/ai-memory/blob/b18f22a7c2f3068575c70d37f13d167fed3476bb/docs/ARCHITECTURE.md">架构说明</a>：采集、页面整理、检索和自动改进。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/akitaonrails/ai-memory/blob/b18f22a7c2f3068575c70d37f13d167fed3476bb/docs/managed-workstreams.md">受管跨客户端工作流</a>：<code>ai-memory run</code>、原生历史补读与限制。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/akitaonrails/ai-memory/blob/b18f22a7c2f3068575c70d37f13d167fed3476bb/DATA_HANDLING.md">数据处理说明</a>：存储、外部数据路径和保留行为。</li>
+</ul>
+<p>以上资料位于同一固定提交。对于保留、删除和模型配置，README 的概述与专项文档存在口径差异，本文未将“全部永不删除”或某一种嵌入后端当作统一默认承诺；实际部署应以所装版本的配置和专项说明为准。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/Agent-Memory/" rel="tag"># Agent Memory</a>
+              <a href="/tags/ai-memory/" rel="tag"># ai-memory</a>
+              <a href="/tags/%E8%B7%A8-Agent-%E5%8D%8F%E4%BD%9C/" rel="tag"># 跨 Agent 协作</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/15/Claude%20Code%E3%80%81Codex%20%E4%B8%8E%20OMP%20%E7%9A%84%20Memory%20%E6%9C%BA%E5%88%B6%E5%AF%B9%E6%AF%94/" rel="prev" title="Claude Code、Codex 与 OMP 的 Memory 机制对比">
+                  <i class="fa fa-angle-left"></i> Claude Code、Codex 与 OMP 的 Memory 机制对比
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/10/22/Claude%20Code%20%E5%9B%A2%E9%98%9F%E5%A6%82%E4%BD%95%E5%AE%A1%E6%9F%A5%20AI%20%E7%94%9F%E6%88%90%E7%9A%84%E4%BB%A3%E7%A0%81/" rel="next" title="Claude Code 团队如何审查 AI 生成的代码">
+                  Claude Code 团队如何审查 AI 生成的代码 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

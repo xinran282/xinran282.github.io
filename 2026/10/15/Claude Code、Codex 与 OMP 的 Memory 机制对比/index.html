@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xinran282.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"tomorrow-night-blue"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null,"show_result":true},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="用编码助手做长期项目，最容易产生的疑问是：昨天已经纠正过的事，为什么今天还要说一遍？ Claude Code、Codex 和 OMP 都有跨会话记忆，但写入和读回的方式不同。Claude Code 主要让模型在工作过程中维护 Markdown 笔记；Codex 从符合条件的历史会话中后台提炼记忆；OMP 则允许选择不同后端，既能做会话摘要，也能使用带检索工具的记忆库。 这会直接影响使用感受：Cla">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claude Code、Codex 与 OMP 的 Memory 机制对比">
+<meta property="og:url" content="https://xinran282.github.io/2026/10/15/Claude%20Code%E3%80%81Codex%20%E4%B8%8E%20OMP%20%E7%9A%84%20Memory%20%E6%9C%BA%E5%88%B6%E5%AF%B9%E6%AF%94/index.html">
+<meta property="og:site_name" content="欣然的备忘录">
+<meta property="og:description" content="用编码助手做长期项目，最容易产生的疑问是：昨天已经纠正过的事，为什么今天还要说一遍？ Claude Code、Codex 和 OMP 都有跨会话记忆，但写入和读回的方式不同。Claude Code 主要让模型在工作过程中维护 Markdown 笔记；Codex 从符合条件的历史会话中后台提炼记忆；OMP 则允许选择不同后端，既能做会话摘要，也能使用带检索工具的记忆库。 这会直接影响使用感受：Cla">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-15T07:04:20.000Z">
+<meta property="article:modified_time" content="2026-10-15T07:07:14.348Z">
+<meta property="article:author" content="欣然">
+<meta property="article:tag" content="Agent Memory">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="Oh My Pi">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://xinran282.github.io/2026/10/15/Claude%20Code%E3%80%81Codex%20%E4%B8%8E%20OMP%20%E7%9A%84%20Memory%20%E6%9C%BA%E5%88%B6%E5%AF%B9%E6%AF%94/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xinran282.github.io/2026/10/15/Claude%20Code%E3%80%81Codex%20%E4%B8%8E%20OMP%20%E7%9A%84%20Memory%20%E6%9C%BA%E5%88%B6%E5%AF%B9%E6%AF%94/","path":"2026/10/15/Claude Code、Codex 与 OMP 的 Memory 机制对比/","title":"Claude Code、Codex 与 OMP 的 Memory 机制对比"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Claude Code、Codex 与 OMP 的 Memory 机制对比 | 欣然的备忘录</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">欣然的备忘录</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%93%AA%E4%BA%9B%E4%B8%9C%E8%A5%BF%E7%AE%97-Memory"><span class="nav-number">1.</span> <span class="nav-text">一、哪些东西算 Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%85%88%E7%9C%8B%E5%B7%AE%E5%BC%82%E6%9C%80%E5%A4%A7%E7%9A%84%E5%87%A0%E4%B8%AA%E7%BB%B4%E5%BA%A6"><span class="nav-number">2.</span> <span class="nav-text">二、先看差异最大的几个维度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81Claude-Code%EF%BC%9A%E6%A8%A1%E5%9E%8B%E7%BB%B4%E6%8A%A4%E7%B4%A2%E5%BC%95%E5%92%8C%E7%AC%94%E8%AE%B0"><span class="nav-number">3.</span> <span class="nav-text">三、Claude Code：模型维护索引和笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%99%E5%85%A5%E5%8F%91%E7%94%9F%E5%9C%A8%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B%E4%B8%AD"><span class="nav-number">3.1.</span> <span class="nav-text">写入发生在工作过程中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%85%88%E5%8A%A0%E8%BD%BD%E7%B4%A2%E5%BC%95%EF%BC%8C%E5%86%8D%E6%8C%89%E9%9C%80%E8%AF%BB%E8%AF%A6%E6%83%85"><span class="nav-number">3.2.</span> <span class="nav-text">启动先加载索引，再按需读详情</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Codex%EF%BC%9A%E4%BB%8E%E5%8E%86%E5%8F%B2%E4%BC%9A%E8%AF%9D%E4%B8%AD%E5%90%8E%E5%8F%B0%E6%8F%90%E7%82%BC"><span class="nav-number">4.</span> <span class="nav-text">四、Codex：从历史会话中后台提炼</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AGENTS-md-%E8%B4%9F%E8%B4%A3%E7%A8%B3%E5%AE%9A%E8%A7%84%E5%88%99"><span class="nav-number">4.1.</span> <span class="nav-text">AGENTS.md 负责稳定规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memories-%E4%B8%8D%E4%B8%80%E5%AE%9A%E5%9C%A8%E8%81%8A%E5%A4%A9%E7%BB%93%E6%9D%9F%E5%90%8E%E7%AB%8B%E5%88%BB%E7%94%9F%E6%88%90"><span class="nav-number">4.2.</span> <span class="nav-text">Memories 不一定在聊天结束后立刻生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%8F%AF%E6%A3%80%E6%9F%A5%EF%BC%8C%E6%8E%A7%E5%88%B6%E4%BB%A5%E8%AE%BE%E7%BD%AE%E4%B8%BA%E4%B8%BB"><span class="nav-number">4.3.</span> <span class="nav-text">文件可检查，控制以设置为主</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81OMP%EF%BC%9A%E5%85%88%E9%80%89%E5%90%8E%E7%AB%AF%EF%BC%8C%E5%86%8D%E8%B0%88%E6%9C%BA%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">五、OMP：先选后端，再谈机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#local%EF%BC%9A%E4%B8%A4%E9%98%B6%E6%AE%B5%E7%94%9F%E6%88%90%E6%91%98%E8%A6%81%EF%BC%8C%E4%B9%9F%E8%83%BD%E7%A7%AF%E7%B4%AF%E7%BB%8F%E9%AA%8C%E6%9D%A1%E7%9B%AE"><span class="nav-number">5.1.</span> <span class="nav-text">local：两阶段生成摘要，也能积累经验条目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mnemopi%EF%BC%9A%E5%B8%A6%E8%87%AA%E5%8A%A8%E5%8F%AC%E5%9B%9E%E7%9A%84%E6%9C%AC%E5%9C%B0%E8%AE%B0%E5%BF%86%E5%BA%93"><span class="nav-number">5.2.</span> <span class="nav-text">Mnemopi：带自动召回的本地记忆库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hindsight%EF%BC%9A%E5%8F%AC%E5%9B%9E%E4%B8%8E%E4%BF%9D%E7%95%99%E4%BA%A4%E7%BB%99%E6%9C%8D%E5%8A%A1%E7%AB%AF-bank"><span class="nav-number">5.3.</span> <span class="nav-text">Hindsight：召回与保留交给服务端 bank</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%90%8C%E4%B8%80%E5%8F%A5%E7%BA%A0%E6%AD%A3%EF%BC%8C%E4%B8%89%E7%A7%8D%E8%AE%B0%E5%BF%86%E8%B7%AF%E5%BE%84"><span class="nav-number">6.</span> <span class="nav-text">六、同一句纠正，三种记忆路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%8E%E6%A0%B7%E9%80%89%EF%BC%8C%E6%80%8E%E6%A0%B7%E7%BB%B4%E6%8A%A4"><span class="nav-number">7.</span> <span class="nav-text">七、怎样选，怎样维护</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%96%99%E6%9D%A5%E6%BA%90"><span class="nav-number">8.</span> <span class="nav-text">资料来源</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="欣然"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">欣然</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">123</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xinran282.github.io/2026/10/15/Claude%20Code%E3%80%81Codex%20%E4%B8%8E%20OMP%20%E7%9A%84%20Memory%20%E6%9C%BA%E5%88%B6%E5%AF%B9%E6%AF%94/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="欣然">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Claude Code、Codex 与 OMP 的 Memory 机制对比 | 欣然的备忘录">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Claude Code、Codex 与 OMP 的 Memory 机制对比
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-10-15 15:04:20 / 修改时间：15:07:14" itemprop="dateCreated datePublished" datetime="2026-10-15T15:04:20+08:00">2026-10-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI-%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">AI 工程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>用编码助手做长期项目，最容易产生的疑问是：昨天已经纠正过的事，为什么今天还要说一遍？</p>
+<p>Claude Code、Codex 和 OMP 都有跨会话记忆，但写入和读回的方式不同。Claude Code 主要让模型在工作过程中维护 Markdown 笔记；Codex 从符合条件的历史会话中后台提炼记忆；OMP 则允许选择不同后端，既能做会话摘要，也能使用带检索工具的记忆库。</p>
+<p>这会直接影响使用感受：Claude 的笔记容易查看和修改，Codex 的记忆可能延迟生成，OMP 的能力和维护成本则取决于启用的后端。<strong>比较之前，要先区分项目规则、长期记忆和上下文压缩。</strong></p>
+<p>本文的 Claude 指 Claude Code，OMP 指 <a target="_blank" rel="noopener" href="https://github.com/can1357/oh-my-pi">Oh My Pi</a>。资料核对日期为 2026 年 10 月 15 日；Claude 与 Codex 依据官方文档，OMP 的实现细节依据文末固定提交的项目文档。OMP 主分支文档描述的功能，不保证已包含在每个已安装版本中。</p>
+<h2 id="一、哪些东西算-Memory"><a href="#一、哪些东西算-Memory" class="headerlink" title="一、哪些东西算 Memory"></a>一、哪些东西算 Memory</h2><p>编码助手使用的上下文至少有四类，解决的问题各不相同。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>回答的问题</th>
+<th>典型载体</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>项目指令</td>
+<td>每次进入项目都应遵守什么？</td>
+<td>CLAUDE.md、AGENTS.md、路径规则</td>
+</tr>
+<tr>
+<td>当前会话状态</td>
+<td>这次任务做到哪一步？</td>
+<td>对话、工具结果、任务计划</td>
+</tr>
+<tr>
+<td>上下文压缩</td>
+<td>对话太长后，怎样继续当前任务？</td>
+<td>压缩摘要、保留的近期消息</td>
+</tr>
+<tr>
+<td>跨会话记忆</td>
+<td>下次开新任务，哪些经验值得带过去？</td>
+<td>笔记、提炼后的摘要、可检索记忆库</td>
+</tr>
+</tbody></table>
+<p>比如，“提交前运行哪个测试命令”适合放进项目指令；“客户刚确认下周才能切换接口”适合成为有时效的项目记忆；“这次已经改了哪些文件”主要属于会话状态。</p>
+<p>压缩后的摘要可以帮助当前任务继续，却不等于新会话一定会读到它。保存完整聊天记录，也不等于系统已经把有用信息提炼出来。Prompt cache 缓存的是可复用的输入计算，同样不能代替跨会话记忆。</p>
+<p>下面主要比较最后一类，同时说明它与项目指令如何配合。</p>
+<h2 id="二、先看差异最大的几个维度"><a href="#二、先看差异最大的几个维度" class="headerlink" title="二、先看差异最大的几个维度"></a>二、先看差异最大的几个维度</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Claude Code Auto memory</th>
+<th>Codex 本地 Memories</th>
+<th>OMP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认状态</td>
+<td>本地会话默认开启，部分运行环境例外</td>
+<td>官方文档说明默认关闭</td>
+<td>默认 <code>memory.backend: off</code></td>
+</tr>
+<tr>
+<td>主要写入方式</td>
+<td>模型在会话中读写笔记</td>
+<td>从符合条件的历史会话后台生成</td>
+<td>local 做后台提炼；其他后端可自动保留或显式写入</td>
+</tr>
+<tr>
+<td>主要存储</td>
+<td>MEMORY.md 索引与专题 Markdown</td>
+<td>Codex home 下的生成文件与支撑材料</td>
+<td>取决于后端：文件、本地 SQLite 或服务端 bank</td>
+</tr>
+<tr>
+<td>新会话如何使用</td>
+<td>启动载入索引，详情按需读取</td>
+<td>将既有记忆注入后续会话</td>
+<td>local 注入摘要；Mnemopi、Hindsight 首轮召回</td>
+</tr>
+<tr>
+<td>常见边界</td>
+<td>默认按 Git 仓库，本机 worktree 共享</td>
+<td>独立的本地 host 记忆库</td>
+<td>作用域随后端和配置变化</td>
+</tr>
+<tr>
+<td>修改方式</td>
+<td>可直接编辑、删除 Markdown</td>
+<td>以 <code>/memories</code> 和设置为主，文件视作生成状态</td>
+<td><code>/memory</code> 加后端工具，删除语义也随后端变化</td>
+</tr>
+</tbody></table>
+<p>不能据此简单排出“谁记性最好”。表格描述的是机制；召回是否准确、有没有记住错误经验，还需要在具体项目里验证。</p>
+<h2 id="三、Claude-Code：模型维护索引和笔记"><a href="#三、Claude-Code：模型维护索引和笔记" class="headerlink" title="三、Claude Code：模型维护索引和笔记"></a>三、Claude Code：模型维护索引和笔记</h2><p>Claude Code 的持久上下文分成两部分。<a target="_blank" rel="noopener" href="https://code.claude.com/docs/en/memory">官方 memory 文档</a>把它们称为指令文件和 Auto memory。</p>
+<p><code>CLAUDE.md</code> 是你或团队维护的规则，可以写构建命令、工作流程和项目约定。Auto memory 则由 Claude 根据工作中的纠正、偏好和项目情况维护。两者都以文本进入上下文，实际的权限限制仍由权限设置或 hooks 等机制负责。</p>
+<h3 id="写入发生在工作过程中"><a href="#写入发生在工作过程中" class="headerlink" title="写入发生在工作过程中"></a>写入发生在工作过程中</h3><p>当前文档把自动记忆分成 <code>user</code>、<code>feedback</code>、<code>project</code> 和 <code>reference</code> 四类，分别记录用户情况、纠正反馈、无法从代码推导的项目背景，以及外部信息入口。</p>
+<p>例如，你明确纠正：“接口迁移还没获批，这周先保持兼容。”这类信息可能对下一次任务有用，又无法从源码直接读出，适合成为项目记忆。Claude 自行判断是否值得保存，并非每次对话都会写笔记。</p>
+<p>文档也要求避免重复保存代码库已经能说明的事实，或 CLAUDE.md 已经写明的内容。这能减少笔记与代码长期分叉的机会。</p>
+<h3 id="启动先加载索引，再按需读详情"><a href="#启动先加载索引，再按需读详情" class="headerlink" title="启动先加载索引，再按需读详情"></a>启动先加载索引，再按需读详情</h3><p>默认目录类似这样：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">~/.claude/projects/&lt;project&gt;/memory/</span><br><span class="line">├── MEMORY.md</span><br><span class="line">├── user_role.md</span><br><span class="line">└── feedback_testing.md</span><br></pre></td></tr></table></figure>
+
+<p><code>MEMORY.md</code> 是索引。每次会话启动时，系统加载其前 200 行或前 25KB，以先达到的上限为准；专题文件不会全部自动塞进上下文，Claude 需要时再用文件工具读取。</p>
+<p>因此，“磁盘上已经保存”与“本轮已经读到”之间仍有距离。索引太长，超出部分在下次启动时会被截掉；索引写得不清楚，模型也可能没去打开真正有用的专题文件。</p>
+<p>默认情况下，同一个 Git 仓库的 worktree 和子目录共享自动记忆目录。笔记保存在本机，不会因为仓库同步就自动出现在另一台电脑上。可用 <code>/memory</code> 管理，也可以直接编辑和删除 Markdown。</p>
+<p>这一设计适合希望随时查看“它到底记了什么”的人。维护时要留意索引是否简洁，以及项目事实是否已经过期。</p>
+<h2 id="四、Codex：从历史会话中后台提炼"><a href="#四、Codex：从历史会话中后台提炼" class="headerlink" title="四、Codex：从历史会话中后台提炼"></a>四、Codex：从历史会话中后台提炼</h2><p>把 Codex 的 memory 等同于 <code>AGENTS.md</code>，会漏掉它的本地 Memories 功能。<a target="_blank" rel="noopener" href="https://learn.chatgpt.com/docs/customization/memories">官方文档</a>明确区分了本地 Codex 记忆与 ChatGPT 网页端的记忆，两者使用不同的存储和控制方式。</p>
+<h3 id="AGENTS-md-负责稳定规则"><a href="#AGENTS-md-负责稳定规则" class="headerlink" title="AGENTS.md 负责稳定规则"></a>AGENTS.md 负责稳定规则</h3><p>Codex 启动时会发现全局和项目级指令。项目范围内，从项目根目录到当前工作目录逐层寻找 <code>AGENTS.override.md</code>、<code>AGENTS.md</code> 及配置的备用文件名，再组合成指令上下文。具体优先顺序见 <a target="_blank" rel="noopener" href="https://developers.openai.com/codex/guides/agents-md/">AGENTS.md 官方指南</a>。</p>
+<p>必须长期遵守的团队要求应放在这里，或写进仓库文档。自动记忆适合补充工作经验。</p>
+<h3 id="Memories-不一定在聊天结束后立刻生成"><a href="#Memories-不一定在聊天结束后立刻生成" class="headerlink" title="Memories 不一定在聊天结束后立刻生成"></a>Memories 不一定在聊天结束后立刻生成</h3><p>开启本地 Memories 后，Codex 会从符合条件的历史会话中提炼有用信息，在后台更新。活跃会话、短暂会话等可能被跳过；系统会等待会话闲置，也可能因剩余额度低于阈值而跳过一次生成。</p>
+<p>这解释了一个容易误判的现象：刚结束任务就开新任务，发现它没有记住，不一定是检索出错，也可能是记忆还没有生成。</p>
+<p>配置参考分别提供 <code>memories.extract_model</code> 和 <code>memories.consolidation_model</code>，对应单会话提取与全局整合。<code>generate_memories</code> 控制新会话能否成为生成输入，<code>use_memories</code> 控制后续会话是否使用已有记忆。两者可以分别关闭。</p>
+<p>这里的“全局整合”不能直接理解成“所有项目的每段记忆都会注入每次会话”。官方说明没有承诺这种行为，也不应据此推断每次召回都使用向量数据库。</p>
+<h3 id="文件可检查，控制以设置为主"><a href="#文件可检查，控制以设置为主" class="headerlink" title="文件可检查，控制以设置为主"></a>文件可检查，控制以设置为主</h3><p>主要记忆文件位于 <code>~/.codex/memories/</code>，或自定义 <code>CODEX_HOME</code> 对应的位置，包括摘要、持久条目和历史证据。官方将其视作生成状态：可以检查，但不建议依靠手工改文件作为主要控制方式。</p>
+<p>本地 Memories 默认关闭，可通过设置或配置启用：</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[features]</span></span><br><span class="line"><span class="attr">memories</span> = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>交互会话中的 <code>/memories</code> 可以分别控制当前任务是否使用既有记忆、是否贡献未来记忆。IDE 扩展使用所连接 Codex host 的本地记忆库；不能把它理解成所有设备自动共享同一份记忆。</p>
+<p>对使用者而言，Codex 的特点是把提炼工作放到后台。排查“为什么没记住”时，应先检查功能是否开启、任务是否允许贡献记忆，以及后台生成是否已满足条件。</p>
+<h2 id="五、OMP：先选后端，再谈机制"><a href="#五、OMP：先选后端，再谈机制" class="headerlink" title="五、OMP：先选后端，再谈机制"></a>五、OMP：先选后端，再谈机制</h2><p>OMP 的 <a target="_blank" rel="noopener" href="https://github.com/can1357/oh-my-pi/blob/c2cb79e4c227aa4b22c4ccb933ff72fd88bceba4/docs/memory.md">Autonomous Memory 文档</a>列出 <code>off</code>、<code>local</code>、<code>hindsight</code>、<code>mnemopi</code>、<code>sharpshooter</code> 五种模式。因此，“OMP 使用 SQLite 记忆”只描述了其中一种选择。</p>
+<table>
+<thead>
+<tr>
+<th>后端</th>
+<th>主要机制</th>
+<th>需要关注的边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>local</td>
+<td>从持久会话提取，再整合成文件与摘要</td>
+<td>没有结构化 <code>recall</code>、<code>retain</code> 等工具</td>
+</tr>
+<tr>
+<td>Hindsight</td>
+<td>通过服务端 bank 保存、召回和综合记忆</td>
+<td>要配置服务、作用域与服务端数据管理</td>
+</tr>
+<tr>
+<td>Mnemopi</td>
+<td>本地 SQLite，支持检索和按 ID 管理记忆</td>
+<td>本地存储不代表模型调用也一定在本机</td>
+</tr>
+<tr>
+<td>sharpshooter</td>
+<td>按摩擦信号触发的项目决策文件，后台整合</td>
+<td>文档将其概括为架构、产品和风格决策；本文不展开其未核实细节</td>
+</tr>
+</tbody></table>
+<h3 id="local：两阶段生成摘要，也能积累经验条目"><a href="#local：两阶段生成摘要，也能积累经验条目" class="headerlink" title="local：两阶段生成摘要，也能积累经验条目"></a>local：两阶段生成摘要，也能积累经验条目</h3><p>启用方式是：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">memory:</span></span><br><span class="line">  <span class="attr">backend:</span> <span class="string">local</span></span><br></pre></td></tr></table></figure>
+
+<p>local 的后台流程在启动时处理符合条件的历史会话。第一阶段逐会话提取决策、约束、已解决的问题和重复流程，第二阶段整合为 <code>MEMORY.md</code>、<code>memory_summary.md</code> 和 <code>skills/</code> 下的操作指南。</p>
+<p>下一次会话会把简短摘要注入系统提示。启用 <code>autolearn.enabled</code> 后，还可用 <code>learn</code> 把明确经验保存到独立的 <code>learned.md</code>，从后续会话开始使用。整合过程不会覆盖这份文件。</p>
+<p>这和 Codex 都有“历史会话提取，再整合”的结构，但不能据此认定内部实现、筛选条件和效果相同。OMP local 还明确把生成操作指南作为输出之一。</p>
+<h3 id="Mnemopi：带自动召回的本地记忆库"><a href="#Mnemopi：带自动召回的本地记忆库" class="headerlink" title="Mnemopi：带自动召回的本地记忆库"></a>Mnemopi：带自动召回的本地记忆库</h3><p><a target="_blank" rel="noopener" href="https://github.com/can1357/oh-my-pi/blob/c2cb79e4c227aa4b22c4ccb933ff72fd88bceba4/docs/mnemosyne-memory-backend.md">Mnemopi 后端</a>在首个模型回合召回相关记忆，自动保留已完成的对话轮次，也提供 <code>retain</code>、<code>recall</code>、<code>reflect</code> 和 <code>memory_edit</code>。</p>
+<p><code>recall</code> 返回的是带 ID 的预览；修改前需要读取完整条目，避免用截断预览覆盖全文。检索可以使用全文路径，也能配置 embedding；多路融合检索、主动关联等是额外开关，不能一概算作默认行为。</p>
+<p>它的作用域尤其值得单独核对：默认 <code>per-project</code> 的 bank 根据当前工作目录的名称和绝对路径哈希生成。换到另一个 worktree，路径不同，就不能照搬 Claude Code 的“同仓库共享”预期。<code>global</code> 和 <code>per-project-tagged</code> 则提供不同的共享方式。</p>
+<p>“本地 SQLite”只说明数据存储位置。配置远程 embedding 或在线记忆模型后，相关处理仍可能访问服务端。</p>
+<h3 id="Hindsight：召回与保留交给服务端-bank"><a href="#Hindsight：召回与保留交给服务端-bank" class="headerlink" title="Hindsight：召回与保留交给服务端 bank"></a>Hindsight：召回与保留交给服务端 bank</h3><p>Hindsight 后端连接一个可访问的服务，服务也可以部署在本机。它支持首轮自动召回、按轮次保留，以及 <code>retain</code>、<code>recall</code>、<code>reflect</code>。默认使用带项目标签的共享 bank 方案；配置为 <code>per-project</code> 时，项目识别会归一到仓库的主 checkout，使关联 worktree 共享项目身份。</p>
+<p>这与 Mnemopi 默认按当前目录路径划分的方式不同。即使都叫“按项目”，也要看项目身份是怎样算出来的。</p>
+<p>删除操作也有差别。Hindsight 的 <code>/memory clear</code> 清理本地会话状态和召回缓存，不删除服务端 bank；Mnemopi 的同名命令会删除当前配置作用域内的数据库。不能只凭命令名称判断数据是否已清空。</p>
+<h2 id="六、同一句纠正，三种记忆路径"><a href="#六、同一句纠正，三种记忆路径" class="headerlink" title="六、同一句纠正，三种记忆路径"></a>六、同一句纠正，三种记忆路径</h2><p>假设你说：“这个项目暂时只能用 Node 22，升级要等客户确认。”</p>
+<p>在 Claude Code 中，Claude 可以在当前会话写下一条项目笔记，加入 MEMORY.md 索引。新会话先看到索引，有需要再打开详情。</p>
+<p>在 Codex 中，这句话可能在该会话满足后台处理条件后被提炼。立即打开新任务，不保证已经可用；如果它是每次构建都必须遵守的约束，应该同时写入 AGENTS.md 或仓库文档。</p>
+<p>在 OMP local 中，它可能经过会话提取与整合后进入摘要，也可以在启用相应功能后用 <code>learn</code> 明确记录。使用 Mnemopi 或 Hindsight 时，则可以显式 <code>retain</code>，以后通过相关性召回读回。</p>
+<p>等客户同意升级，这条记忆就过期了。合适的记录应带上原因和失效条件，例如“升级等待客户确认；获批后重新检查”。只写“永远使用 Node 22”，会把临时限制变成长期错误。</p>
+<p>这也是本文的使用建议：对会影响行动的记忆，重新核对当前仓库和最新用户要求。记忆保留了过去的经验，过去未必仍然适用。</p>
+<h2 id="七、怎样选，怎样维护"><a href="#七、怎样选，怎样维护" class="headerlink" title="七、怎样选，怎样维护"></a>七、怎样选，怎样维护</h2><p>希望查看和修改笔记，尤其常在同一仓库多个 worktree 间工作的，可以重点看 Claude Code 的文件式自动记忆。索引规模和过期条目是维护重点。</p>
+<p>已经使用 Codex，希望从长期任务中自动积累经验，可以开启本地 Memories，同时保留简洁的 AGENTS.md。遇到遗忘时，先检查生成条件和任务级开关。</p>
+<p>需要选择记忆后端、控制 bank 作用域，或希望通过工具更新、失效和召回具体条目，可以考虑 OMP。先决定使用摘要文件还是可检索记忆库，再核对所选后端的共享和清理语义。没有共享需求时，可以从 local 或隔离作用域开始。</p>
+<p>无论使用哪一款，团队必须遵守的要求应留在版本管理中的指令或文档里；自动记忆负责补充经验。判断它是否可靠，最好拿真实任务试一次：记录一条纠正，开启新会话检查能否读回，再修改事实，观察旧记忆能否被及时更新。</p>
+<h2 id="资料来源"><a href="#资料来源" class="headerlink" title="资料来源"></a>资料来源</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://code.claude.com/docs/en/memory">Claude Code：How Claude remembers your project</a>，用于核对指令文件、自动记忆、加载上限、作用域与管理方式。</li>
+<li><a target="_blank" rel="noopener" href="https://learn.chatgpt.com/docs/customization/memories">OpenAI：Memories</a>，用于核对本地 Codex 记忆的生成、存储、开关及与 ChatGPT 网页端的区别。</li>
+<li><a target="_blank" rel="noopener" href="https://developers.openai.com/codex/guides/agents-md/">OpenAI：Custom instructions with AGENTS.md</a>，用于核对 Codex 项目指令发现机制。</li>
+<li><a target="_blank" rel="noopener" href="https://developers.openai.com/codex/config-reference/">OpenAI：Configuration reference</a>，用于核对 <code>features.memories</code>、提取、整合和生成控制参数。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/can1357/oh-my-pi/blob/c2cb79e4c227aa4b22c4ccb933ff72fd88bceba4/docs/memory.md">OMP：Autonomous Memory</a>，用于核对后端、local 流程和 Hindsight 行为。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/can1357/oh-my-pi/blob/c2cb79e4c227aa4b22c4ccb933ff72fd88bceba4/docs/mnemosyne-memory-backend.md">OMP：Mnemopi memory backend</a>，用于核对 SQLite 后端、召回、作用域和清理语义。</li>
+</ul>
+<p>本文比较公开文档描述的机制，没有对三款工具进行同任务召回率或长期准确率测试。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+              <a href="/tags/Oh-My-Pi/" rel="tag"># Oh My Pi</a>
+              <a href="/tags/Agent-Memory/" rel="tag"># Agent Memory</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/10/09/Open%20Code%20Review%20%E6%8A%8A%E4%B8%8D%E8%AF%A5%E4%BA%A4%E7%BB%99%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%A1%E6%9F%A5%E6%AD%A5%E9%AA%A4%E6%94%B6%E5%9B%9E%E6%9D%A5/" rel="prev" title="Open Code Review 把不该交给模型的审查步骤收回来">
+                  <i class="fa fa-angle-left"></i> Open Code Review 把不该交给模型的审查步骤收回来
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/10/19/ai-memory%EF%BC%9A%E8%AE%A9%E7%BC%96%E7%A0%81%20Agent%20%E5%85%B1%E4%BA%AB%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BF%86%E4%B8%8E%E4%BB%BB%E5%8A%A1%E4%BA%A4%E6%8E%A5/" rel="next" title="ai-memory：让编码 Agent 共享项目记忆与任务交接">
+                  ai-memory：让编码 Agent 共享项目记忆与任务交接 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2022 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">true</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
