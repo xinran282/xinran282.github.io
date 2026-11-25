@@ -1,0 +1,672 @@
+[
+  {
+    "path": "pstack/README.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/.cursor-plugin/plugin.json",
+    "ok": true
+  },
+  {
+    "path": "pstack/agents/poteto-agent.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/agents/comment-sicko.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/automations/benny/FOR_AGENTS.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/automations/benny/README.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/automations/benny/skills/reproduce-and-fix-issues/references/feature-map.example.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/automations/benny/skills/setup-benny/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/automations/benny/skills/triage-issue-reports/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/automations/benny/skills/reproduce-and-fix-issues/references/verify-existing-fix.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/automations/benny/skills/reproduce-and-fix-issues/references/control-adapter.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/automations/benny/templates/reproduce-automation-prompt.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/docs/guide/01-setup.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/docs/guide/04-design.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/automations/benny/templates/triage-automation-prompt.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/automations/benny/skills/triage-issue-reports/references/routing.example.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/docs/guide/02-poteto-mode.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/docs/guide/03-understand.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/docs/guide/07-overnight.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/docs/guide/08-principles.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/docs/guide/10-recipes-and-pitfalls.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/docs/guide/README.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/docs/guide/05-build-and-clean.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/architect/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/arena/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/benchmark-checklist/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/docs/guide/06-verify-and-ship.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/blast-radius/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/docs/guide/09-make-it-yours.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/create-formal-verification-skill/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/docs/harness/claude-code.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/plugin.json",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/create-verification-skill/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/create-verification-skill/references/feature-map-example/README.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/create-verification-skill/references/feature-map-example/create-note.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/automate-me/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/figure-it-out/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/how/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/in-your-own-words/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/bro/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/ketchup-video/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/ketchup/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/interrogate/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/maintain-formal-verification-skill/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/maintain-verification-skill/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/make-bot-ui/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/correct/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/no-comments/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-help/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/authoring-a-skill.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-help/references/recipes.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/create-verification-skill/references/feature-map-example/search.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/autonomous-run.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/autopilot-full.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/autopilot-stack.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/babysit.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/bug-fix.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/eval.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/feature.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/hillclimb.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/investigation.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/multi-phase-plan.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/opening-a-pr.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/perf-issue.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/refactoring.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/pause-safely.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/prototype.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/runtime-forensics.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/shipping.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/session-pickup.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-help/references/prompting.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/trace-forensics.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/visual-parity.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-attack-the-premise/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/playbooks/worktree-cleanup.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-boundary-discipline/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/references/bugbot-triage.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/scripts/bootstrap.ts",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-build-the-lever/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-explain-the-number/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-exhaust-the-design-space/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-experience-first/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-fix-root-causes/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-foundational-thinking/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-guard-the-context-window/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-make-operations-idempotent/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-minimize-reader-load/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-never-block-on-the-human/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-prove-it-works/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/poteto-mode/worker.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-separate-before-serializing-shared-state/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-encode-lessons-in-structure/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/principle-sequence-verifiable-units/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-subtract-before-you-add/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-laziness-protocol/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/principle-test-behavior-not-implementation/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-type-system-discipline/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/reframe/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-model-the-domain/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/principle-outcome-oriented-execution/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/setup-pstack/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/show-me-your-work/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/principle-redesign-from-first-principles/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/recall/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/reflect/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/sharpen/SKILL.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/references/render.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/backends/report.ts",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/frontends/verdict.ts",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/pipeline.ts",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/statechart.ts",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/Counter/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterAction/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterDeadlock/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterFan/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterGuard/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterInitPast/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterInitPastHolds/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterStart/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterInstance/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterJump/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterLoop/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterRules/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/DieHard/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterOrder/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/FirstRule/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterStop/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/HiddenClock/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterTie/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/Login/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterTieInGraph/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/LoginGuarded/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/CounterView/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/LoginParallel/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/MediaPlayer/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/MediaPlayerProps/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/Shadow/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/TwoPhaseFixed/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/TypeGuard/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/UserNoDeadlock/report.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/swarm/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/tdd/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/teach/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/MediaPlayerFixed/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/PickWorker/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/technical-writing/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/SpacedNames/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/unslop/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/typescript-best-practices/references/patterns.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/why/SKILL.md",
+    "ok": true
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/test/corpus/TwoPhase/report.md",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/statechart/scripts/worker.ts",
+    "ok": false,
+    "error": "Response status code does not indicate success: 429 (Too Many Requests)."
+  },
+  {
+    "path": "pstack/skills/typescript-best-practices/SKILL.md",
+    "ok": true
+  }
+]

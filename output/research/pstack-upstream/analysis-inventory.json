@@ -1,0 +1,18 @@
+{
+  "repository": "cursor/plugins",
+  "commit": "9e278fe4d4ecd8bfe98b1b79bf4be662efb338cc",
+  "pluginVersion": "0.15.48",
+  "registeredSkills": 59,
+  "principleSkills": 24,
+  "playbooks": 22,
+  "sourceCoverage": "complete",
+  "checkedPinnedLinks": 85,
+  "htmlSections": 43,
+  "htmlTables": 10,
+  "markdownCopiesMatch": true,
+  "postDirectoryHtmlArtifacts": 0,
+  "markdownBytes": 49636,
+  "htmlBytes": 140701,
+  "acquisition": "complete archive snapshot",
+  "analysis": "source inspection; no plugin installation or execution"
+}
